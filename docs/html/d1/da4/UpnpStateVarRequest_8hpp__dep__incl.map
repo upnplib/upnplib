@@ -1,13 +1,7 @@
 <map id="Compa/inc/UpnpStateVarRequest.hpp" name="Compa/inc/UpnpStateVarRequest.hpp">
-<area shape="rect" id="Node000001" title="Header file for UpnpStateVarRequest methods." alt="" coords="186,5,451,31"/>
+<area shape="rect" id="Node000001" title="Header file for UpnpStateVarRequest methods." alt="" coords="81,5,346,31"/>
 <area shape="rect" id="Node000002" href="$d3/d7b/UpnpStateVarRequest_8cpp.html" title="Source file for UpnpStateVarRequest methods." alt="" coords="5,79,213,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="277,38,161,81,159,76,275,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="189,41,136,81,133,76,186,37"/>
 <area shape="rect" id="Node000003" href="$d6/d92/soap__device_8cpp.html" title="Items for UPnP devices to manage UPnP Control." alt="" coords="238,79,399,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="321,44,321,79,316,79,316,44"/>
-<area shape="rect" id="Node000004" href="$d0/daf/tv__device_8hpp.html" title="Declarations for a simple UPnP device console application." alt="" coords="424,86,651,111"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="364,33,506,83,505,88,363,38"/>
-<area shape="rect" id="Node000005" href="$d9/d09/tv__device_8cpp.html" title="Definitions for a simple UPnP device console application." alt="" coords="313,174,538,199"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="513,122,442,176,439,172,509,118"/>
-<area shape="rect" id="Node000006" href="$d5/de7/tv__device__main_8cpp_source.html" title=" " alt="" coords="563,167,736,207"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="565,118,626,164,623,169,562,122"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="241,37,295,76,292,81,238,41"/>
 </map>

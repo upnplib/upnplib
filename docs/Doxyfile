@@ -947,11 +947,11 @@ INPUT                  = README.md \
                          Pupnp/directory.dox \
                          docs \
                          Upnplib \
-                         Compa \
-                         sample/api_samples.cpp \
-                         sample/common/tv_device.hpp \
-                         sample/common/tv_device.cpp \
-                         sample/linux/tv_device_main.cpp
+                         Compa
+                         # sample/api_samples.cpp \
+                         # sample/common/tv_device.hpp \
+                         # sample/common/tv_device.cpp \
+                         # sample/linux/tv_device_main.cpp
 #
 # delete Compa/inc/UpnpGlobal.hpp
 # delete Compa/inc/UpnpInet.hpp

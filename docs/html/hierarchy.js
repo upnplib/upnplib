@@ -67,7 +67,6 @@ var hierarchy =
     [ "TimerThread", "d0/d87/TimerThread_8hpp.html#d0/d2a/structTimerThread", null ],
     [ "timezone", "d5/d91/ThreadPool_8hpp.html#de/dc1/structtimezone", null ],
     [ "token", "de/dd0/Compa_2src_2inc_2uri_8hpp.html#d4/df4/structtoken", null ],
-    [ "TvService", "d0/daf/tv__device_8hpp.html#d4/db0/structTvService", null ],
     [ "UpnpListHead", "dc/d1d/list_8hpp.html#d0/d92/structUpnpListHead", null ],
     [ "UpnpNonblockParam", "d3/da9/upnpapi_8hpp.html#d8/db0/structUpnpNonblockParam", null ],
     [ "uri_type", "de/dd0/Compa_2src_2inc_2uri_8hpp.html#d4/d48/structuri__type", null ],

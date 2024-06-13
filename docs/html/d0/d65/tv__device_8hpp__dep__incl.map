@@ -1,7 +1,0 @@
-<map id="sample/common/tv_device.hpp" name="sample/common/tv_device.hpp">
-<area shape="rect" id="Node000001" title="Declarations for a simple UPnP device console application." alt="" coords="117,5,343,31"/>
-<area shape="rect" id="Node000002" href="$d9/d09/tv__device_8cpp.html" title="Definitions for a simple UPnP device console application." alt="" coords="5,86,231,111"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,41,136,88,133,84,200,37"/>
-<area shape="rect" id="Node000003" href="$d5/de7/tv__device__main_8cpp_source.html" title=" " alt="" coords="255,79,429,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="259,36,317,76,313,81,256,41"/>
-</map>

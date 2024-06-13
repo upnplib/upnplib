@@ -23,6 +23,7 @@ namespace upnplib {
  * // Usage e.g.:
  * if (is_netaddr("[2001:db8::1]") != AF_UNSPEC) { manage_given_netaddress(); }
  * if (is_netaddr("[2001:db8::1]", AF_INET) == AF_INET) { // nothing to do }
+ * if (is_netaddr("[fe80::1%2]") == AF_INET6) { manage_link_local_addr(); }
  * \endcode
  *
  * Checks if a string is a netaddress without port and returns its address

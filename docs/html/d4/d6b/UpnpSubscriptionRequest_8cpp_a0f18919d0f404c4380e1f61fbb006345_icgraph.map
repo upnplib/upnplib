@@ -1,19 +1,11 @@
 <map id="UpnpSubscriptionRequest_get_ServiceId" name="UpnpSubscriptionRequest_get_ServiceId">
-<area shape="rect" id="Node000001" title=" " alt="" coords="853,101,1043,141"/>
-<area shape="rect" id="Node000002" href="$d9/d09/tv__device_8cpp.html#a236a906cc1d589cb1655d8ce6b0623bc" title="Called during a subscription request callback." alt="" coords="596,5,805,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="892,98,804,60,770,48,772,43,806,55,895,93"/>
-<area shape="rect" id="Node000006" href="$d4/d6b/UpnpSubscriptionRequest_8cpp.html#a9c3fc23e7ce88471de191f52d974534c" title=" " alt="" coords="606,69,795,109"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="839,110,795,104,796,99,840,105"/>
-<area shape="rect" id="Node000008" href="$d4/d6b/UpnpSubscriptionRequest_8cpp.html#ad2145aa1436353508e0e5499e53fad22" title=" " alt="" coords="606,133,795,173"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="840,138,796,144,795,138,839,133"/>
-<area shape="rect" id="Node000009" href="$d4/d6b/UpnpSubscriptionRequest_8cpp.html#a8b70e9c310e43f2341fca34db487a4b1" title=" " alt="" coords="606,197,795,237"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="895,150,806,188,772,200,770,195,804,183,892,145"/>
-<area shape="rect" id="Node000003" href="$d9/d09/tv__device_8cpp.html#aed1cafead3fb83e9101a11c24b346a3b" title="The callback handler registered with the SDK while registering root device." alt="" coords="321,13,548,38"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="582,28,548,28,548,23,582,23"/>
-<area shape="rect" id="Node000004" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,13,273,38"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="308,28,274,28,274,23,308,23"/>
-<area shape="rect" id="Node000005" href="$d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,13,111,38"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="145,28,111,28,111,23,145,23"/>
-<area shape="rect" id="Node000007" href="$d4/d6b/UpnpSubscriptionRequest_8cpp.html#a577e00a26a879876811fd2d8e6b0e87f" title=" " alt="" coords="325,77,545,102"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="592,92,545,92,545,87,592,87"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="511,69,700,109"/>
+<area shape="rect" id="Node000002" href="$d4/d6b/UpnpSubscriptionRequest_8cpp.html#a9c3fc23e7ce88471de191f52d974534c" title=" " alt="" coords="273,5,463,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="517,68,442,48,443,43,518,63"/>
+<area shape="rect" id="Node000004" href="$d4/d6b/UpnpSubscriptionRequest_8cpp.html#ad2145aa1436353508e0e5499e53fad22" title=" " alt="" coords="273,69,463,109"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="497,92,463,92,463,87,497,87"/>
+<area shape="rect" id="Node000005" href="$d4/d6b/UpnpSubscriptionRequest_8cpp.html#a8b70e9c310e43f2341fca34db487a4b1" title=" " alt="" coords="273,133,463,173"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="518,116,443,136,442,131,517,110"/>
+<area shape="rect" id="Node000003" href="$d4/d6b/UpnpSubscriptionRequest_8cpp.html#a577e00a26a879876811fd2d8e6b0e87f" title=" " alt="" coords="5,13,225,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="260,28,226,28,226,23,260,23"/>
 </map>

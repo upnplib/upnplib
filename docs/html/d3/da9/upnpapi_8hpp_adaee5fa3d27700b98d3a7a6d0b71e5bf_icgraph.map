@@ -1,35 +1,26 @@
 <map id="GetDeviceHandleInfo" name="GetDeviceHandleInfo">
-<area shape="rect" id="Node000001" title="Retrieves the device handle and information of the first device of the address family specified...." alt="" coords="1348,159,1509,184"/>
-<area shape="rect" id="Node000002" href="$db/db9/ssdp__device_8cpp.html#a71cabcefa14fea2869b65b9d2ba7712d" title="Handles the search request." alt="" coords="1147,67,1300,107"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1383,156,1272,110,1274,105,1385,151"/>
-<area shape="rect" id="Node000007" href="$d4/d99/upnpapi_8cpp.html#a75a3c9f9180bc908e17d49c3e2218e99" title="Terminates the Linux SDK for UPnP Devices." alt="" coords="1176,187,1271,212"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="1335,187,1272,196,1271,190,1334,182"/>
-<area shape="rect" id="Node000003" href="$db/daf/namespaceanonymous__namespace_02ssdp__common_8cpp_03.html#a73ff71f907e2bf442c51b304f877d07a" title="This function is a thread that handles SSDP requests." alt="" coords="897,5,1099,60"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1133,68,1098,60,1099,54,1134,63"/>
-<area shape="rect" id="Node000004" href="$df/d13/ssdp__common_8cpp.html#af3e17308ebc31e7e81c476624487614c" title="This function reads the data from the ssdp socket." alt="" coords="678,20,839,45"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="884,35,840,35,840,30,884,30"/>
-<area shape="rect" id="Node000005" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a02379f09474a96b3590cadd8ca82ecf1" title="Read data from the SSDP socket." alt="" coords="407,13,620,53"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="664,35,620,35,620,30,664,30"/>
-<area shape="rect" id="Node000006" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a29857662f54c55aa7e6023b37b08af76" title="Run the miniserver." alt="" coords="159,5,359,60"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="393,35,359,35,359,30,393,30"/>
-<area shape="rect" id="Node000008" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="201,148,316,173"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="1195,180,1152,150,1125,136,1098,126,986,102,871,91,756,89,644,96,540,107,447,122,310,151,308,145,446,116,540,102,644,90,756,84,872,85,987,97,1099,121,1128,131,1154,145,1198,176"/>
-<area shape="rect" id="Node000010" href="$d9/d09/tv__device_8cpp.html#ae9d9e95e2f4d533ed860ae40c9b3353b" title="Stops the device. Uninitializes the SDK." alt="" coords="942,136,1054,161"/>
-<area shape="poly" id="edge9_Node000007_Node000010" title=" " alt="" coords="1162,188,1053,164,1055,159,1163,183"/>
-<area shape="rect" id="Node000012" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="471,212,556,237"/>
-<area shape="poly" id="edge11_Node000007_Node000012" title=" " alt="" coords="1162,204,556,226,556,221,1162,199"/>
-<area shape="rect" id="Node000013" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="689,237,828,263"/>
-<area shape="poly" id="edge13_Node000007_Node000013" title=" " alt="" coords="1163,212,1099,221,828,247,828,242,1098,215,1162,206"/>
-<area shape="rect" id="Node000014" href="$d4/d99/upnpapi_8cpp.html#a679257c76bd4ebdd2aa3fa2bb470dadd" title="Finishes initializing the UPnP SDK." alt="" coords="680,312,837,337"/>
-<area shape="poly" id="edge15_Node000007_Node000014" title=" " alt="" coords="1209,225,1166,280,1135,308,1100,328,1063,341,1025,349,947,354,874,350,813,340,814,335,874,344,947,349,1024,344,1062,336,1098,324,1132,303,1162,277,1205,222"/>
-<area shape="rect" id="Node000015" href="$d4/d99/upnpapi_8cpp.html#aabf66e54504de499079a21f1d01b91ca" title="Initializes the global threadm pools used by the UPnP SDK." alt="" coords="919,288,1077,313"/>
-<area shape="poly" id="edge17_Node000007_Node000015" title=" " alt="" coords="1192,222,1149,247,1100,271,1046,290,1045,285,1098,266,1146,242,1189,217"/>
-<area shape="rect" id="Node000009" href="$d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,148,111,173"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="187,163,111,163,111,158,187,158"/>
-<area shape="rect" id="Node000011" href="$d9/d09/tv__device_8cpp.html#ad3a78c1a3b2b7ebeca7dd92f1ed27de1" title="Function that receives commands from the user at the command prompt during the lifetime of the device..." alt="" coords="668,136,849,161"/>
-<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="928,151,849,151,849,146,928,146"/>
-<area shape="poly" id="edge12_Node000012_Node000008" title=" " alt="" coords="457,213,309,176,311,171,458,208"/>
-<area shape="poly" id="edge14_Node000013_Node000012" title=" " alt="" coords="675,244,556,232,556,226,676,239"/>
-<area shape="poly" id="edge16_Node000014_Node000012" title=" " alt="" coords="712,309,545,240,547,235,714,304"/>
-<area shape="poly" id="edge18_Node000015_Node000013" title=" " alt="" coords="923,288,819,265,820,260,924,282"/>
+<area shape="rect" id="Node000001" title="Retrieves the device handle and information of the first device of the address family specified...." alt="" coords="1175,108,1336,133"/>
+<area shape="rect" id="Node000002" href="$db/db9/ssdp__device_8cpp.html#a71cabcefa14fea2869b65b9d2ba7712d" title="Handles the search request." alt="" coords="973,42,1127,82"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1196,107,1120,85,1121,80,1197,101"/>
+<area shape="rect" id="Node000007" href="$d4/d99/upnpapi_8cpp.html#a75a3c9f9180bc908e17d49c3e2218e99" title="Terminates the Linux SDK for UPnP Devices." alt="" coords="1003,136,1097,161"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="1161,136,1098,145,1098,140,1161,131"/>
+<area shape="rect" id="Node000003" href="$db/daf/namespaceanonymous__namespace_02ssdp__common_8cpp_03.html#a73ff71f907e2bf442c51b304f877d07a" title="This function is a thread that handles SSDP requests." alt="" coords="724,5,925,60"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="959,53,925,48,926,43,960,48"/>
+<area shape="rect" id="Node000004" href="$df/d13/ssdp__common_8cpp.html#af3e17308ebc31e7e81c476624487614c" title="This function reads the data from the ssdp socket." alt="" coords="515,20,676,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="710,35,676,35,676,30,710,30"/>
+<area shape="rect" id="Node000005" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a02379f09474a96b3590cadd8ca82ecf1" title="Read data from the SSDP socket." alt="" coords="253,13,467,53"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="501,35,467,35,467,30,501,30"/>
+<area shape="rect" id="Node000006" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a29857662f54c55aa7e6023b37b08af76" title="Run the miniserver." alt="" coords="5,5,205,60"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="240,35,206,35,206,30,240,30"/>
+<area shape="rect" id="Node000008" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="317,149,403,175"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="989,144,925,139,720,130,630,132,515,139,403,156,402,151,514,134,630,126,720,125,925,134,989,139"/>
+<area shape="rect" id="Node000009" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="526,149,665,175"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="989,153,665,163,665,157,989,148"/>
+<area shape="rect" id="Node000010" href="$d4/d99/upnpapi_8cpp.html#a679257c76bd4ebdd2aa3fa2bb470dadd" title="Finishes initializing the UPnP SDK." alt="" coords="517,224,674,249"/>
+<area shape="poly" id="edge10_Node000007_Node000010" title=" " alt="" coords="1025,172,981,202,926,227,861,242,794,249,730,250,674,247,674,242,730,244,794,243,860,236,924,222,978,198,1022,168"/>
+<area shape="rect" id="Node000011" href="$d4/d99/upnpapi_8cpp.html#aabf66e54504de499079a21f1d01b91ca" title="Initializes the global threadm pools used by the UPnP SDK." alt="" coords="746,187,903,212"/>
+<area shape="poly" id="edge12_Node000007_Node000011" title=" " alt="" coords="990,165,883,189,881,184,989,160"/>
+<area shape="poly" id="edge9_Node000009_Node000008" title=" " alt="" coords="512,165,403,165,403,159,512,159"/>
+<area shape="poly" id="edge11_Node000010_Node000008" title=" " alt="" coords="540,222,400,177,402,172,542,217"/>
+<area shape="poly" id="edge13_Node000011_Node000009" title=" " alt="" coords="732,187,665,176,665,171,733,182"/>
 </map>

@@ -1,19 +1,11 @@
 <map id="UpnpStateVarRequest_get_ServiceID" name="UpnpStateVarRequest_get_ServiceID">
-<area shape="rect" id="Node000001" title=" " alt="" coords="871,87,1035,127"/>
-<area shape="rect" id="Node000002" href="$d9/d09/tv__device_8cpp.html#a0b4724f1fe00b4e52d4c6009547062a7" title="Called during a get variable request callback." alt="" coords="596,5,823,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="903,83,822,46,778,33,780,28,824,41,905,78"/>
-<area shape="rect" id="Node000006" href="$d3/d7b/UpnpStateVarRequest_8cpp.html#a2c1d93efd2b737b04852debf2d3a4ccd" title=" " alt="" coords="627,55,791,95"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="857,97,791,89,792,83,858,92"/>
-<area shape="rect" id="Node000008" href="$d3/d7b/UpnpStateVarRequest_8cpp.html#ab1c2306abce770ee84046bbf217671a2" title=" " alt="" coords="627,119,791,159"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="858,122,792,131,791,126,857,117"/>
-<area shape="rect" id="Node000009" href="$d3/d7b/UpnpStateVarRequest_8cpp.html#aa63caed6f07c89fc603c608aee2d094e" title=" " alt="" coords="624,183,795,223"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="905,136,824,174,789,186,787,181,822,169,903,131"/>
-<area shape="rect" id="Node000003" href="$d9/d09/tv__device_8cpp.html#aed1cafead3fb83e9101a11c24b346a3b" title="The callback handler registered with the SDK while registering root device." alt="" coords="321,5,548,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="582,21,548,21,548,15,582,15"/>
-<area shape="rect" id="Node000004" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,5,273,31"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="308,21,274,21,274,15,308,15"/>
-<area shape="rect" id="Node000005" href="$d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,5,111,31"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="145,21,111,21,111,15,145,15"/>
-<area shape="rect" id="Node000007" href="$d3/d7b/UpnpStateVarRequest_8cpp.html#a3866a42a64ca574f4735248481d0c88b" title=" " alt="" coords="337,63,532,88"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="614,78,532,78,532,73,614,73"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="467,69,631,109"/>
+<area shape="rect" id="Node000002" href="$d3/d7b/UpnpStateVarRequest_8cpp.html#a2c1d93efd2b737b04852debf2d3a4ccd" title=" " alt="" coords="251,5,415,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="467,68,400,48,402,43,468,63"/>
+<area shape="rect" id="Node000004" href="$d3/d7b/UpnpStateVarRequest_8cpp.html#ab1c2306abce770ee84046bbf217671a2" title=" " alt="" coords="251,69,415,109"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="453,92,415,92,415,87,453,87"/>
+<area shape="rect" id="Node000005" href="$d3/d7b/UpnpStateVarRequest_8cpp.html#aa63caed6f07c89fc603c608aee2d094e" title=" " alt="" coords="248,133,419,173"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="468,116,402,136,400,131,467,111"/>
+<area shape="rect" id="Node000003" href="$d3/d7b/UpnpStateVarRequest_8cpp.html#a3866a42a64ca574f4735248481d0c88b" title=" " alt="" coords="5,13,200,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="237,28,200,28,200,23,237,23"/>
 </map>

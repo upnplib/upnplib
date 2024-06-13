@@ -1,18 +1,14 @@
 <map id="anonymous_namespace{soap_device::cpp}::namecopy" name="anonymous_namespace{soap_device::cpp}::namecopy">
-<area shape="rect" id="Node000001" title="Copy string with length NAME_SIZE and terminate with &#39;\0&#39;." alt="" coords="1081,45,1261,100"/>
-<area shape="rect" id="Node000002" href="$d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#a861d745204c74350296327193bf1d2e5" title="Check header validity, get action name and version of service." alt="" coords="853,5,1033,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1067,57,1033,51,1034,46,1068,52"/>
-<area shape="rect" id="Node000008" href="$d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#a0b921cd63c6bb6bffb975e00b1073df8" title="Retrieve SOAP device/service information associated with request&#45;URI." alt="" coords="853,84,1033,139"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="1068,93,1034,99,1033,93,1067,88"/>
-<area shape="rect" id="Node000003" href="$d6/d92/soap__device_8cpp.html#a4b5104845d73b836d6365a306fba1679" title="This is a callback called by minisever." alt="" coords="641,60,805,85"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="840,54,794,63,793,57,839,49"/>
-<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="455,60,593,85"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="627,75,594,75,594,70,627,70"/>
-<area shape="rect" id="Node000005" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="321,60,407,85"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="441,75,407,75,407,70,441,70"/>
-<area shape="rect" id="Node000006" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,60,273,85"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="307,75,274,75,274,70,307,70"/>
-<area shape="rect" id="Node000007" href="$d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,60,111,85"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="145,75,111,75,111,70,145,70"/>
-<area shape="poly" id="edge8_Node000008_Node000003" title=" " alt="" coords="839,96,795,88,796,83,840,90"/>
+<area shape="rect" id="Node000001" title="Copy string with length NAME_SIZE and terminate with &#39;\0&#39;." alt="" coords="765,45,945,100"/>
+<area shape="rect" id="Node000002" href="$d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#a861d745204c74350296327193bf1d2e5" title="Check header validity, get action name and version of service." alt="" coords="537,5,717,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="751,57,717,51,718,46,752,52"/>
+<area shape="rect" id="Node000006" href="$d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#a0b921cd63c6bb6bffb975e00b1073df8" title="Retrieve SOAP device/service information associated with request&#45;URI." alt="" coords="537,84,717,139"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="752,93,718,99,717,93,751,88"/>
+<area shape="rect" id="Node000003" href="$d6/d92/soap__device_8cpp.html#a4b5104845d73b836d6365a306fba1679" title="This is a callback called by minisever." alt="" coords="325,60,489,85"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="524,54,478,63,477,57,523,49"/>
+<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="139,60,277,85"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="311,75,278,75,278,70,311,70"/>
+<area shape="rect" id="Node000005" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="5,60,91,85"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="125,75,91,75,91,70,125,70"/>
+<area shape="poly" id="edge6_Node000006_Node000003" title=" " alt="" coords="523,96,479,88,480,83,524,90"/>
 </map>

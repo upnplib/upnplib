@@ -234,7 +234,8 @@ ss</td>
 <div class="fragment"><div class="line"><span class="comment">// Usage e.g.:</span></div>
 <div class="line"><span class="keywordflow">if</span> (<a class="code hl_function" href="../../d0/dd8/group__upnplib-addrmodul.html#ga8f3bd5579e056ae4b668789de4ef12b3">is_netaddr</a>(<span class="stringliteral">&quot;[2001:db8::1]&quot;</span>) != AF_UNSPEC) { manage_given_netaddress(); }</div>
 <div class="line"><span class="keywordflow">if</span> (<a class="code hl_function" href="../../d0/dd8/group__upnplib-addrmodul.html#ga8f3bd5579e056ae4b668789de4ef12b3">is_netaddr</a>(<span class="stringliteral">&quot;[2001:db8::1]&quot;</span>, AF_INET) == AF_INET) { <span class="comment">// nothing to do }</span></div>
-<div class="ttc" id="agroup__upnplib-addrmodul_html_ga8f3bd5579e056ae4b668789de4ef12b3"><div class="ttname"><a href="../../d0/dd8/group__upnplib-addrmodul.html#ga8f3bd5579e056ae4b668789de4ef12b3">upnplib::is_netaddr</a></div><div class="ttdeci">sa_family_t is_netaddr(const std::string &amp;a_node, const int a_addr_family=AF_UNSPEC) noexcept</div><div class="ttdoc">Check for a netaddress and return its address family.</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dd7/netaddr_8cpp_source.html#l00021">netaddr.cpp:21</a></div></div>
+<div class="line"><span class="keywordflow">if</span> (<a class="code hl_function" href="../../d0/dd8/group__upnplib-addrmodul.html#ga8f3bd5579e056ae4b668789de4ef12b3">is_netaddr</a>(<span class="stringliteral">&quot;[fe80::1%2]&quot;</span>) == AF_INET6) { manage_link_local_addr(); }</div>
+<div class="ttc" id="agroup__upnplib-addrmodul_html_ga8f3bd5579e056ae4b668789de4ef12b3"><div class="ttname"><a href="../../d0/dd8/group__upnplib-addrmodul.html#ga8f3bd5579e056ae4b668789de4ef12b3">upnplib::is_netaddr</a></div><div class="ttdeci">sa_family_t is_netaddr(const std::string &amp;a_node, const int a_addr_family=AF_UNSPEC) noexcept</div><div class="ttdoc">Check for a netaddress and return its address family.</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dd7/netaddr_8cpp_source.html#l00022">netaddr.cpp:22</a></div></div>
 </div><!-- fragment --><p>Checks if a string is a netaddress without port and returns its address family.</p>
 <dl class="section return"><dt>Returns</dt><dd>On success: Address family AF_INET6 or AF_INET the address belongs to<br  />
  On error: AF_UNSPEC, the address is alphanumeric (maybe a DNS name?) </dd></dl>
@@ -246,47 +247,31 @@ ss</td>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d5/dd7/netaddr_8cpp_source.html#l00021">21</a> of file <a class="el" href="../../d5/dd7/netaddr_8cpp_source.html">netaddr.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d5/dd7/netaddr_8cpp_source.html#l00022">22</a> of file <a class="el" href="../../d5/dd7/netaddr_8cpp_source.html">netaddr.cpp</a>.</p>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
+  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><img src="../../d0/dd8/group__upnplib-addrmodul_ga8f3bd5579e056ae4b668789de4ef12b3_cgraph.png" border="0" usemap="#ad0/dd8/group__upnplib-addrmodul_ga8f3bd5579e056ae4b668789de4ef12b3_cgraph" alt=""/></div>
-<map name="ad0/dd8/group__upnplib-addrmodul_ga8f3bd5579e056ae4b668789de4ef12b3_cgraph" id="ad0/dd8/group__upnplib-addrmodul_ga8f3bd5579e056ae4b668789de4ef12b3_cgraph">
-<area shape="rect" title="Check for a netaddress and return its address family." alt="" coords="5,29,152,55"/>
-<area shape="poly" title=" " alt="" coords="54,31,49,21,51,11,62,5,79,3,99,6,108,15,104,18,96,11,79,8,63,10,56,15,54,20,58,28"/>
-</map>
-</div>
-<div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-1-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-1-summary" class="dynsummary" style="display:block;">
-</div>
-<div id="dynsection-1-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d0/dd8/group__upnplib-addrmodul_ga8f3bd5579e056ae4b668789de4ef12b3_icgraph.png" border="0" usemap="#ad0/dd8/group__upnplib-addrmodul_ga8f3bd5579e056ae4b668789de4ef12b3_icgraph" alt=""/></div>
 <map name="ad0/dd8/group__upnplib-addrmodul_ga8f3bd5579e056ae4b668789de4ef12b3_icgraph" id="ad0/dd8/group__upnplib-addrmodul_ga8f3bd5579e056ae4b668789de4ef12b3_icgraph">
-<area shape="rect" title="Check for a netaddress and return its address family." alt="" coords="1525,77,1672,102"/>
-<area shape="poly" title=" " alt="" coords="1638,67,1627,59,1599,55,1575,57,1562,62,1560,68,1567,75,1563,78,1555,68,1559,58,1574,52,1599,50,1629,54,1642,63"/>
-<area shape="rect" href="../../da/dad/classupnplib_1_1CAddrinfo.html#ac2170a23c93c9c0a5ea5ae9fba38151b" title="Constructor for getting an address information with service name." alt="" coords="1304,5,1447,45"/>
-<area shape="poly" title=" " alt="" coords="1539,75,1445,48,1447,43,1541,70"/>
-<area shape="rect" href="../../da/dad/classupnplib_1_1CAddrinfo.html#a307094d37736d609bde57f810f7b8ba5" title="Initialize address information that is returned from the operating system." alt="" coords="1304,69,1447,109"/>
-<area shape="poly" title=" " alt="" coords="1511,92,1447,92,1447,87,1511,87"/>
-<area shape="rect" href="../../d8/d44/classupnplib_1_1Netaddr.html#a708035c6099832d99f9b81025a962fd7" title="Assign a netaddress." alt="" coords="1273,134,1477,159"/>
-<area shape="poly" title=" " alt="" coords="1537,108,1478,124,1429,137,1427,131,1477,119,1536,103"/>
-<area shape="rect" href="../../d8/d73/classupnplib_1_1CSocket.html#a7548ff82d122192ae5ee7855b7dec846" title="Bind socket to a local interface address." alt="" coords="1059,77,1225,102"/>
-<area shape="poly" title=" " alt="" coords="1290,92,1226,92,1226,87,1290,87"/>
-<area shape="rect" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a7edcadd0e5ba55588d4794730343772e" title="Create STREAM sockets, binds to local network interfaces and listens for incoming connections." alt="" coords="831,62,1011,117"/>
-<area shape="poly" title=" " alt="" coords="1045,92,1011,92,1011,87,1045,87"/>
-<area shape="rect" href="../../d5/db2/miniserver_8cpp.html#a85c0b17d965bdb9430a9ce2e6931770a" title="Initialize the sockets functionality for the Miniserver." alt="" coords="660,77,783,102"/>
-<area shape="poly" title=" " alt="" coords="817,92,783,92,783,87,817,87"/>
-<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a679257c76bd4ebdd2aa3fa2bb470dadd" title="Finishes initializing the UPnP SDK." alt="" coords="455,77,612,102"/>
-<area shape="poly" title=" " alt="" coords="646,92,612,92,612,87,646,87"/>
-<area shape="rect" href="../../d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="321,77,407,102"/>
-<area shape="poly" title=" " alt="" coords="441,92,407,92,407,87,441,87"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,77,273,102"/>
-<area shape="poly" title=" " alt="" coords="307,92,274,92,274,87,307,87"/>
-<area shape="rect" href="../../d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,77,111,102"/>
-<area shape="poly" title=" " alt="" coords="145,92,111,92,111,87,145,87"/>
+<area shape="rect" title="Check for a netaddress and return its address family." alt="" coords="1209,77,1356,102"/>
+<area shape="rect" href="../../da/dad/classupnplib_1_1CAddrinfo.html#ac2170a23c93c9c0a5ea5ae9fba38151b" title="Constructor for getting an address information with service name." alt="" coords="988,5,1131,45"/>
+<area shape="poly" title=" " alt="" coords="1223,75,1129,48,1131,43,1225,70"/>
+<area shape="rect" href="../../da/dad/classupnplib_1_1CAddrinfo.html#a307094d37736d609bde57f810f7b8ba5" title="Initialize address information that is returned from the operating system." alt="" coords="988,69,1131,109"/>
+<area shape="poly" title=" " alt="" coords="1195,92,1131,92,1131,87,1195,87"/>
+<area shape="rect" href="../../d8/d44/classupnplib_1_1Netaddr.html#a708035c6099832d99f9b81025a962fd7" title="Assign a netaddress." alt="" coords="957,134,1161,159"/>
+<area shape="poly" title=" " alt="" coords="1221,108,1162,124,1113,137,1111,131,1161,119,1220,103"/>
+<area shape="rect" href="../../d8/d73/classupnplib_1_1CSocket.html#a7548ff82d122192ae5ee7855b7dec846" title="Bind socket to a local interface address." alt="" coords="743,77,909,102"/>
+<area shape="poly" title=" " alt="" coords="974,92,910,92,910,87,974,87"/>
+<area shape="rect" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a7edcadd0e5ba55588d4794730343772e" title="Create STREAM sockets, binds to local network interfaces and listens for incoming connections." alt="" coords="515,62,695,117"/>
+<area shape="poly" title=" " alt="" coords="729,92,695,92,695,87,729,87"/>
+<area shape="rect" href="../../d5/db2/miniserver_8cpp.html#a85c0b17d965bdb9430a9ce2e6931770a" title="Initialize the sockets functionality for the Miniserver." alt="" coords="344,77,467,102"/>
+<area shape="poly" title=" " alt="" coords="501,92,467,92,467,87,501,87"/>
+<area shape="rect" href="../../d4/d99/upnpapi_8cpp.html#a679257c76bd4ebdd2aa3fa2bb470dadd" title="Finishes initializing the UPnP SDK." alt="" coords="139,77,296,102"/>
+<area shape="poly" title=" " alt="" coords="330,92,296,92,296,87,330,87"/>
+<area shape="rect" href="../../d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="5,77,91,102"/>
+<area shape="poly" title=" " alt="" coords="125,92,91,92,91,87,125,87"/>
 </map>
 </div>
 
@@ -319,17 +304,17 @@ ss</td>
 <p>Check if a given string represents a port number. </p>
 <div class="fragment"><div class="line"><span class="comment">// Usage e.g.:</span></div>
 <div class="line"><span class="keywordflow">if</span> (<a class="code hl_function" href="../../d0/dd8/group__upnplib-addrmodul.html#ga94539c3b024819362409a8421756bc58">is_port</a>(<span class="stringliteral">&quot;55555&quot;</span>) { manage_given_port(); }</div>
-<div class="ttc" id="agroup__upnplib-addrmodul_html_ga94539c3b024819362409a8421756bc58"><div class="ttname"><a href="../../d0/dd8/group__upnplib-addrmodul.html#ga94539c3b024819362409a8421756bc58">upnplib::is_port</a></div><div class="ttdeci">bool is_port(const std::string &amp;a_port_str) noexcept</div><div class="ttdoc">Check if a given string represents a port number.</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dd7/netaddr_8cpp_source.html#l00064">netaddr.cpp:64</a></div></div>
+<div class="ttc" id="agroup__upnplib-addrmodul_html_ga94539c3b024819362409a8421756bc58"><div class="ttname"><a href="../../d0/dd8/group__upnplib-addrmodul.html#ga94539c3b024819362409a8421756bc58">upnplib::is_port</a></div><div class="ttdeci">bool is_port(const std::string &amp;a_port_str) noexcept</div><div class="ttdoc">Check if a given string represents a port number.</div><div class="ttdef"><b>Definition</b> <a href="../../d5/dd7/netaddr_8cpp_source.html#l00087">netaddr.cpp:87</a></div></div>
 </div><!-- fragment --><p>Checks if the given string represents a numeric value between 0 and 65535. That also means that an empty port string "" returns false.</p>
 <dl class="section return"><dt>Returns</dt><dd><b>true</b> if string represents a port number 0..65535<br  />
  <b>false</b> otherwise, inclusive if having an empty port string "" </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d5/dd7/netaddr_8cpp_source.html#l00064">64</a> of file <a class="el" href="../../d5/dd7/netaddr_8cpp_source.html">netaddr.cpp</a>.</p>
-<div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-2-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-2-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="../../d5/dd7/netaddr_8cpp_source.html#l00087">87</a> of file <a class="el" href="../../d5/dd7/netaddr_8cpp_source.html">netaddr.cpp</a>.</p>
+<div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-1-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-1-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-2-content" class="dyncontent" style="display:none;">
+<div id="dynsection-1-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d0/dd8/group__upnplib-addrmodul_ga94539c3b024819362409a8421756bc58_icgraph.png" border="0" usemap="#ad0/dd8/group__upnplib-addrmodul_ga94539c3b024819362409a8421756bc58_icgraph" alt=""/></div>
 <map name="ad0/dd8/group__upnplib-addrmodul_ga94539c3b024819362409a8421756bc58_icgraph" id="ad0/dd8/group__upnplib-addrmodul_ga94539c3b024819362409a8421756bc58_icgraph">
 <area shape="rect" title="Check if a given string represents a port number." alt="" coords="257,49,380,75"/>
@@ -383,22 +368,22 @@ ss</td>
  <b>false</b> otherwise </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00109">109</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
-<div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-3-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-3-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-2-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-2-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-3-content" class="dyncontent" style="display:none;">
+<div id="dynsection-2-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d0/dd8/group__upnplib-addrmodul_ga4e7da7df74d9c304cc3c8661f7313e6e_cgraph.png" border="0" usemap="#ad0/dd8/group__upnplib-addrmodul_ga4e7da7df74d9c304cc3c8661f7313e6e_cgraph" alt=""/></div>
 <map name="ad0/dd8/group__upnplib-addrmodul_ga4e7da7df74d9c304cc3c8661f7313e6e_cgraph" id="ad0/dd8/group__upnplib-addrmodul_ga4e7da7df74d9c304cc3c8661f7313e6e_cgraph">
 <area shape="rect" title="logical compare two sockaddr structures" alt="" coords="5,29,176,84"/>
 <area shape="poly" title=" " alt="" coords="57,29,57,19,63,10,74,5,91,3,110,6,121,13,118,18,108,11,91,8,76,10,66,15,62,21,62,29"/>
 </map>
 </div>
-<div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-4-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-4-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-3-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-3-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-4-content" class="dyncontent" style="display:none;">
+<div id="dynsection-3-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d0/dd8/group__upnplib-addrmodul_ga4e7da7df74d9c304cc3c8661f7313e6e_icgraph.png" border="0" usemap="#ad0/dd8/group__upnplib-addrmodul_ga4e7da7df74d9c304cc3c8661f7313e6e_icgraph" alt=""/></div>
 <map name="ad0/dd8/group__upnplib-addrmodul_ga4e7da7df74d9c304cc3c8661f7313e6e_icgraph" id="ad0/dd8/group__upnplib-addrmodul_ga4e7da7df74d9c304cc3c8661f7313e6e_icgraph">
 <area shape="rect" title="logical compare two sockaddr structures" alt="" coords="5,29,176,84"/>
@@ -439,22 +424,22 @@ ss</td>
 <div class="ttc" id="agroup__upnplib-addrmodul_html_ga4bd3c5a8241ac74e3a45595123ad81e8"><div class="ttname"><a href="../../d0/dd8/group__upnplib-addrmodul.html#ga4bd3c5a8241ac74e3a45595123ad81e8">upnplib::anonymous_namespace{sockaddr.cpp}::to_netaddr</a></div><div class="ttdeci">std::string to_netaddr(const ::sockaddr_storage *const a_sockaddr) noexcept</div><div class="ttdoc">Get the netaddress without port from a sockaddr structure.</div><div class="ttdef"><b>Definition</b> <a href="../../d7/def/sockaddr_8cpp_source.html#l00029">sockaddr.cpp:29</a></div></div>
 </div><!-- fragment --> 
 <p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00029">29</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
-<div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-5-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-5-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-4-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-4-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-5-content" class="dyncontent" style="display:none;">
+<div id="dynsection-4-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d0/dd8/group__upnplib-addrmodul_ga4bd3c5a8241ac74e3a45595123ad81e8_cgraph.png" border="0" usemap="#ad0/dd8/group__upnplib-addrmodul_ga4bd3c5a8241ac74e3a45595123ad81e8_cgraph" alt=""/></div>
 <map name="ad0/dd8/group__upnplib-addrmodul_ga4bd3c5a8241ac74e3a45595123ad81e8_cgraph" id="ad0/dd8/group__upnplib-addrmodul_ga4bd3c5a8241ac74e3a45595123ad81e8_cgraph">
 <area shape="rect" title="Get the netaddress without port from a sockaddr structure." alt="" coords="5,29,176,84"/>
 <area shape="poly" title=" " alt="" coords="57,29,57,19,63,10,74,5,91,3,110,6,121,13,118,18,108,11,91,8,76,10,66,15,62,21,62,29"/>
 </map>
 </div>
-<div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-6-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-6-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-5-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-5-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-6-content" class="dyncontent" style="display:none;">
+<div id="dynsection-5-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d0/dd8/group__upnplib-addrmodul_ga4bd3c5a8241ac74e3a45595123ad81e8_icgraph.png" border="0" usemap="#ad0/dd8/group__upnplib-addrmodul_ga4bd3c5a8241ac74e3a45595123ad81e8_icgraph" alt=""/></div>
 <map name="ad0/dd8/group__upnplib-addrmodul_ga4bd3c5a8241ac74e3a45595123ad81e8_icgraph" id="ad0/dd8/group__upnplib-addrmodul_ga4bd3c5a8241ac74e3a45595123ad81e8_icgraph">
 <area shape="rect" title="Get the netaddress without port from a sockaddr structure." alt="" coords="5,29,176,84"/>
@@ -495,11 +480,11 @@ ss</td>
 <div class="ttc" id="agroup__upnplib-addrmodul_html_gafd74ac6303ebfad050c64d52458125a8"><div class="ttname"><a href="../../d0/dd8/group__upnplib-addrmodul.html#gafd74ac6303ebfad050c64d52458125a8">upnplib::to_netaddrp</a></div><div class="ttdeci">UPNPLIB_API std::string to_netaddrp(const ::sockaddr_storage *const a_sockaddr) noexcept</div><div class="ttdoc">Get the netaddress with port from a sockaddr structure.</div><div class="ttdef"><b>Definition</b> <a href="../../d7/def/sockaddr_8cpp_source.html#l00163">sockaddr.cpp:163</a></div></div>
 </div><!-- fragment --> 
 <p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00163">163</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
-<div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-7-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-7-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-6-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-6-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-7-content" class="dyncontent" style="display:none;">
+<div id="dynsection-6-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d0/dd8/group__upnplib-addrmodul_gafd74ac6303ebfad050c64d52458125a8_icgraph.png" border="0" usemap="#ad0/dd8/group__upnplib-addrmodul_gafd74ac6303ebfad050c64d52458125a8_icgraph" alt=""/></div>
 <map name="ad0/dd8/group__upnplib-addrmodul_gafd74ac6303ebfad050c64d52458125a8_icgraph" id="ad0/dd8/group__upnplib-addrmodul_gafd74ac6303ebfad050c64d52458125a8_icgraph">
 <area shape="rect" title="Get the netaddress with port from a sockaddr structure." alt="" coords="1911,223,2067,248"/>
@@ -652,11 +637,11 @@ ss</td>
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00081">81</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
-<div id="dynsection-8" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-8-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-8-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-7-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-7-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-8-content" class="dyncontent" style="display:none;">
+<div id="dynsection-7-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d0/dd8/group__upnplib-addrmodul_gae717eb4b8c4749ec70fcf88294e826ee_cgraph.png" border="0" usemap="#ad0/dd8/group__upnplib-addrmodul_gae717eb4b8c4749ec70fcf88294e826ee_cgraph" alt=""/></div>
 <map name="ad0/dd8/group__upnplib-addrmodul_gae717eb4b8c4749ec70fcf88294e826ee_cgraph" id="ad0/dd8/group__upnplib-addrmodul_gae717eb4b8c4749ec70fcf88294e826ee_cgraph">
 <area shape="rect" title="Get the port number from a string." alt="" coords="5,29,176,84"/>
@@ -665,11 +650,11 @@ ss</td>
 <area shape="poly" title=" " alt="" coords="176,54,210,54,210,59,176,59"/>
 </map>
 </div>
-<div id="dynsection-9" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-9-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-9-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-8" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-8-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-8-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-9-content" class="dyncontent" style="display:none;">
+<div id="dynsection-8-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d0/dd8/group__upnplib-addrmodul_gae717eb4b8c4749ec70fcf88294e826ee_icgraph.png" border="0" usemap="#ad0/dd8/group__upnplib-addrmodul_gae717eb4b8c4749ec70fcf88294e826ee_icgraph" alt=""/></div>
 <map name="ad0/dd8/group__upnplib-addrmodul_gae717eb4b8c4749ec70fcf88294e826ee_icgraph" id="ad0/dd8/group__upnplib-addrmodul_gae717eb4b8c4749ec70fcf88294e826ee_icgraph">
 <area shape="rect" title="Get the port number from a string." alt="" coords="5,29,176,84"/>

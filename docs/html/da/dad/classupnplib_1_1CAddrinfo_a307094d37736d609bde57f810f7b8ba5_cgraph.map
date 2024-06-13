@@ -1,8 +1,7 @@
 <map id="upnplib::CAddrinfo::init" name="upnplib::CAddrinfo::init">
-<area shape="rect" id="Node000001" title="Initialize address information that is returned from the operating system." alt="" coords="5,47,148,87"/>
-<area shape="rect" id="Node000002" href="$d0/dd8/group__upnplib-addrmodul.html#ga8f3bd5579e056ae4b668789de4ef12b3" title="Check for a netaddress and return its address family." alt="" coords="201,29,347,55"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,56,187,50,187,56,149,61"/>
-<area shape="rect" id="Node000003" href="$d0/dd8/group__upnplib-addrmodul.html#gafd74ac6303ebfad050c64d52458125a8" title="Get the netaddress with port from a sockaddr structure." alt="" coords="196,79,352,104"/>
-<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="149,73,183,78,182,83,148,79"/>
-<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="241,31,235,21,238,11,252,5,274,3,301,6,312,15,309,19,299,11,274,8,253,10,242,15,240,20,246,28"/>
+<area shape="rect" id="Node000001" title="Initialize address information that is returned from the operating system." alt="" coords="5,23,148,63"/>
+<area shape="rect" id="Node000002" href="$d0/dd8/group__upnplib-addrmodul.html#ga8f3bd5579e056ae4b668789de4ef12b3" title="Check for a netaddress and return its address family." alt="" coords="201,5,347,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,32,187,26,187,32,149,37"/>
+<area shape="rect" id="Node000003" href="$d0/dd8/group__upnplib-addrmodul.html#gafd74ac6303ebfad050c64d52458125a8" title="Get the netaddress with port from a sockaddr structure." alt="" coords="196,55,352,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="149,49,183,54,182,59,148,55"/>
 </map>

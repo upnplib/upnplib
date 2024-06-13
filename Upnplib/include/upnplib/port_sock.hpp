@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_PORT_SOCK_HPP
 #define UPNPLIB_INCLUDE_PORT_SOCK_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-25
+// Redistribution only with this Copyright remark. Last modified: 2024-06-14
 /*!
  * \file
  * \brief Specifications to be portable with sockets between different
@@ -68,6 +68,14 @@
 // without error missing this macro.
 #ifndef MSG_NOSIGNAL
 #define MSG_NOSIGNAL 0
+#endif
+
+// On MS Windows there is 'int' used instead of 'sa_family_t' (unsigned short
+// int) for some variable. To be portable I simply use
+// 'static_cast<sa_family_t>(var)'. This is a compile time guard that the
+// smaler boundaries of 'sa_family_t' are not violated.
+#if (AF_UNSPEC < 0) || (AF_UNSPEC > 65535) || (AF_INET6 < 0) || (AF_INET6 > 65535) || (AF_INET < 0) || (AF_INET > 65535)
+  #error "Constant AF_UNSPEC, or AF_INET6, or AF_INET is negative or bigger than 65535."
 #endif
 
 // clang-format on

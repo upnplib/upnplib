@@ -83,7 +83,6 @@ var annotated_dup =
     [ "TimerThread", "d0/d87/TimerThread_8hpp.html#d0/d2a/structTimerThread", "d0/d87/TimerThread_8hpp_d0/d2a/structTimerThread" ],
     [ "timezone", "d5/d91/ThreadPool_8hpp.html#de/dc1/structtimezone", "d5/d91/ThreadPool_8hpp_de/dc1/structtimezone" ],
     [ "token", "de/dd0/Compa_2src_2inc_2uri_8hpp.html#d4/df4/structtoken", "de/dd0/Compa_2src_2inc_2uri_8hpp_d4/df4/structtoken" ],
-    [ "TvService", "d0/daf/tv__device_8hpp.html#d4/db0/structTvService", "d0/daf/tv__device_8hpp_d4/db0/structTvService" ],
     [ "UpnpListHead", "dc/d1d/list_8hpp.html#d0/d92/structUpnpListHead", "dc/d1d/list_8hpp_d0/d92/structUpnpListHead" ],
     [ "UpnpNonblockParam", "d3/da9/upnpapi_8hpp.html#d8/db0/structUpnpNonblockParam", "d3/da9/upnpapi_8hpp_d8/db0/structUpnpNonblockParam" ],
     [ "uri_type", "de/dd0/Compa_2src_2inc_2uri_8hpp.html#d4/d48/structuri__type", "de/dd0/Compa_2src_2inc_2uri_8hpp_d4/d48/structuri__type" ],

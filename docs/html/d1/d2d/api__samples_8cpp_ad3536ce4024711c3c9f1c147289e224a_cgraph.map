@@ -1,7 +1,0 @@
-<map id="sample001" name="sample001">
-<area shape="rect" id="Node000001" title="Initialize OpenSSL context." alt="" coords="5,31,100,56"/>
-<area shape="rect" id="Node000002" href="$d5/d78/sock_8cpp.html#aa1c16c9b2701dab6728c2b7e2efacf7b" title="Free the OpenSSL context." alt="" coords="177,5,266,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,34,162,24,163,29,101,39"/>
-<area shape="rect" id="Node000003" href="$d5/d78/sock_8cpp.html#a9ae7d3022dfbe93f3c955c1a9a86461d" title="Initializes the OpenSSL library, and the OpenSSL context." alt="" coords="148,55,295,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="101,47,135,52,134,58,100,53"/>
-</map>

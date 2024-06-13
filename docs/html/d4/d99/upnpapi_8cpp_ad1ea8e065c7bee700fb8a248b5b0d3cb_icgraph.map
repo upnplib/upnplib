@@ -1,15 +1,11 @@
 <map id="free_advertise_arg" name="free_advertise_arg">
-<area shape="rect" id="Node000001" title="Free memory associated with advertise job&#39;s argument." alt="" coords="975,38,1119,63"/>
-<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#abb1ab3d0ba145286005284d447110fce" title="This function is a timer thread scheduled by UpnpSendAdvertisement to the send advetisement again." alt="" coords="812,63,927,89"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="961,66,928,70,927,65,961,60"/>
-<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a35b8096fd45fc632c6ac12a835d67f53" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="553,5,764,45"/>
-<area shape="poly" id="edge7_Node000001_Node000003" title=" " alt="" coords="961,48,764,35,764,30,961,42"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="801,63,742,48,743,43,803,57"/>
-<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a9e7f15fd415e463b3c4f4c873ed56114" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="321,42,505,67"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="540,42,506,46,505,41,539,37"/>
-<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="519,57,812,71,812,76,519,62"/>
-<area shape="rect" id="Node000005" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,42,273,67"/>
-<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="307,57,273,57,273,52,307,52"/>
-<area shape="rect" id="Node000006" href="$d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,42,111,67"/>
-<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="145,57,111,57,111,52,145,52"/>
+<area shape="rect" id="Node000001" title="Free memory associated with advertise job&#39;s argument." alt="" coords="659,38,803,63"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#abb1ab3d0ba145286005284d447110fce" title="This function is a timer thread scheduled by UpnpSendAdvertisement to the send advetisement again." alt="" coords="496,63,611,89"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="645,66,612,70,611,65,645,60"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a35b8096fd45fc632c6ac12a835d67f53" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="237,5,448,45"/>
+<area shape="poly" id="edge5_Node000001_Node000003" title=" " alt="" coords="645,48,448,35,448,30,645,42"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="485,63,426,48,427,43,487,57"/>
+<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a9e7f15fd415e463b3c4f4c873ed56114" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="5,42,189,67"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="224,42,190,46,189,41,223,37"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="203,57,496,71,496,76,203,62"/>
 </map>

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-30
+// Redistribution only with this Copyright remark. Last modified: 2024-06-16
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -1025,7 +1025,10 @@ TEST(StartMiniServerTestSuite, get_miniserver_sockets_with_invalid_ip_address) {
     EXPECT_EQ(CLOSE_SOCKET_P(miniSocket.miniServerSock4), -1);
 }
 
-#ifdef _MSC_VER
+#if 0
+// Winsock is general initialized in socket.hpp now so it is always available
+// and this test is obsolete.
+// #ifdef _MSC_VER
 TEST(StartMiniServerTestSuite, get_miniserver_sockets_uninitialized) {
     // MS Windows sockets are not initialized. Don't use WINSOCK_INIT. Unit
     // should never return a valid socket and/or port.

@@ -95,7 +95,7 @@ void CAddrinfo::init() {
     // Temporary working copies: modified node and hints to use for syscall
     // ::getaddrinfo().
     std::string node;
-    addrinfo hints = m_hints;
+    ::addrinfo hints = m_hints;
 
     if (is_netaddr(m_node, AF_INET6) == AF_INET6) {
         // Here we have only ipv6 node strings representing a numeric ip
@@ -115,7 +115,7 @@ void CAddrinfo::init() {
     const char* c_node = node.empty() ? nullptr : node.c_str();
     std::string node_out = node.empty() ? "nullptr" : "\"" + node + "\"";
 
-    addrinfo* new_res{nullptr};
+    ::addrinfo* new_res{nullptr};
 
     // syscall ::getaddrinfo() with prepared arguments
     // -----------------------------------------------

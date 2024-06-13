@@ -8,6 +8,5 @@ var searchData=
   ['timerevent_5',['TimerEvent',['../da/d04/namespaceanonymous__namespace_02TimerThread_8cpp_03.html#d8/d38/structanonymous__namespace_02TimerThread_8cpp_03_1_1TimerEvent',1,'anonymous_namespace{TimerThread.cpp}']]],
   ['timerthread_6',['TimerThread',['../d0/d87/TimerThread_8hpp.html#d0/d2a/structTimerThread',1,'']]],
   ['timezone_7',['timezone',['../d5/d91/ThreadPool_8hpp.html#de/dc1/structtimezone',1,'']]],
-  ['token_8',['token',['../de/dd0/Compa_2src_2inc_2uri_8hpp.html#d4/df4/structtoken',1,'']]],
-  ['tvservice_9',['TvService',['../d0/daf/tv__device_8hpp.html#d4/db0/structTvService',1,'']]]
+  ['token_8',['token',['../de/dd0/Compa_2src_2inc_2uri_8hpp.html#d4/df4/structtoken',1,'']]]
 ];

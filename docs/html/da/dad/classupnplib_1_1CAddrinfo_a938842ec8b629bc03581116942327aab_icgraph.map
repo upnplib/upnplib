@@ -1,18 +1,14 @@
 <map id="upnplib::CAddrinfo::netaddr" name="upnplib::CAddrinfo::netaddr">
-<area shape="rect" id="Node000001" title="Get the assosiated netaddress." alt="" coords="1273,29,1416,69"/>
-<area shape="poly" id="edge8_Node000001_Node000001" title=" " alt="" coords="1379,18,1367,11,1345,8,1325,10,1314,15,1309,21,1312,28,1306,30,1304,20,1310,11,1324,5,1345,3,1368,6,1381,13"/>
-<area shape="rect" id="Node000002" href="$d8/d73/classupnplib_1_1CSocket.html#a7548ff82d122192ae5ee7855b7dec846" title="Bind socket to a local interface address." alt="" coords="1059,37,1225,62"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1259,52,1226,52,1226,47,1259,47"/>
-<area shape="rect" id="Node000003" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a7edcadd0e5ba55588d4794730343772e" title="Create STREAM sockets, binds to local network interfaces and listens for incoming connections." alt="" coords="831,22,1011,77"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1045,52,1011,52,1011,47,1045,47"/>
-<area shape="rect" id="Node000004" href="$d5/db2/miniserver_8cpp.html#a85c0b17d965bdb9430a9ce2e6931770a" title="Initialize the sockets functionality for the Miniserver." alt="" coords="660,37,783,62"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="817,52,783,52,783,47,817,47"/>
-<area shape="rect" id="Node000005" href="$d4/d99/upnpapi_8cpp.html#a679257c76bd4ebdd2aa3fa2bb470dadd" title="Finishes initializing the UPnP SDK." alt="" coords="455,37,612,62"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="646,52,612,52,612,47,646,47"/>
-<area shape="rect" id="Node000006" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="321,37,407,62"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="441,52,407,52,407,47,441,47"/>
-<area shape="rect" id="Node000007" href="$d9/d09/tv__device_8cpp.html#a3c0e03102826b6b41c6146d18619aa25" title="Initializes the UPnP SDK, registers the root&#45;device, and sends out advertisements." alt="" coords="159,37,273,62"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="307,52,274,52,274,47,307,47"/>
-<area shape="rect" id="Node000008" href="$d9/d09/tv__device_8cpp.html#ad0dc5c3600aa2ebd4ffdc90e741607e7" title="Main entry point for tv device application." alt="" coords="5,37,111,62"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="145,52,111,52,111,47,145,47"/>
+<area shape="rect" id="Node000001" title="Get the assosiated netaddress." alt="" coords="957,29,1100,69"/>
+<area shape="poly" id="edge6_Node000001_Node000001" title=" " alt="" coords="1063,18,1051,11,1029,8,1009,10,998,15,993,21,996,28,990,30,988,20,994,11,1008,5,1029,3,1052,6,1065,13"/>
+<area shape="rect" id="Node000002" href="$d8/d73/classupnplib_1_1CSocket.html#a7548ff82d122192ae5ee7855b7dec846" title="Bind socket to a local interface address." alt="" coords="743,37,909,62"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="943,52,910,52,910,47,943,47"/>
+<area shape="rect" id="Node000003" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a7edcadd0e5ba55588d4794730343772e" title="Create STREAM sockets, binds to local network interfaces and listens for incoming connections." alt="" coords="515,22,695,77"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="729,52,695,52,695,47,729,47"/>
+<area shape="rect" id="Node000004" href="$d5/db2/miniserver_8cpp.html#a85c0b17d965bdb9430a9ce2e6931770a" title="Initialize the sockets functionality for the Miniserver." alt="" coords="344,37,467,62"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="501,52,467,52,467,47,501,47"/>
+<area shape="rect" id="Node000005" href="$d4/d99/upnpapi_8cpp.html#a679257c76bd4ebdd2aa3fa2bb470dadd" title="Finishes initializing the UPnP SDK." alt="" coords="139,37,296,62"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="330,52,296,52,296,47,330,47"/>
+<area shape="rect" id="Node000006" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="5,37,91,62"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="125,52,91,52,91,47,125,47"/>
 </map>

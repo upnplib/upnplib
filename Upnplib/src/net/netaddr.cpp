@@ -1,5 +1,5 @@
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-25
+// Redistribution only with this Copyright remark. Last modified: 2024-06-16
 /*!
  * \file
  * \brief Definition of the Netaddr class.
@@ -14,6 +14,7 @@
 
 namespace upnplib {
 
+#if 0
 // Free function to check for a netaddress without port
 // ----------------------------------------------------
 // I simply use the system function %inet_pton() to check if the node string is
@@ -57,6 +58,85 @@ sa_family_t is_netaddr(const std::string& a_node,
     }
     return AF_UNSPEC;
 }
+#endif
+
+#if 1
+// Free function to check for a netaddress without port
+// ----------------------------------------------------
+// I use the system function ::getaddrinfo() to check if the node string is
+// acceptable. Using ::getaddrinfo() is needed to cover all special address
+// features like scope id for link local addresses and so on.
+sa_family_t is_netaddr(const std::string& a_node,
+                       const int a_addr_family) noexcept {
+    // clang-format off
+    TRACE("Executing is_netaddr(\"" + a_node + "\", " +
+          (a_addr_family == AF_INET6 ? "AF_INET6" :
+          (a_addr_family == AF_INET ? "AF_INET" :
+          (a_addr_family == AF_UNSPEC ? "AF_UNSPEC" :
+          std::to_string(a_addr_family)))) + ")")
+    // clang-format on
+
+    // The shortest numeric netaddress is "[::]".
+    if (a_node.size() < 4) { // noexcept
+        std::cerr << "DEBUG! Tracepoint1\n";
+        return AF_UNSPEC;
+    }
+
+    // Provide resources for ::getaddrinfo()
+    // AI_NUMERICHOST ensures that only numeric addresses accepted.
+    std::string node;
+    ::addrinfo hints{};
+    hints.ai_flags = AI_NUMERICHOST;
+    hints.ai_family = a_addr_family;
+    ::addrinfo* res{nullptr};
+
+    // Check for ipv6 addresses and remove surounding brackets for
+    // ::getaddrinfo().
+    // front() and back() have undefined behavior with an empty string. Here
+    // its size() is at least 4. Substr() throws exception out of range if pos
+    // > size(). All this means that we cannot get an exception here.
+    if (a_node.front() == '[' && a_node.back() == ']' &&
+        (a_addr_family == AF_UNSPEC || a_addr_family == AF_INET6)) {
+        node = a_node.substr(1, a_node.length() - 2);
+        hints.ai_family = AF_INET6;
+        std::cerr << "DEBUG! Tracepoint2\n";
+
+    } else if (a_node.find_first_of(":") != std::string::npos) {
+        // Ipv6 addresses are already checked and here are only ipv4 addresses
+        // and URL names possible. Both are not valid if they contain a colon.
+        // find_first_of() does not throw an exception.
+        std::cerr << "DEBUG! Tracepoint3\n";
+        return AF_UNSPEC;
+
+    } else {
+        std::cerr << "DEBUG! Tracepoint4\n";
+        node = a_node;
+    }
+
+    // Call ::getaddrinfo() to check the remaining node string.
+    TRACE("syscall ::getaddrinfo()")
+    std::cerr << "DEBUG! Tracepoint5\n";
+    int errcode = ::getaddrinfo(node.c_str(), nullptr, &hints, &res);
+    if (errcode != 0) {
+        freeaddrinfo(res);
+        UPNPLIB_LOGINFO "MSG1116: (" << errcode << ") " << gai_strerror(errcode)
+                                     << '\n';
+        std::cerr << "DEBUG! Tracepoint6\n";
+        return AF_UNSPEC;
+    }
+
+    int af_family = res->ai_family;
+    freeaddrinfo(res);
+    // Guard different types on different platforms (win32); need to cast to
+    // af_family (unsigned short).
+    if (af_family < 0 || af_family > 65535) {
+        std::cerr << "DEBUG! Tracepoint7\n";
+        return AF_UNSPEC;
+    }
+    std::cerr << "DEBUG! Tracepoint8\n";
+    return static_cast<sa_family_t>(af_family);
+}
+#endif
 
 
 // Free function to check if a string is a valid port number
@@ -65,7 +145,8 @@ bool is_port(const std::string& a_port_str) noexcept {
     TRACE("Executing is_port() with port=\"" + a_port_str + "\"")
 
     // Only non empty strings
-    // and strings with max. 5 characters are valid (uint16_t has max. 65535)
+    // and strings with max. 5 characters are valid (uint16_t has max.
+    // 65535)
     if (a_port_str.empty() || a_port_str.length() > 5)
         return false;
 
@@ -75,9 +156,9 @@ bool is_port(const std::string& a_port_str) noexcept {
             return false;
     }
     // Valid positive number but is it within the port range (uint16_t)?
-    // stoi may throw std::invalid_argument if no conversion could be performed
-    // or std::out_of_range. But with the prechecked number string this should
-    // never be thrown.
+    // stoi may throw std::invalid_argument if no conversion could be
+    // performed or std::out_of_range. But with the prechecked number string
+    // this should never be thrown.
     return (std::stoi(a_port_str) <= 65535) ? true : false;
 }
 

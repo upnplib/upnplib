@@ -1,9 +1,10 @@
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-04
+// Redistribution only with this Copyright remark. Last modified: 2024-06-17
 
 #include <upnplib/netaddr.hpp>
 
 #include <upnplib/global.hpp>
+#include <upnplib/socket.hpp>
 #include <iostream>
 #include <utest/utest.hpp>
 
@@ -44,8 +45,12 @@ TEST(NetaddrTestSuite, netaddr_successful) {
 
 TEST(NetaddrTestSuite, is_numeric_node) {
     // Free function 'is_netaddr()' checks only the netaddress without port.
-    EXPECT_EQ(is_netaddr("[2001:db8::4]", AF_INET6), AF_INET6);
-    EXPECT_EQ(is_netaddr("192.168.47.9", AF_INET), AF_INET);
+    EXPECT_EQ(is_netaddr("[2001:db8::41]", AF_INET6), AF_INET6);
+    EXPECT_EQ(is_netaddr("[2001:db8::42]", AF_INET), AF_UNSPEC);
+    EXPECT_EQ(is_netaddr("[2001:db8::42]", AF_UNSPEC), AF_INET6);
+    EXPECT_EQ(is_netaddr("192.168.47.91", AF_INET), AF_INET);
+    EXPECT_EQ(is_netaddr("192.168.47.92", AF_INET6), AF_UNSPEC);
+    EXPECT_EQ(is_netaddr("192.168.47.93", AF_UNSPEC), AF_INET);
     EXPECT_EQ(is_netaddr("192.168.47.8"), AF_INET);
     EXPECT_EQ(is_netaddr("[2001:db8::5]"), AF_INET6);
     EXPECT_EQ(is_netaddr("[2001::db8::6]"), AF_UNSPEC); // double double colon
@@ -72,10 +77,15 @@ TEST(NetaddrTestSuite, is_numeric_node) {
     EXPECT_EQ(is_netaddr(""), AF_UNSPEC);
     // This should be an invalid address family
     EXPECT_EQ(is_netaddr("[2001:db8::99]", 67890), AF_UNSPEC);
+    EXPECT_EQ(is_netaddr("192.168.77.77", 67891), AF_UNSPEC);
     // Next are never numeric addresses
     EXPECT_EQ(is_netaddr("localhost", AF_INET6), AF_UNSPEC);
     EXPECT_EQ(is_netaddr("localhost", AF_INET), AF_UNSPEC);
     EXPECT_EQ(is_netaddr("example.com"), AF_UNSPEC);
+    EXPECT_EQ(is_netaddr("[fe80::37%1]"), AF_INET6);
+    EXPECT_EQ(is_netaddr("[2001:db8::77:78%2]"), AF_INET6);
+    EXPECT_EQ(is_netaddr("[192.168.101.102%3]"), AF_UNSPEC);
+    EXPECT_EQ(is_netaddr("192.168.101.102%4"), AF_UNSPEC);
 }
 
 
@@ -159,6 +169,7 @@ INSTANTIATE_TEST_SUITE_P(
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
+    WINSOCK_INIT
 #include <utest/utest_main.inc>
     return gtest_return_code; // managed in gtest_main.inc
 }
