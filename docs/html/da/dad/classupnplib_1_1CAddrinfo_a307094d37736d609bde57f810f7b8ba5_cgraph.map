@@ -1,5 +1,5 @@
 <map id="upnplib::CAddrinfo::init" name="upnplib::CAddrinfo::init">
-<area shape="rect" id="Node000001" title="Initialize address information that is returned by syscall ::getaddrinfo()" alt="" coords="5,47,148,87"/>
+<area shape="rect" id="Node000001" title="Initialize address information that is returned from the operating system." alt="" coords="5,47,148,87"/>
 <area shape="rect" id="Node000002" href="$d0/dd8/group__upnplib-addrmodul.html#ga8f3bd5579e056ae4b668789de4ef12b3" title="Check for a netaddress and return its address family." alt="" coords="201,29,347,55"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,56,187,50,187,56,149,61"/>
 <area shape="rect" id="Node000003" href="$d0/dd8/group__upnplib-addrmodul.html#gafd74ac6303ebfad050c64d52458125a8" title="Get the netaddress with port from a sockaddr structure." alt="" coords="196,79,352,104"/>

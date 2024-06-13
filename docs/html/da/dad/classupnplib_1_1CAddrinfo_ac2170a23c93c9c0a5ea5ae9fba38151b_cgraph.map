@@ -1,0 +1,6 @@
+<map id="upnplib::CAddrinfo::CAddrinfo" name="upnplib::CAddrinfo::CAddrinfo">
+<area shape="rect" id="Node000001" title="Constructor for getting an address information with service name." alt="" coords="5,22,148,62"/>
+<area shape="rect" id="Node000002" href="$d0/dd8/group__upnplib-addrmodul.html#ga8f3bd5579e056ae4b668789de4ef12b3" title="Check for a netaddress and return its address family." alt="" coords="196,29,343,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,39,182,39,182,45,148,45"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="238,31,231,21,234,11,248,5,269,3,296,6,307,15,303,19,294,11,269,8,249,10,238,15,236,20,242,28"/>
+</map>

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-02
+// Redistribution only with this Copyright remark. Last modified: 2024-06-13
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -43,7 +43,7 @@ TEST(AddrinfoTestSuite, instantiate_ipv6_addrinfo_successful) {
     // Check the initialized object. This is what we have given with the
     // constructor. We get just the initialized hints.
     EXPECT_EQ(ai1->ai_family, AF_INET6);
-    EXPECT_EQ(ai1->ai_socktype, 0);
+    EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai1->ai_protocol, 0);
     EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST);
     EXPECT_EQ(ai1->ai_addrlen, 0);
@@ -60,7 +60,7 @@ TEST(AddrinfoTestSuite, instantiate_ipv4_addrinfo_successful) {
     // Check the initialized object. This is what we have given with the
     // constructor. We get just the initialized hints.
     EXPECT_EQ(ai1->ai_family, AF_INET);
-    EXPECT_EQ(ai1->ai_socktype, 0);
+    EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai1->ai_protocol, 0);
     EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST);
     EXPECT_EQ(ai1->ai_addrlen, 0);
@@ -77,7 +77,7 @@ TEST(AddrinfoTestSuite, init_ipv6_addrinfo_successful) {
     ASSERT_NO_THROW(ai1.init());
 
     EXPECT_EQ(ai1->ai_family, AF_INET6);
-    EXPECT_EQ(ai1->ai_socktype, 0);
+    EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai1->ai_protocol, 0);
     EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST);
     EXPECT_EQ(ai1->ai_addrlen, 28);
@@ -93,7 +93,7 @@ TEST(AddrinfoTestSuite, init_ipv4_addrinfo_successful) {
     ASSERT_NO_THROW(ai1.init());
 
     EXPECT_EQ(ai1->ai_family, AF_INET);
-    EXPECT_EQ(ai1->ai_socktype, 0);
+    EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai1->ai_protocol, 0);
     EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST);
     EXPECT_EQ(ai1->ai_addrlen, 16);
@@ -109,7 +109,7 @@ TEST(AddrinfoTestSuite, double_set_addrinfo_successful) {
     // resolution from external DNS server.
 
     // Test Unit with numeric port number
-    CAddrinfo ai2("[2001:db8::2]", 50048, AF_INET6, SOCK_STREAM,
+    CAddrinfo ai2("[2001:db8::2]", "50048", AF_INET6, SOCK_STREAM,
                   AI_PASSIVE | AI_NUMERICHOST);
     ASSERT_NO_THROW(ai2.init());
 
@@ -236,7 +236,7 @@ TEST_F(AddrinfoMockFTestSuite, get_addrinfo_out_of_memory) {
                             Field(&addrinfo::ai_flags, 0), _))
         .WillOnce(Return(EAI_MEMORY));
 
-    CAddrinfo ai("localhost", 50118, AF_UNSPEC, SOCK_STREAM);
+    CAddrinfo ai("localhost", "50118", AF_UNSPEC, SOCK_STREAM);
     EXPECT_THROW(ai.init(), std::invalid_argument);
 }
 
@@ -254,7 +254,7 @@ TEST(AddrinfoTestSuite, invalid_ipv6_node_address) {
 
 TEST(AddrinfoTestSuite, get_unknown_node_address) {
     // Test Unit with unspecified ipv6 address
-    CAddrinfo ai3("[::]", 0, AF_INET6, 0, AI_NUMERICHOST | AI_NUMERICSERV);
+    CAddrinfo ai3("[::]", "0", AF_INET6, 0, AI_NUMERICHOST | AI_NUMERICSERV);
     ASSERT_NO_THROW(ai3.init());
 
     EXPECT_EQ(ai3->ai_family, AF_INET6);
@@ -264,7 +264,7 @@ TEST(AddrinfoTestSuite, get_unknown_node_address) {
     EXPECT_EQ(ai3.netaddr().str(), "[::]:0");
 
     // Test Unit with unspecified ipv4 address
-    CAddrinfo ai4("0.0.0.0", 0, AF_INET, 0, AI_NUMERICHOST | AI_NUMERICSERV);
+    CAddrinfo ai4("0.0.0.0", "0", AF_INET, 0, AI_NUMERICHOST | AI_NUMERICSERV);
     ASSERT_NO_THROW(ai4.init());
 
     EXPECT_EQ(ai4->ai_family, AF_INET);

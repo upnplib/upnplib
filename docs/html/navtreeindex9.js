@@ -1,7 +1,5 @@
 var NAVTREEINDEX9 =
 {
-"dd/df9/connection__device_8cpp_source.html":[8,0,3,1,1,5],
-"de/d27/group__SSDP-common__functions.html":[5,1,1,1],
 "de/d27/group__SSDP-common__functions.html#ga2c1b3867525da6ac8931c684baa6da52":[5,1,1,1,7],
 "de/d27/group__SSDP-common__functions.html#ga308dfe9b1114a11c55c09678a9397aa9":[5,1,1,1,1],
 "de/d27/group__SSDP-common__functions.html#ga3096b77d16b0ab09d3d0ec540fb09016":[5,1,1,1,2],
@@ -239,8 +237,8 @@ var NAVTREEINDEX9 =
 "dir_ef3e16eca2e4bf07151d928c47a55d62.html":[8,0,0,1,2,4],
 "dir_f220696de752dfbcf5a4b22b94561361.html":[8,0,0,1,4],
 "files.html":[8,0],
-"functions.html":[7,3,0,0],
 "functions.html":[7,3,0],
+"functions.html":[7,3,0,0],
 "functions_b.html":[7,3,0,1],
 "functions_c.html":[7,3,0,2],
 "functions_d.html":[7,3,0,3],
@@ -249,5 +247,7 @@ var NAVTREEINDEX9 =
 "functions_func.html":[7,3,1],
 "functions_g.html":[7,3,0,6],
 "functions_h.html":[7,3,0,7],
-"functions_i.html":[7,3,0,8]
+"functions_i.html":[7,3,0,8],
+"functions_j.html":[7,3,0,9],
+"functions_l.html":[7,3,0,10]
 };

@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_ADDRINFO_HPP
 #define UPNPLIB_INCLUDE_ADDRINFO_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-24
+// Redistribution only with this Copyright remark. Last modified: 2024-06-13
 /*!
  * \file
  * \brief Declaration of the Addrinfo class.
@@ -26,29 +26,25 @@ namespace upnplib {
  * */
 class UPNPLIB_API CAddrinfo {
   public:
-    /*! \brief Constructor for getting an address information with port number
-     * string. */
+    /*! \brief Constructor for getting an address information with service name
+     * \details The service name can also be a port number string, e.g. "http"
+     * or "80" */
     CAddrinfo(std::string_view a_node, std::string_view a_service,
               const int a_family = AF_UNSPEC,
               const int a_socktype = SOCK_STREAM, const int a_flags = 0,
-              const int protocol = 0);
-
-    /*! \brief Constructor for getting an address information with numeric port
-     * number. */
-    CAddrinfo(std::string_view a_node, in_port_t a_service,
-              const int a_family = AF_UNSPEC,
-              const int a_socktype = SOCK_STREAM, const int a_flags = 0,
-              const int protocol = 0);
+              const int a_protocol = 0);
 
     /*! \brief Constructor for getting an address information from only a
      * netaddress */
-    CAddrinfo(std::string_view a_node);
+    CAddrinfo(std::string_view a_node, const int a_family = AF_UNSPEC,
+              const int a_socktype = SOCK_STREAM, const int a_flags = 0,
+              const int a_protocol = 0);
 
-
-    /*! \brief Destructor */
-    virtual ~CAddrinfo();
 
     /// \cond
+    // Destructor
+    virtual ~CAddrinfo();
+
     // Copy constructor
     // We cannot use the default copy constructor because there is also
     // allocated memory for the addrinfo structure to copy. We get segfaults
@@ -60,15 +56,17 @@ class UPNPLIB_API CAddrinfo {
     CAddrinfo& operator=(CAddrinfo) = delete;
     /// \endcond
 
+
     /*! \name Setter
      * *************
      * @{ */
-    /*! \brief Initialize address information that is returned by syscall
-     * ::%getaddrinfo()
-     *
+    /*! \brief Initialize address information that is returned from the
+     * operating system
      * \code
 // Usage e.g.:
-CAddrinfo ai("[2001:db8::1]", 50050, AF_INET6, SOCK_STREAM, AI_NUMERICHOST);
+CAddrinfo ai("[2001:db8::1]", "50050", AF_INET6, SOCK_STREAM, AI_NUMERICHOST);
+// or
+CAddrinfo ai("[2001:db8::1]:50050");
 try {
     ai.init();
 } catch (const std::runtime_error& e) { handle_failed_address_info();
@@ -113,12 +111,12 @@ normal_execution();
      * structure</a>
      * \code
      * // Usage e.g.:
-     * CAddrinfo ai("localhost", 50001, AF_UNSPEC, SOCK_STREAM);
+     * CAddrinfo ai("localhost", "50001", AF_UNSPEC, SOCK_STREAM);
      * try {
      *     ai.init();
      * } catch (xcp) { handle_error(); }
      * if (ai->ai_socktype == SOCK_DGRAM) {} // is SOCK_STREAM in this example
-     * if (ai->ai_family == AF_INET6) { do_this(); };
+     * if (ai->ai_family == AF_INET6) { handle_ipv6(); };
      * \endcode
      *
      * The operating system returns the information in a structure that you can
@@ -129,7 +127,7 @@ normal_execution();
     /*! \brief Get the assosiated [netaddress](\ref glossary_netaddr)
      * \code
      * // Usage e.g.:
-     * CAddrinfo ai("localhost", 50001, AF_UNSPEC, SOCK_STREAM);
+     * CAddrinfo ai("localhost", "50001", AF_UNSPEC, SOCK_STREAM);
      * try {
      *     ai.init();
      * } catch (xcp) { handle_error(); }

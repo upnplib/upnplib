@@ -34,7 +34,7 @@
 <area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="568,326,632,359,712,395,738,404,736,409,710,400,630,364,566,331"/>
 <area shape="rect" id="Node000007" href="$db/d84/classupnplib_1_1CSocket__basic.html#a41cf15ed4d81fb0f237d8a6b69f72d8a" title="Get the socket type SOCK_STREAM or SOCK_DGRAM." alt="" coords="745,296,916,336"/>
 <area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="627,313,732,313,732,319,627,319"/>
-<area shape="rect" id="Node000008" href="$da/dad/classupnplib_1_1CAddrinfo.html#a307094d37736d609bde57f810f7b8ba5" title="Initialize address information that is returned by syscall ::getaddrinfo()" alt="" coords="759,93,902,133"/>
+<area shape="rect" id="Node000008" href="$da/dad/classupnplib_1_1CAddrinfo.html#a307094d37736d609bde57f810f7b8ba5" title="Initialize address information that is returned from the operating system." alt="" coords="759,93,902,133"/>
 <area shape="poly" id="edge9_Node000003_Node000008" title=" " alt="" coords="551,301,575,269,611,226,657,181,709,143,745,127,747,132,712,148,660,186,615,230,579,273,556,305"/>
 <area shape="rect" id="Node000011" href="$da/dad/classupnplib_1_1CAddrinfo.html#a938842ec8b629bc03581116942327aab" title="Get the assosiated netaddress." alt="" coords="759,181,902,221"/>
 <area shape="poly" id="edge13_Node000003_Node000011" title=" " alt="" coords="569,301,632,271,710,238,749,223,751,228,712,242,635,276,571,306"/>

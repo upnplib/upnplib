@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-02
+// Redistribution only with this Copyright remark. Last modified: 2024-06-13
 /*!
  * \file
  * \brief Definition of the Addrinfo class and free helper functions.
@@ -21,7 +21,8 @@ namespace upnplib {
 // On Microsoft Windows this needs to have Windows Sockets initialized with
 // WSAStartup().
 
-// Constructor for getting an address information with port number string.
+// Constructor for getting an address information with service name that can
+// also be a port number string.
 CAddrinfo::CAddrinfo(std::string_view a_node, std::string_view a_service,
                      const int a_family, const int a_socktype,
                      const int a_flags, const int a_protocol)
@@ -51,27 +52,23 @@ CAddrinfo::CAddrinfo(std::string_view a_node, std::string_view a_service,
     }
 }
 
-// Constructor for getting an address information with numeric port number.
-// ------------------------------------------------------------------------
-CAddrinfo::CAddrinfo(std::string_view a_node, in_port_t a_service,
-                     const int a_family, const int a_socktype,
-                     const int a_flags, const int a_protocol)
-    : CAddrinfo(a_node, std::to_string(a_service), a_family, a_socktype,
-                a_flags, a_protocol) {}
-
 
 // Constructor for getting an address information from only a netaddress.
 // ----------------------------------------------------------------------
-CAddrinfo::CAddrinfo(std::string_view a_node)
-    : CAddrinfo(a_node, "0", AF_UNSPEC, 0, 0, 0) {}
+CAddrinfo::CAddrinfo(std::string_view a_node, const int a_family,
+                     const int a_socktype, const int a_flags,
+                     const int a_protocol)
+    : CAddrinfo(a_node, "0", a_family, a_socktype, a_flags, a_protocol) {}
 
 
 // Destructor
 // ----------
+/// \cond
 CAddrinfo::~CAddrinfo() {
     TRACE2(this, " Destruct CAddrinfo()")
     this->free_addrinfo();
 }
+/// \endcond
 
 // Private method to free allocated memory for address information
 // ---------------------------------------------------------------
