@@ -1,12 +1,15 @@
 #ifndef UPNPLIB_GLOBAL_HPP
 #define UPNPLIB_GLOBAL_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-03-14
+// Redistribution only with this Copyright remark. Last modified: 2024-06-20
 /*!
  * \file
  * \brief Global used constants and variables.
  */
 
+// Due to the global nature of this header file additional #include statements
+// should be taken with great care. They are included in nearly all other
+// compile units.
 #include <upnplib/global.ipp>
 
 namespace upnplib {

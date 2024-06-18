@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-13
+// Redistribution only with this Copyright remark. Last modified: 2024-06-19
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -219,18 +219,17 @@ TEST(AddrinfoTestSuite, get_unknown_numeric_host_fails) {
     EXPECT_THROW(ai3.init(), std::runtime_error);
 }
 
-TEST_F(AddrinfoMockFTestSuite, get_unknown_alphanumeric_host_fails) {
-    // An alphanumeric node name with '[' is not valid.
-    EXPECT_CALL(m_netdbObj,
-                getaddrinfo(Pointee(*"[localhost]"), Pointee(*"50055"),
-                            Field(&addrinfo::ai_flags, 0), _))
-        .WillOnce(Return(EAI_NONAME));
-
+TEST(AddrinfoMockTestSuite, get_unknown_alphanumeric_host_fails) {
     CAddrinfo ai("[localhost]", "50055", AF_UNSPEC, SOCK_DGRAM);
     EXPECT_THROW(ai.init(), std::runtime_error);
 }
 
 TEST_F(AddrinfoMockFTestSuite, get_addrinfo_out_of_memory) {
+    EXPECT_CALL(m_netdbObj,
+                getaddrinfo(Pointee(*"localhost"), nullptr,
+                            Field(&addrinfo::ai_flags, AI_NUMERICHOST), _))
+        .Times(2)
+        .WillRepeatedly(Return(EAI_MEMORY));
     EXPECT_CALL(m_netdbObj,
                 getaddrinfo(Pointee(*"localhost"), Pointee(*"50118"),
                             Field(&addrinfo::ai_flags, 0), _))
@@ -602,7 +601,6 @@ TEST(AddrinfoTestSuite, get_fails) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
-    WINSOCK_INIT
 #include <utest/utest_main.inc>
     return gtest_return_code; // managed in gtest_main.inc
 }

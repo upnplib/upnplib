@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-16
+// Redistribution only with this Copyright remark. Last modified: 2024-06-19
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -803,8 +803,6 @@ TEST(StartMiniServerTestSuite, get_miniserver_sockets_with_no_ip_addr) {
 
 TEST_F(StartMiniServerMockFTestSuite,
        get_miniserver_sockets_with_one_ipv4_addr) {
-    WINSOCK_INIT
-
     // Initialize needed structure
     constexpr SOCKET sockfd{umock::sfd_base + 71};
     SSockaddr saddrObj;
@@ -888,8 +886,6 @@ TEST_F(StartMiniServerMockFTestSuite,
 
 TEST_F(StartMiniServerMockFTestSuite,
        get_miniserver_sockets_with_one_ipv6_lla_addr) {
-    WINSOCK_INIT
-
     // Initialize needed structure
     constexpr SOCKET sockfd{umock::sfd_base + 10};
     SSockaddr saddrObj;
@@ -1030,8 +1026,8 @@ TEST(StartMiniServerTestSuite, get_miniserver_sockets_with_invalid_ip_address) {
 // and this test is obsolete.
 // #ifdef _MSC_VER
 TEST(StartMiniServerTestSuite, get_miniserver_sockets_uninitialized) {
-    // MS Windows sockets are not initialized. Don't use WINSOCK_INIT. Unit
-    // should never return a valid socket and/or port.
+    // MS Windows sockets are not initialized. Unit should never return a valid
+    // socket and/or port.
     CLogging logObj; // Output only with build type DEBUG.
     if (g_dbug)
         logObj.enable(UPNP_ALL);
@@ -1115,8 +1111,6 @@ TEST_F(StartMiniServerMockFTestSuite,
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 TEST(StartMiniServerTestSuite, init_socket_suff_successful) {
-    WINSOCK_INIT
-
     // Set ip address and needed structure
     constexpr char text_addr[]{"2001:db8::3"};
     char addrbuf[INET6_ADDRSTRLEN];
@@ -1152,8 +1146,6 @@ TEST(StartMiniServerTestSuite, init_socket_suff_successful) {
 TEST(StartMiniServerTestSuite, init_socket_suff_reuseaddr) {
     // This isn't supported anymore.
     EXPECT_FALSE(MINISERVER_REUSEADDR);
-
-    WINSOCK_INIT
 
     // Set ip address and needed structure
     constexpr char text_addr[]{"2001:db8::4"};
@@ -1203,7 +1195,6 @@ TEST_F(StartMiniServerMockFTestSuite, init_socket_suff_with_invalid_socket) {
 }
 
 TEST(StartMiniServerTestSuite, init_socket_suff_with_invalid_ip_address) {
-    WINSOCK_INIT
     // Set ip address and needed structure
     constexpr char text_addr[]{"2001:db8::1::2"}; // invalid ip address
     char addrbuf[INET6_ADDRSTRLEN];
@@ -1312,7 +1303,6 @@ TEST_F(StartMiniServerMockFTestSuite, do_bind_listen_successful) {
 }
 
 TEST(StartMiniServerTestSuite, do_bind_listen_with_wrong_socket) {
-    WINSOCK_INIT
     constexpr char text_addr[]{"0.0.0.0"};
 
     s_SocketStuff s;
@@ -2008,7 +1998,6 @@ TEST_F(StartMiniServerMockFTestSuite, get_port_successful) {
     // * Use fictive socket file descriptor
     // * Set actual socket used port
     // * Mocked getsockname() returns successful
-    WINSOCK_INIT
 
     // Provide needed data for the Unit
     constexpr SOCKET sockfd{umock::sfd_base + 23};
@@ -2104,7 +2093,6 @@ TEST(StartMiniServerTestSuite, get_miniserver_stopsock) {
     // Here we test a real connection to the loopback device. This needs
     // initialization of sockets on MS Windows. We also have to close the
     // socket.
-    WINSOCK_INIT
     MiniServerSockArray out;
     InitMiniServerSockArray(&out);
 
@@ -2218,11 +2206,6 @@ TEST_F(StartMiniServerMockFTestSuite,
 
 
 int main(int argc, char** argv) {
-#ifdef _MSC_VER
-    // Uninitialize Windows sockets because it is global initialized with using
-    // the upnplib library. We need this for testing uninitialized sockets.
-    ::WSACleanup();
-#endif
     ::testing::InitGoogleMock(&argc, argv);
 #include "utest/utest_main.inc"
     return gtest_return_code; // managed in compa/gtest_main.inc

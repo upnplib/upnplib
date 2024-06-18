@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-03
+// Redistribution only with this Copyright remark. Last modified: 2024-06-18
 
 #include <upnplib/global.hpp>
 #include <upnplib/socket.hpp>
@@ -81,8 +81,6 @@ std::uniform_int_distribution<in_port_t> portno(49152, 65535); // define range
 #include <syncstream>
 
 TEST(SockTestSuite, sock_connect_to_host) {
-    WINSOCK_INIT
-
     // Get the remote host socket address
     upnplib::CAddrinfo ai("example.com", "http");
     ASSERT_NO_THROW(ai.init());
@@ -119,8 +117,6 @@ TEST(SocketErrorTestSuite, check_WSA_errorcode_compatibillity) {
     //
     // For details look at
     // REF:_[Error_Codes_-_errno,_h_errno_and_WSAGetLastError]_(https://learn.microsoft.com/en-us/windows/win32/winsock/error-codes-errno-h-errno-and-wsagetlasterror-2)
-    WINSOCK_INIT
-
     WSASetLastError(EWOULDBLOCK);
     EXPECT_EQ(WSAGetLastError(), EWOULDBLOCK);
     EXPECT_EQ(EWOULDBLOCK, 140);
@@ -145,7 +141,6 @@ TEST(SocketErrorTestSuite, check_WSA_errorcode_compatibillity) {
 #endif
 
 TEST(SocketErrorTestSuite, get_socket_error_successful) {
-    WINSOCK_INIT
     CSocketErr sockerrObj;
 
     // Test Unit
@@ -1675,7 +1670,6 @@ TEST(SocketV6onlyTestSuite, v6only_on_passive_af_inet_dgram_socket) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
-    WINSOCK_INIT
 #include <utest/utest_main.inc>
     return gtest_return_code; // managed in gtest_main.inc
 }

@@ -1,13 +1,13 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-03
+// Redistribution only with this Copyright remark. Last modified: 2024-06-19
 /*!
  * \file
  * \brief Definition of the 'class Socket'.
  */
 
 #include <upnplib/socket.hpp>
+
 #include <upnplib/addrinfo.hpp>
-#include <upnplib/synclog.hpp>
 #include <umock/sys_socket.hpp>
 #include <umock/stringh.hpp>
 #ifdef _MSC_VER
@@ -68,27 +68,6 @@ int getsockname(SOCKET a_sockfd, sockaddr* a_addr, socklen_t* a_addrlen) {
 }
 
 } // anonymous namespace
-
-
-// Initialize and cleanup Microsoft Windows Sockets
-// ------------------------------------------------
-#ifdef _MSC_VER
-CWSAStartup::CWSAStartup() {
-    TRACE2(this, " Construct CWSAStartup")
-    WSADATA wsaData;
-    int rc = ::WSAStartup(MAKEWORD(2, 2), &wsaData);
-    if (rc != 0)
-        throw std::runtime_error(UPNPLIB_LOGEXCEPT +
-                                 "MSG1003: Failed to initialize Windows "
-                                 "sockets: WSAStartup() returns " +
-                                 std::to_string(rc) + "\n");
-}
-
-CWSAStartup::~CWSAStartup() {
-    TRACE2(this, " Destruct CWSAStartup")
-    ::WSACleanup();
-}
-#endif // _MSC_VER
 
 
 // CSocket_basic class

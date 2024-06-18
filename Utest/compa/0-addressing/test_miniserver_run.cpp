@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-04
+// Redistribution only with this Copyright remark. Last modified: 2024-06-19
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -1318,7 +1318,6 @@ TEST(RunMiniServerTestSuite, free_handle_request_arg_successful) {
 }
 
 TEST(RunMiniServerTestSuite, free_handle_request_arg_with_valid_socket) {
-    WINSOCK_INIT
     // Provide null set request structure
     mserv_request_t* request =
         static_cast<mserv_request_t*>(calloc(1, sizeof(mserv_request_t)));
@@ -1617,7 +1616,6 @@ TEST(RunMiniServerTestSuite, set_gena_callback) {
 
 #ifdef UPNPLIB_WITH_NATIVE_PUPNP
 TEST(RunMiniServerTestSuite, do_reinit) {
-    WINSOCK_INIT
     // On reinit the socket file descriptor will be closed and a new file
     // descriptor is requested. Mostly it is the same but it is possible that
     // it changes when other socket fds are requested.
@@ -1657,8 +1655,6 @@ TEST(RunMiniServerTestSuite, do_reinit) {
 #endif
 
 TEST(StopMiniServerTestSuite, sock_close) {
-    WINSOCK_INIT
-
     // Close invalid sockets
     EXPECT_EQ(sock_close(INVALID_SOCKET), -1);
     EXPECT_EQ(sock_close(1234), -1);

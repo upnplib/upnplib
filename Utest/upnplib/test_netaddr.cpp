@@ -1,5 +1,5 @@
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-17
+// Redistribution only with this Copyright remark. Last modified: 2024-06-19
 
 #include <upnplib/netaddr.hpp>
 
@@ -27,7 +27,7 @@ TEST(NetaddrTestSuite, netaddr_successful) {
     captureObj.start();
 
     // Test Unit output stream
-    std::cout << napObj << "\n";
+    std::cout << std::endl << napObj << std::endl;
     EXPECT_THAT(captureObj.str(), EndsWith("[2001:db8::1]:61234\n"));
 
     // Test Unit default copy constructor
@@ -169,7 +169,6 @@ INSTANTIATE_TEST_SUITE_P(
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
-    WINSOCK_INIT
 #include <utest/utest_main.inc>
     return gtest_return_code; // managed in gtest_main.inc
 }

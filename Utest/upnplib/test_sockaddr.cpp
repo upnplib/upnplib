@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-20
+// Redistribution only with this Copyright remark. Last modified: 2024-06-19
 
 #include <Upnplib/src/net/sockaddr.cpp>
 
@@ -538,7 +538,6 @@ TEST(ToAddrStrTestSuite, sockaddr_to_address_port_string) {
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleMock(&argc, argv);
-    WINSOCK_INIT
 #include <utest/utest_main.inc>
     return gtest_return_code; // managed in gtest_main.inc
 }

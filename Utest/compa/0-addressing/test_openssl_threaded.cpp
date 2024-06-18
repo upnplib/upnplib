@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-03
+// Redistribution only with this Copyright remark. Last modified: 2024-06-19
 
 #include <upnplib/global.hpp>
 #include <upnplib/cmake_vars.hpp>
@@ -340,7 +340,6 @@ TEST(SockTestSuite, simple_tls_server) { EXPECT_EQ(simple_TLS_client(), 0); }
 } // namespace utest
 
 int main(int argc, char** argv) {
-    WINSOCK_INIT
     std::thread t1(utest::simple_TLS_server);
     t1.detach();
     ::testing::InitGoogleMock(&argc, argv);
