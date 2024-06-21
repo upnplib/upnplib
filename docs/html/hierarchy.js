@@ -4,6 +4,7 @@ var hierarchy =
     [ "upnplib::CSigpipe_scoped", "d3/de4/classupnplib_1_1CSigpipe__scoped.html", null ],
     [ "upnplib::CSocketErr", "d2/dd2/classupnplib_1_1CSocketErr.html", null ],
     [ "upnplib::CUri", "dd/db5/classupnplib_1_1CUri.html", null ],
+    [ "upnplib::anonymous_namespace{global.cpp}::CWSAStartup", "de/d4a/classupnplib_1_1anonymous__namespace_02global_8cpp_03_1_1CWSAStartup.html", null ],
     [ "upnplib::Document_meta", "dc/d6d/namespaceupnplib.html#d8/d3d/structupnplib_1_1Document__meta", null ],
     [ "anonymous_namespace{upnptools.cpp}::ErrorString", "dc/d80/namespaceanonymous__namespace_02upnptools_8cpp_03.html#d9/d56/structanonymous__namespace_02upnptools_8cpp_03_1_1ErrorString", null ],
     [ "ErrorString", "d6/d13/Compa_2src_2api_2upnptools_8cpp.html#dc/dff/structErrorString", null ],

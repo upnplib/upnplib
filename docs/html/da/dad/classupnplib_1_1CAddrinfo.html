@@ -137,7 +137,7 @@ Public Member Functions</h2></td></tr>
 <div class="textblock"><p>Get information from the operating system about a <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a>. </p>
 <p>This is a stripped version. It is only as snapshot to get information about a netaddress. There is no need to copy the object. The last full featured version with copy constructor, copy asignment operator, compare operator, additional getter and its unit tests can be found at Github commit e2ffc0c46a2d8f15390f2816e1a18782e500fd09 </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d6/dbf/addrinfo_8hpp_source.html#l00027">27</a> of file <a class="el" href="../../d6/dbf/addrinfo_8hpp_source.html">addrinfo.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d6/dbf/addrinfo_8hpp_source.html#l00026">26</a> of file <a class="el" href="../../d6/dbf/addrinfo_8hpp_source.html">addrinfo.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ac2170a23c93c9c0a5ea5ae9fba38151b" name="ac2170a23c93c9c0a5ea5ae9fba38151b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac2170a23c93c9c0a5ea5ae9fba38151b">&#9670;&#160;</a></span>CAddrinfo() <span class="overload">[1/2]</span></h2>
@@ -192,19 +192,7 @@ Public Member Functions</h2></td></tr>
 <p>Constructor for getting an address information with service name. </p>
 <p>The service name can also be a port number string, e.g. "http" or "80" </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html#l00026">26</a> of file <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html">addrinfo.cpp</a>.</p>
-<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
-</div>
-<div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><img src="../../da/dad/classupnplib_1_1CAddrinfo_ac2170a23c93c9c0a5ea5ae9fba38151b_cgraph.png" border="0" usemap="#ada/dad/classupnplib_1_1CAddrinfo_ac2170a23c93c9c0a5ea5ae9fba38151b_cgraph" alt=""/></div>
-<map name="ada/dad/classupnplib_1_1CAddrinfo_ac2170a23c93c9c0a5ea5ae9fba38151b_cgraph" id="ada/dad/classupnplib_1_1CAddrinfo_ac2170a23c93c9c0a5ea5ae9fba38151b_cgraph">
-<area shape="rect" title="Constructor for getting an address information with service name." alt="" coords="5,5,148,45"/>
-<area shape="rect" href="../../d0/dd8/group__upnplib-addrmodul.html#ga8f3bd5579e056ae4b668789de4ef12b3" title="Check for a netaddress and return its address family." alt="" coords="196,13,343,38"/>
-<area shape="poly" title=" " alt="" coords="148,23,182,23,182,28,148,28"/>
-</map>
-</div>
+<p class="definition">Definition at line <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html#l00022">22</a> of file <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html">addrinfo.cpp</a>.</p>
 
 </div>
 </div>
@@ -254,7 +242,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Constructor for getting an address information from only a netaddress. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html#l00058">58</a> of file <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html">addrinfo.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html#l00032">32</a> of file <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html">addrinfo.cpp</a>.</p>
 
 </div>
 </div>
@@ -285,7 +273,7 @@ Public Member Functions</h2></td></tr>
 <div class="line">} <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::invalid_argument&amp; e) { handle_other_error();</div>
 <div class="line">}</div>
 <div class="line">normal_execution();</div>
-<div class="ttc" id="aclassupnplib_1_1CAddrinfo_html"><div class="ttname"><a href="../../da/dad/classupnplib_1_1CAddrinfo.html">upnplib::CAddrinfo</a></div><div class="ttdoc">Get information from the operating system about a netaddress.</div><div class="ttdef"><b>Definition</b> <a href="../../d6/dbf/addrinfo_8hpp_source.html#l00027">addrinfo.hpp:27</a></div></div>
+<div class="ttc" id="aclassupnplib_1_1CAddrinfo_html"><div class="ttname"><a href="../../da/dad/classupnplib_1_1CAddrinfo.html">upnplib::CAddrinfo</a></div><div class="ttdoc">Get information from the operating system about a netaddress.</div><div class="ttdef"><b>Definition</b> <a href="../../d6/dbf/addrinfo_8hpp_source.html#l00026">addrinfo.hpp:26</a></div></div>
 </div><!-- fragment --> <dl class="section note"><dt>Note</dt><dd>It is important to careful check the error situation because this initialization depends on the real environment over which we have no influence. Name resolution may fail because to be unspecified, DNS server may be temporary down, etc.</dd></dl>
 <p>Usually this setter is called one time after constructing the object. This gets an address information from the operating system that may also use its internal name resolver inclusive contacting external DNS server. If you use the flag <b>AI_NUMERICHOST</b> with the constructor then a possible expensive name resolution to DNS server is suppressed.</p>
 <p>Because always the same cached hints given with the constructor are used we also get the same information but with new allocated memory. So it doesn't make much sense to call it more than one time, but doesn't hurt except waste of resources.</p>
@@ -298,26 +286,28 @@ Public Member Functions</h2></td></tr>
 </dl>
 <p>Provides strong exception guarantee. It should be noted that are different error messages returned by different platforms. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html#l00092">92</a> of file <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html">addrinfo.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html#l00115">115</a> of file <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html">addrinfo.cpp</a>.</p>
+<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-0-content" class="dyncontent" style="display:none;">
+<div class="center"><img src="../../da/dad/classupnplib_1_1CAddrinfo_a307094d37736d609bde57f810f7b8ba5_cgraph.png" border="0" usemap="#ada/dad/classupnplib_1_1CAddrinfo_a307094d37736d609bde57f810f7b8ba5_cgraph" alt=""/></div>
+<map name="ada/dad/classupnplib_1_1CAddrinfo_a307094d37736d609bde57f810f7b8ba5_cgraph" id="ada/dad/classupnplib_1_1CAddrinfo_a307094d37736d609bde57f810f7b8ba5_cgraph">
+<area shape="rect" title="Initialize address information that is returned from the operating system." alt="" coords="5,47,148,87"/>
+<area shape="rect" href="../../d0/dd8/group__upnplib-addrmodul.html#ga8f3bd5579e056ae4b668789de4ef12b3" title="Check for a netaddress and return its address family." alt="" coords="201,5,347,31"/>
+<area shape="poly" title=" " alt="" coords="148,47,209,31,210,37,149,52"/>
+<area shape="rect" href="../../d0/dd8/group__upnplib-addrmodul.html#gae7d54669b7911d1af4deefefa508b5d2" title="Check if a given string represents a port number." alt="" coords="199,55,349,80"/>
+<area shape="poly" title=" " alt="" coords="148,65,185,65,185,70,148,70"/>
+<area shape="rect" href="../../d0/dd8/group__upnplib-addrmodul.html#gafd74ac6303ebfad050c64d52458125a8" title="Get the netaddress with port from a sockaddr structure." alt="" coords="196,104,352,129"/>
+<area shape="poly" title=" " alt="" coords="149,83,210,98,209,103,148,88"/>
+</map>
+</div>
 <div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-1-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
+  <img id="dynsection-1-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-1-summary" class="dynsummary" style="display:block;">
 </div>
 <div id="dynsection-1-content" class="dyncontent" style="display:none;">
-<div class="center"><img src="../../da/dad/classupnplib_1_1CAddrinfo_a307094d37736d609bde57f810f7b8ba5_cgraph.png" border="0" usemap="#ada/dad/classupnplib_1_1CAddrinfo_a307094d37736d609bde57f810f7b8ba5_cgraph" alt=""/></div>
-<map name="ada/dad/classupnplib_1_1CAddrinfo_a307094d37736d609bde57f810f7b8ba5_cgraph" id="ada/dad/classupnplib_1_1CAddrinfo_a307094d37736d609bde57f810f7b8ba5_cgraph">
-<area shape="rect" title="Initialize address information that is returned from the operating system." alt="" coords="5,23,148,63"/>
-<area shape="rect" href="../../d0/dd8/group__upnplib-addrmodul.html#ga8f3bd5579e056ae4b668789de4ef12b3" title="Check for a netaddress and return its address family." alt="" coords="201,5,347,31"/>
-<area shape="poly" title=" " alt="" coords="148,32,187,26,187,32,149,37"/>
-<area shape="rect" href="../../d0/dd8/group__upnplib-addrmodul.html#gafd74ac6303ebfad050c64d52458125a8" title="Get the netaddress with port from a sockaddr structure." alt="" coords="196,55,352,80"/>
-<area shape="poly" title=" " alt="" coords="149,49,183,54,182,59,148,55"/>
-</map>
-</div>
-<div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-2-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-2-summary" class="dynsummary" style="display:block;">
-</div>
-<div id="dynsection-2-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../da/dad/classupnplib_1_1CAddrinfo_a307094d37736d609bde57f810f7b8ba5_icgraph.png" border="0" usemap="#ada/dad/classupnplib_1_1CAddrinfo_a307094d37736d609bde57f810f7b8ba5_icgraph" alt=""/></div>
 <map name="ada/dad/classupnplib_1_1CAddrinfo_a307094d37736d609bde57f810f7b8ba5_icgraph" id="ada/dad/classupnplib_1_1CAddrinfo_a307094d37736d609bde57f810f7b8ba5_icgraph">
 <area shape="rect" title="Initialize address information that is returned from the operating system." alt="" coords="957,13,1100,53"/>
@@ -369,12 +359,12 @@ Public Member Functions</h2></td></tr>
 <div class="line"><span class="keywordflow">if</span> (netaddrp == <span class="stringliteral">&quot;[::1]:50001&quot;</span>) { manage_ipv6_interface();</div>
 <div class="line">} <span class="keywordflow">else</span> <span class="keywordflow">if</span> (netaddrp == <span class="stringliteral">&quot;127.0.0.1:50001&quot;</span>) { manage_ipv4_interface(); }</div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html#l00200">200</a> of file <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html">addrinfo.cpp</a>.</p>
-<div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-3-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-3-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html#l00242">242</a> of file <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html">addrinfo.cpp</a>.</p>
+<div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-2-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-2-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-3-content" class="dyncontent" style="display:none;">
+<div id="dynsection-2-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../da/dad/classupnplib_1_1CAddrinfo_a938842ec8b629bc03581116942327aab_cgraph.png" border="0" usemap="#ada/dad/classupnplib_1_1CAddrinfo_a938842ec8b629bc03581116942327aab_cgraph" alt=""/></div>
 <map name="ada/dad/classupnplib_1_1CAddrinfo_a938842ec8b629bc03581116942327aab_cgraph" id="ada/dad/classupnplib_1_1CAddrinfo_a938842ec8b629bc03581116942327aab_cgraph">
 <area shape="rect" title="Get the assosiated netaddress." alt="" coords="5,29,148,69"/>
@@ -383,11 +373,11 @@ Public Member Functions</h2></td></tr>
 <area shape="poly" title=" " alt="" coords="148,47,183,47,183,52,148,52"/>
 </map>
 </div>
-<div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-4-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-4-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-3-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-3-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-4-content" class="dyncontent" style="display:none;">
+<div id="dynsection-3-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../da/dad/classupnplib_1_1CAddrinfo_a938842ec8b629bc03581116942327aab_icgraph.png" border="0" usemap="#ada/dad/classupnplib_1_1CAddrinfo_a938842ec8b629bc03581116942327aab_icgraph" alt=""/></div>
 <map name="ada/dad/classupnplib_1_1CAddrinfo_a938842ec8b629bc03581116942327aab_icgraph" id="ada/dad/classupnplib_1_1CAddrinfo_a938842ec8b629bc03581116942327aab_icgraph">
 <area shape="rect" title="Get the assosiated netaddress." alt="" coords="957,29,1100,69"/>
@@ -440,7 +430,7 @@ Public Member Functions</h2></td></tr>
 <div class="line"><span class="keywordflow">if</span> (ai-&gt;ai_family == AF_INET6) { handle_ipv6(); };</div>
 </div><!-- fragment --><p>The operating system returns the information in a structure that you can read to get all details. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html#l00086">86</a> of file <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html">addrinfo.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html#l00109">109</a> of file <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html">addrinfo.cpp</a>.</p>
 
 </div>
 </div>

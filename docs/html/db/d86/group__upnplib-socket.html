@@ -99,8 +99,8 @@ $(document).ready(function(){initNavTree('db/d86/group__upnplib-socket.html','..
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#define-members">Macros</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">Socket module<div class="ingroups"><a class="el" href="../../d4/d32/group__upnplib.html">object oriented UPnP library</a> &raquo; <a class="el" href="../../dd/df8/group__upnplib-Addressing.html">Step 0: Addressing</a></div></div></div>
 </div><!--header-->
 <div class="contents">
@@ -119,18 +119,21 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/dd2/classupnplib_1_1CSocketErr.html">upnplib::CSocketErr</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class for portable handling of network socket errors.  <a href="../../d2/dd2/classupnplib_1_1CSocketErr.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:gaa9494d0f2750c611339d1336ae8183d8" id="r_gaa9494d0f2750c611339d1336ae8183d8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d86/group__upnplib-socket.html#gaa9494d0f2750c611339d1336ae8183d8">WINSOCK_INIT</a></td></tr>
-<tr class="memdesc:gaa9494d0f2750c611339d1336ae8183d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize and cleanup Microsoft Windows Sockets.  <br /></td></tr>
-<tr class="separator:gaa9494d0f2750c611339d1336ae8183d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d4a/classupnplib_1_1anonymous__namespace_02global_8cpp_03_1_1CWSAStartup.html">upnplib::anonymous_namespace{global.cpp}::CWSAStartup</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize and cleanup Microsoft Windows Sockets.  <a href="../../de/d4a/classupnplib_1_1anonymous__namespace_02global_8cpp_03_1_1CWSAStartup.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ga99c7777de5a847f201f6d2f66540a535" id="r_ga99c7777de5a847f201f6d2f66540a535"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d86/group__upnplib-socket.html#ga99c7777de5a847f201f6d2f66540a535">upnplib::anonymous_namespace{socket.cpp}::getsockname</a> (<a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a> a_sockfd, sockaddr *a_addr, socklen_t *a_addrlen)</td></tr>
 <tr class="memdesc:ga99c7777de5a847f201f6d2f66540a535"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wrapper for the ::getsockname() system function.  <br /></td></tr>
 <tr class="separator:ga99c7777de5a847f201f6d2f66540a535"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:gac0b5c6476bc3668768820c4ecfc625a4" id="r_gac0b5c6476bc3668768820c4ecfc625a4"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="../../de/d4a/classupnplib_1_1anonymous__namespace_02global_8cpp_03_1_1CWSAStartup.html">CWSAStartup</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d86/group__upnplib-socket.html#gac0b5c6476bc3668768820c4ecfc625a4">upnplib::anonymous_namespace{global.cpp}::init_winsock</a></td></tr>
+<tr class="memdesc:gac0b5c6476bc3668768820c4ecfc625a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">This object initialize and cleanup the Microsoft Windows Socket subsystem.  <br /></td></tr>
+<tr class="separator:gac0b5c6476bc3668768820c4ecfc625a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>The socket module contains all classes and free functions to manage network sockets. </p>
@@ -154,30 +157,6 @@ valid socket file descriptor</h2>
 <h2><a class="anchor" id="autotoc_md17"></a>
 options SO_REUSEADDR and SO_EXCLUSIVEADDRUSE</h2>
 <p>I don't set the option to immediately reuse an address and I always set the option <code>SO_EXCLUSIVEADDRUSE</code> on Microsoft Windows. For more details of this have a look at <a class="el" href="../../d2/d59/Overview.html#overview_reuseaddr">Socket option &quot;reuse address&quot;</a>. </p>
-<h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="gaa9494d0f2750c611339d1336ae8183d8" name="gaa9494d0f2750c611339d1336ae8183d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaa9494d0f2750c611339d1336ae8183d8">&#9670;&#160;</a></span>WINSOCK_INIT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define WINSOCK_INIT</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Initialize and cleanup Microsoft Windows Sockets. </p>
-<div class="fragment"><div class="line"><span class="comment">// Usage e.g.:</span></div>
-<div class="line"><a class="code hl_define" href="../../db/d86/group__upnplib-socket.html#gaa9494d0f2750c611339d1336ae8183d8">WINSOCK_INIT</a></div>
-<div class="line"><span class="comment">// Do Microsoft Windows socket stuff</span></div>
-<div class="ttc" id="agroup__upnplib-socket_html_gaa9494d0f2750c611339d1336ae8183d8"><div class="ttname"><a href="../../db/d86/group__upnplib-socket.html#gaa9494d0f2750c611339d1336ae8183d8">WINSOCK_INIT</a></div><div class="ttdeci">#define WINSOCK_INIT</div><div class="ttdoc">Initialize and cleanup Microsoft Windows Sockets.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00462">socket.hpp:462</a></div></div>
-</div><!-- fragment --><p>Winsock needs to be initialized before using it and it needs to be freed. I do that with a class, following the RAII paradigm. Multiple initialization doesn't matter. This is managed by the operating system with a counter. It ensures that winsock is initialzed only one time and freed with the last free call. To be portable this macro can be used on all platforms. It ensures that the Winsock initialization is only done on Microsoft Windows. </p>
-
-<p class="definition">Definition at line <a class="el" href="../../da/dfc/socket_8hpp_source.html#l00462">462</a> of file <a class="el" href="../../da/dfc/socket_8hpp_source.html">socket.hpp</a>.</p>
-
-</div>
-</div>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ga99c7777de5a847f201f6d2f66540a535" name="ga99c7777de5a847f201f6d2f66540a535"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga99c7777de5a847f201f6d2f66540a535">&#9670;&#160;</a></span>getsockname()</h2>
@@ -237,6 +216,25 @@ options SO_REUSEADDR and SO_EXCLUSIVEADDRUSE</h2>
 <area shape="poly" title=" " alt="" coords="134,18,122,11,102,8,85,10,74,15,69,21,69,29,64,29,64,19,71,10,84,5,102,3,124,6,136,14"/>
 </map>
 </div>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="gac0b5c6476bc3668768820c4ecfc625a4" name="gac0b5c6476bc3668768820c4ecfc625a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac0b5c6476bc3668768820c4ecfc625a4">&#9670;&#160;</a></span>init_winsock</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="../../de/d4a/classupnplib_1_1anonymous__namespace_02global_8cpp_03_1_1CWSAStartup.html">CWSAStartup</a> upnplib::anonymous_namespace{global.cpp}::init_winsock</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This object initialize and cleanup the Microsoft Windows Socket subsystem. </p>
+
+<p class="definition">Definition at line <a class="el" href="../../db/d7d/global_8cpp_source.html#l00108">108</a> of file <a class="el" href="../../db/d7d/global_8cpp_source.html">global.cpp</a>.</p>
 
 </div>
 </div>

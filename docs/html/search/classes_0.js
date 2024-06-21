@@ -5,5 +5,6 @@ var searchData=
   ['csocket_2',['CSocket',['../d8/d73/classupnplib_1_1CSocket.html',1,'upnplib']]],
   ['csocket_5fbasic_3',['CSocket_basic',['../db/d84/classupnplib_1_1CSocket__basic.html',1,'upnplib']]],
   ['csocketerr_4',['CSocketErr',['../d2/dd2/classupnplib_1_1CSocketErr.html',1,'upnplib']]],
-  ['curi_5',['CUri',['../dd/db5/classupnplib_1_1CUri.html',1,'upnplib']]]
+  ['curi_5',['CUri',['../dd/db5/classupnplib_1_1CUri.html',1,'upnplib']]],
+  ['cwsastartup_6',['CWSAStartup',['../de/d4a/classupnplib_1_1anonymous__namespace_02global_8cpp_03_1_1CWSAStartup.html',1,'upnplib::anonymous_namespace{global.cpp}']]]
 ];

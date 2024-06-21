@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-05-21
+// Redistribution only with this Copyright remark. Last modified: 2024-06-27
 /*!
  * \file
  * \brief Definition of the Sockaddr class and some free helper functions.
@@ -83,14 +83,13 @@ in_port_t to_port(const std::string& a_port_str) {
           "\"")
     if (a_port_str.empty())
         return 0;
-
-    if (is_port(a_port_str)) {
+    if (is_numport(a_port_str) == 0) {
         int port = std::stoi(a_port_str);
         return static_cast<in_port_t>(port);
     }
-    throw std::invalid_argument(UPNPLIB_LOGEXCEPT +
-                                "MSG1033: Failed to get port number for \"" +
-                                a_port_str + "\".");
+    throw std::invalid_argument(
+        UPNPLIB_LOGEXCEPT + "MSG1033: Failed to get port number for string \"" +
+        a_port_str + "\"");
 }
 
 

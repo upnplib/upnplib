@@ -22,6 +22,9 @@ var annotated_dup =
       [ "xml_alias_t", "d4/db6/structanonymous__namespace_02webserver_8cpp_03_1_1xml__alias__t.html", "d4/db6/structanonymous__namespace_02webserver_8cpp_03_1_1xml__alias__t" ]
     ] ],
     [ "upnplib", "dc/d6d/namespaceupnplib.html", [
+      [ "anonymous_namespace{global.cpp}", "de/d7f/namespaceupnplib_1_1anonymous__namespace_02global_8cpp_03.html", [
+        [ "CWSAStartup", "de/d4a/classupnplib_1_1anonymous__namespace_02global_8cpp_03_1_1CWSAStartup.html", null ]
+      ] ],
       [ "CAddrinfo", "da/dad/classupnplib_1_1CAddrinfo.html", "da/dad/classupnplib_1_1CAddrinfo" ],
       [ "CSigpipe_scoped", "d3/de4/classupnplib_1_1CSigpipe__scoped.html", null ],
       [ "CSocket", "d8/d73/classupnplib_1_1CSocket.html", "d8/d73/classupnplib_1_1CSocket" ],

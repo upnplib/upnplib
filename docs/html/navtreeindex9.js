@@ -1,6 +1,5 @@
 var NAVTREEINDEX9 =
 {
-"de/d27/group__SSDP-common__functions.html#ga6f360c6b4cce127d24d3cdf25caaee78":[5,1,1,1,4],
 "de/d27/group__SSDP-common__functions.html#ga75269399e8a3b97be6e0f2c2f2cace3d":[5,1,1,1,12],
 "de/d27/group__SSDP-common__functions.html#ga813e243c5a6ea133ef0803838244766b":[5,1,1,1,3],
 "de/d27/group__SSDP-common__functions.html#ga99424b09aff9e82571d74b982378e21a":[5,1,1,1,11],
@@ -8,7 +7,9 @@ var NAVTREEINDEX9 =
 "de/d27/group__SSDP-common__functions.html#gacf83eab7c7d8483f9c91d266bc465d9e":[5,1,1,1,8],
 "de/d27/group__SSDP-common__functions.html#gadcb9b37b1e0a3f7f45a1ca208d54d5bd":[5,1,1,1,9],
 "de/d27/group__SSDP-common__functions.html#gae3e29279280d276d05762d9dbeffe31d":[5,1,1,1,14],
+"de/d4a/classupnplib_1_1anonymous__namespace_02global_8cpp_03_1_1CWSAStartup.html":[5,3,0,1,3],
 "de/d5b/lib__info_8hpp.html":[5,1,6,2],
+"de/d7f/namespaceupnplib_1_1anonymous__namespace_02global_8cpp_03.html":[6,0,24,0],
 "de/dd0/Compa_2src_2inc_2uri_8hpp.html":[8,0,0,1,3,26],
 "de/dd0/Compa_2src_2inc_2uri_8hpp.html#a03191d65a1c8679ea4bbb1e01a8d15a8":[8,0,0,1,3,26,2,0],
 "de/dd0/Compa_2src_2inc_2uri_8hpp.html#a0d8566b401c3af78e284171e571b377f":[8,0,0,1,3,26,15],
@@ -227,8 +228,8 @@ var NAVTREEINDEX9 =
 "dir_ef3e16eca2e4bf07151d928c47a55d62.html":[8,0,0,1,2,4],
 "dir_f220696de752dfbcf5a4b22b94561361.html":[8,0,0,1,4],
 "files.html":[8,0],
-"functions.html":[7,3,0,0],
 "functions.html":[7,3,0],
+"functions.html":[7,3,0,0],
 "functions_b.html":[7,3,0,1],
 "functions_c.html":[7,3,0,2],
 "functions_d.html":[7,3,0,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX9 =
 "functions_s.html":[7,3,0,16],
 "functions_t.html":[7,3,0,17],
 "functions_u.html":[7,3,0,18],
-"functions_v.html":[7,3,0,19],
-"functions_vars.html":[7,3,2,0]
+"functions_v.html":[7,3,0,19]
 };

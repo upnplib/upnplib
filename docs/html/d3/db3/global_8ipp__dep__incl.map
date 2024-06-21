@@ -1,25 +1,23 @@
 <map id="Upnplib/include/upnplib/global.ipp" name="Upnplib/include/upnplib/global.ipp">
-<area shape="rect" id="Node000001" title="Global used constants, variables, functions and macros." alt="" coords="931,5,1105,45"/>
-<area shape="rect" id="Node000002" href="$d9/d3a/global_8hpp.html" title="Global used constants and variables." alt="" coords="833,93,1008,133"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="988,56,944,95,940,91,985,52"/>
-<area shape="rect" id="Node000012" href="$db/d7d/global_8cpp.html" title="Global used flag and emulated system function." alt="" coords="1032,101,1199,126"/>
-<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="1052,53,1104,98,1100,102,1048,57"/>
+<area shape="rect" id="Node000001" title="Global used constants, variables, functions and macros." alt="" coords="839,5,1013,45"/>
+<area shape="rect" id="Node000002" href="$d9/d3a/global_8hpp.html" title="Global used constants and variables." alt="" coords="741,93,916,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="896,56,852,95,848,91,893,52"/>
+<area shape="rect" id="Node000011" href="$db/d7d/global_8cpp.html" title="Global used flags, classes and emulated system functions." alt="" coords="940,101,1107,126"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="960,53,1012,98,1008,102,956,57"/>
 <area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html" title="Inititalize the compatible library before it can be used." alt="" coords="5,189,204,214"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="820,125,547,148,216,184,168,191,167,186,215,179,546,142,819,119"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="728,126,494,150,216,184,169,191,168,186,215,179,493,145,728,121"/>
 <area shape="rect" id="Node000004" href="$d5/db2/miniserver_8cpp.html" title="Implements the functionality and utility functions used by the Miniserver module." alt="" coords="228,181,437,221"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="820,131,450,184,438,186,437,181,450,179,819,126"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="728,135,438,185,437,179,727,129"/>
 <area shape="rect" id="Node000005" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html" title="This file defines the functionality making use of the http." alt="" coords="462,181,633,221"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="826,139,630,184,628,179,825,134"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="755,140,610,184,608,179,753,135"/>
 <area shape="rect" id="Node000006" href="$d1/d28/Compa_2src_2genlib_2net_2http_2webserver_8cpp.html" title="Internal Web Server and functions to carry out operations of it." alt="" coords="657,181,817,221"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="869,142,778,184,776,179,867,137"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="800,145,759,183,755,179,797,141"/>
 <area shape="rect" id="Node000007" href="$d5/d78/sock_8cpp.html" title="Manage network sockets and connections." alt="" coords="841,181,1001,221"/>
-<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="923,147,923,181,918,181,918,147"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="861,141,902,179,898,183,857,145"/>
 <area shape="rect" id="Node000008" href="$df/d13/ssdp__common_8cpp.html" title="Manage &quot;Step 1: Discovery&quot; of the UPnP+™ specification for common SSDP usage." alt="" coords="1025,181,1184,221"/>
-<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="975,137,1066,179,1063,184,972,142"/>
-<area shape="rect" id="Node000009" href="$dc/d59/addrinfo_8cpp.html" title="Definition of the Addrinfo class and free helper functions." alt="" coords="1209,189,1414,214"/>
-<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="1020,134,1260,186,1259,191,1019,139"/>
-<area shape="rect" id="Node000010" href="$d5/dd7/netaddr_8cpp.html" title="Definition of the Netaddr class." alt="" coords="1438,189,1638,214"/>
-<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="1022,131,1226,155,1426,179,1473,186,1473,191,1426,184,1225,161,1021,136"/>
-<area shape="rect" id="Node000011" href="$d7/def/sockaddr_8cpp.html" title="Definition of the Sockaddr class and some free helper functions." alt="" coords="1662,189,1870,214"/>
-<area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="1022,131,1199,149,1338,156,1476,163,1650,179,1701,186,1701,191,1650,184,1475,168,1338,161,1199,154,1022,136"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="903,135,1045,179,1043,184,901,140"/>
+<area shape="rect" id="Node000009" href="$d5/dd7/netaddr_8cpp.html" title="Definition of the Netaddr class." alt="" coords="1209,189,1409,214"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="930,131,1243,186,1242,191,929,136"/>
+<area shape="rect" id="Node000010" href="$d7/def/sockaddr_8cpp.html" title="Definition of the Sockaddr class and some free helper functions." alt="" coords="1433,189,1641,214"/>
+<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="930,131,1069,147,1177,156,1285,164,1421,179,1471,186,1470,191,1420,184,1284,169,1177,161,1068,152,929,136"/>
 </map>

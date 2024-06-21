@@ -12,7 +12,7 @@ var searchData=
   ['is_5flisten_9',['is_listen',['../d8/d73/classupnplib_1_1CSocket.html#ab92d154fbfebd2d5f995e0f91af805ca',1,'upnplib::CSocket']]],
   ['is_5fmark_10',['is_mark',['../dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a1425dfc37b98f61a0b49a36ac07660d1',1,'anonymous_namespace{uri.cpp}']]],
   ['is_5fnetaddr_11',['is_netaddr',['../d0/dd8/group__upnplib-addrmodul.html#ga8f3bd5579e056ae4b668789de4ef12b3',1,'upnplib']]],
-  ['is_5fport_12',['is_port',['../d0/dd8/group__upnplib-addrmodul.html#ga94539c3b024819362409a8421756bc58',1,'upnplib']]],
+  ['is_5fnumport_12',['is_numport',['../d0/dd8/group__upnplib-addrmodul.html#gae7d54669b7911d1af4deefefa508b5d2',1,'upnplib']]],
   ['is_5fqdtext_5fchar_13',['is_qdtext_char',['../da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#aa8849fbe55dcefa7ab2465ea8aabd214',1,'anonymous_namespace{httpparser.cpp}']]],
   ['is_5freserved_14',['is_reserved',['../dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a72aa299b86ca4486b62de1ac2e11b649',1,'anonymous_namespace{uri.cpp}']]],
   ['is_5freuse_5faddr_15',['is_reuse_addr',['../db/d84/classupnplib_1_1CSocket__basic.html#ac0efc89243d210568f8021f38d1783bd',1,'upnplib::CSocket_basic']]],

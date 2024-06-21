@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-19
+// Redistribution only with this Copyright remark. Last modified: 2024-06-27
 
 #include <Upnplib/src/net/sockaddr.cpp>
 
@@ -178,7 +178,7 @@ TEST(SockaddrStorageTestSuite, set_address_and_port_fail) {
     EXPECT_THAT([&saddr]() { saddr = "garbage"; },
                 ThrowsMessage<std::invalid_argument>(
                     EndsWith("] EXCEPTION MSG1033: Failed to get port number "
-                             "for \"garbage\".")));
+                             "for string \"garbage\"")));
 
     EXPECT_THAT(
         [&saddr]() { saddr = "[2001::db8::1]"; },
@@ -406,55 +406,55 @@ TEST(ToPortTestSuite, str_to_port) {
     EXPECT_EQ(to_port("9"), 9);
     EXPECT_EQ(to_port("00000"), 0);
 
-    EXPECT_THAT(
-        []() { to_port("000000"); },
-        ThrowsMessage<std::invalid_argument>(HasSubstr(
-            "] EXCEPTION MSG1033: Failed to get port number for \"000000\"")));
+    EXPECT_THAT([]() { to_port("000000"); },
+                ThrowsMessage<std::invalid_argument>(
+                    HasSubstr("] EXCEPTION MSG1033: Failed to get port number "
+                              "for string \"000000\"")));
 
-    EXPECT_THAT(
-        []() { to_port("65536"); },
-        ThrowsMessage<std::invalid_argument>(HasSubstr(
-            "] EXCEPTION MSG1033: Failed to get port number for \"65536\"")));
+    EXPECT_THAT([]() { to_port("65536"); },
+                ThrowsMessage<std::invalid_argument>(
+                    HasSubstr("] EXCEPTION MSG1033: Failed to get port number "
+                              "for string \"65536\"")));
 
-    EXPECT_THAT(
-        []() { to_port("-1"); },
-        ThrowsMessage<std::invalid_argument>(HasSubstr(
-            "] EXCEPTION MSG1033: Failed to get port number for \"-1\"")));
+    EXPECT_THAT([]() { to_port("-1"); },
+                ThrowsMessage<std::invalid_argument>(
+                    HasSubstr("] EXCEPTION MSG1033: Failed to get port number "
+                              "for string \"-1\"")));
 
-    EXPECT_THAT(
-        []() { to_port("123456"); },
-        ThrowsMessage<std::invalid_argument>(HasSubstr(
-            "] EXCEPTION MSG1033: Failed to get port number for \"123456\"")));
+    EXPECT_THAT([]() { to_port("123456"); },
+                ThrowsMessage<std::invalid_argument>(
+                    HasSubstr("] EXCEPTION MSG1033: Failed to get port number "
+                              "for string \"123456\"")));
 
-    EXPECT_THAT(
-        []() { to_port(" "); },
-        ThrowsMessage<std::invalid_argument>(HasSubstr(
-            "] EXCEPTION MSG1033: Failed to get port number for \" \"")));
+    EXPECT_THAT([]() { to_port(" "); },
+                ThrowsMessage<std::invalid_argument>(
+                    HasSubstr("] EXCEPTION MSG1033: Failed to get port number "
+                              "for string \" \"")));
 
-    EXPECT_THAT(
-        []() { to_port(" 123"); },
-        ThrowsMessage<std::invalid_argument>(HasSubstr(
-            "] EXCEPTION MSG1033: Failed to get port number for \" 123\"")));
+    EXPECT_THAT([]() { to_port(" 123"); },
+                ThrowsMessage<std::invalid_argument>(
+                    HasSubstr("] EXCEPTION MSG1033: Failed to get port number "
+                              "for string \" 123\"")));
 
-    EXPECT_THAT(
-        []() { to_port("123 "); },
-        ThrowsMessage<std::invalid_argument>(HasSubstr(
-            "] EXCEPTION MSG1033: Failed to get port number for \"123 \"")));
+    EXPECT_THAT([]() { to_port("123 "); },
+                ThrowsMessage<std::invalid_argument>(
+                    HasSubstr("] EXCEPTION MSG1033: Failed to get port number "
+                              "for string \"123 \"")));
 
-    EXPECT_THAT(
-        []() { to_port("123.4"); },
-        ThrowsMessage<std::invalid_argument>(HasSubstr(
-            "] EXCEPTION MSG1033: Failed to get port number for \"123.4\"")));
+    EXPECT_THAT([]() { to_port("123.4"); },
+                ThrowsMessage<std::invalid_argument>(
+                    HasSubstr("] EXCEPTION MSG1033: Failed to get port number "
+                              "for string \"123.4\"")));
 
-    EXPECT_THAT(
-        []() { to_port(":1234"); },
-        ThrowsMessage<std::invalid_argument>(HasSubstr(
-            "] EXCEPTION MSG1033: Failed to get port number for \":1234\"")));
+    EXPECT_THAT([]() { to_port(":1234"); },
+                ThrowsMessage<std::invalid_argument>(
+                    HasSubstr("] EXCEPTION MSG1033: Failed to get port number "
+                              "for string \":1234\"")));
 
-    EXPECT_THAT(
-        []() { to_port("12x34"); },
-        ThrowsMessage<std::invalid_argument>(HasSubstr(
-            "] EXCEPTION MSG1033: Failed to get port number for \"12x34\"")));
+    EXPECT_THAT([]() { to_port("12x34"); },
+                ThrowsMessage<std::invalid_argument>(
+                    HasSubstr("] EXCEPTION MSG1033: Failed to get port number "
+                              "for string \"12x34\"")));
 }
 
 TEST(ToAddrStrTestSuite, sockaddr_to_address_string) {

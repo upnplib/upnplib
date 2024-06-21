@@ -12,7 +12,7 @@ var dir_80023e064d24958bf48d92ff505d1ef6 =
     [ "port.hpp", "d1/d42/port_8hpp.html", null ],
     [ "port_sock.hpp", "d8/d43/port__sock_8hpp.html", null ],
     [ "sockaddr.hpp", "d7/d1b/sockaddr_8hpp.html", "d7/d1b/sockaddr_8hpp" ],
-    [ "socket.hpp", "da/dfc/socket_8hpp.html", "da/dfc/socket_8hpp" ],
+    [ "socket.hpp", "da/dfc/socket_8hpp.html", null ],
     [ "synclog.hpp", "d1/d3b/synclog_8hpp.html", null ],
     [ "upnptools.hpp", "df/dfb/Upnplib_2include_2upnplib_2upnptools_8hpp.html", "df/dfb/Upnplib_2include_2upnplib_2upnptools_8hpp" ],
     [ "uri.hpp", "d7/d61/Upnplib_2include_2upnplib_2uri_8hpp.html", null ],

@@ -31,6 +31,7 @@ var group__upnplib_socket =
       [ "error_str", "d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4", null ],
       [ "operator const int &", "d2/dd2/classupnplib_1_1CSocketErr.html#aadada5820c5ed14f1e777fbbfb50bcf4", null ]
     ] ],
-    [ "WINSOCK_INIT", "db/d86/group__upnplib-socket.html#gaa9494d0f2750c611339d1336ae8183d8", null ],
-    [ "upnplib::anonymous_namespace{socket.cpp}::getsockname", "db/d86/group__upnplib-socket.html#ga99c7777de5a847f201f6d2f66540a535", null ]
+    [ "upnplib::anonymous_namespace{global.cpp}::CWSAStartup", "de/d4a/classupnplib_1_1anonymous__namespace_02global_8cpp_03_1_1CWSAStartup.html", null ],
+    [ "upnplib::anonymous_namespace{socket.cpp}::getsockname", "db/d86/group__upnplib-socket.html#ga99c7777de5a847f201f6d2f66540a535", null ],
+    [ "upnplib::anonymous_namespace{global.cpp}::init_winsock", "db/d86/group__upnplib-socket.html#gac0b5c6476bc3668768820c4ecfc625a4", null ]
 ];

@@ -1,5 +1,5 @@
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-19
+// Redistribution only with this Copyright remark. Last modified: 2024-06-27
 /*!
  * \file
  * \brief Definition of the Netaddr class.
@@ -19,7 +19,8 @@ namespace upnplib {
 // ----------------------------------------------------
 // I use the system function ::getaddrinfo() to check if the node string is
 // acceptable. Using ::getaddrinfo() is needed to cover all special address
-// features like scope id for link local addresses and so on.
+// features like scope id for link local addresses, Internationalized Domain
+// Names, and so on.
 sa_family_t is_netaddr(const std::string& a_node,
                        const int a_addr_family) noexcept {
     // clang-format off
@@ -30,7 +31,7 @@ sa_family_t is_netaddr(const std::string& a_node,
           std::to_string(a_addr_family)))) + ")")
     // clang-format on
 
-    // The shortest numeric netaddress is "[::]".
+    // The shortest numeric netaddress string is "[::]".
     if (a_node.size() < 4) { // noexcept
         return AF_UNSPEC;
     }
@@ -68,7 +69,9 @@ sa_family_t is_netaddr(const std::string& a_node,
     int rc = umock::netdb_h.getaddrinfo(node.c_str(), nullptr, &hints, &res);
     if (rc != 0) {
         freeaddrinfo(res);
-        UPNPLIB_LOGINFO "MSG1116: (" << rc << ") " << gai_strerror(rc) << '\n';
+        UPNPLIB_LOGINFO "MSG1116: syscall ::getaddrinfo(\""
+            << node.c_str() << "\", nullptr, " << &hints << ", " << &res
+            << "), (" << rc << ") " << gai_strerror(rc) << '\n';
         return AF_UNSPEC;
     }
 
@@ -85,25 +88,28 @@ sa_family_t is_netaddr(const std::string& a_node,
 
 // Free function to check if a string is a valid port number
 // ---------------------------------------------------------
-bool is_port(const std::string& a_port_str) noexcept {
-    TRACE("Executing is_port() with port=\"" + a_port_str + "\"")
+int is_numport(const std::string& a_port_str) noexcept {
+    TRACE("Executing is_numport() with port=\"" + a_port_str + "\"")
 
     // Only non empty strings
-    // and strings with max. 5 characters are valid (uint16_t has max.
-    // 65535)
-    if (a_port_str.empty() || a_port_str.length() > 5)
-        return false;
+    if (a_port_str.empty())
+        return -1;
 
     // Now we check if the string are all digit characters
     for (char ch : a_port_str) {
-        if (!::isdigit(static_cast<unsigned char>(ch)))
-            return false;
+        if (!std::isdigit(static_cast<unsigned char>(ch)))
+            return -1;
     }
+
+    // Only strings with max. 5 char may be valid (uint16_t has max. 65535)
+    if (a_port_str.length() > 5)
+        return 1;
+
     // Valid positive number but is it within the port range (uint16_t)?
     // stoi may throw std::invalid_argument if no conversion could be
     // performed or std::out_of_range. But with the prechecked number string
     // this should never be thrown.
-    return (std::stoi(a_port_str) <= 65535) ? true : false;
+    return (std::stoi(a_port_str) <= 65535) ? 0 : 1;
 }
 
 
@@ -117,6 +123,7 @@ Netaddr::~Netaddr() {
     TRACE2(this, " Destruct Netaddr()") //
 }
 
+#if false
 // Assignment operator to set a netaddress
 // ---------------------------------------
 void Netaddr::operator=(const std::string& a_addr_str) noexcept {
@@ -166,6 +173,7 @@ void Netaddr::operator=(const std::string& a_addr_str) noexcept {
         return;
     }
 }
+#endif
 
 // Getter for a netaddress string
 // ------------------------------

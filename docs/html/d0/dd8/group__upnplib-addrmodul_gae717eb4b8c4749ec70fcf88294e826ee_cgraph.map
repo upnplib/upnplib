@@ -1,6 +1,6 @@
 <map id="upnplib::anonymous_namespace{sockaddr::cpp}::to_port" name="upnplib::anonymous_namespace{sockaddr::cpp}::to_port">
 <area shape="rect" id="Node000001" title="Get the port number from a string." alt="" coords="5,29,176,84"/>
-<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="52,29,52,19,59,10,72,5,91,3,113,6,126,14,123,18,111,11,91,8,74,10,63,15,57,21,58,29"/>
-<area shape="rect" id="Node000002" href="$d0/dd8/group__upnplib-addrmodul.html#ga94539c3b024819362409a8421756bc58" title="Check if a given string represents a port number." alt="" coords="224,44,347,69"/>
+<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="50,29,50,19,57,10,71,5,91,3,114,6,128,14,125,18,113,11,91,8,72,10,60,15,55,21,55,29"/>
+<area shape="rect" id="Node000002" href="$d0/dd8/group__upnplib-addrmodul.html#gae7d54669b7911d1af4deefefa508b5d2" title="Check if a given string represents a port number." alt="" coords="224,44,375,69"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,54,210,54,210,59,176,59"/>
 </map>

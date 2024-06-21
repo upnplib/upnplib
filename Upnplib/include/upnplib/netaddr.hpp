@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_NET_NETADDR_HPP
 #define UPNPLIB_NET_NETADDR_HPP
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-18
+// Redistribution only with this Copyright remark. Last modified: 2024-06-26
 /*!
  * \file
  * \brief Declaration of the Netaddr class
@@ -48,17 +48,19 @@ sa_family_t is_netaddr(
  * \ingroup upnplib-addrmodul
  * \code
  * // Usage e.g.:
- * if (is_port("55555") { manage_given_port(); }
+ * if (is_numport("55555") == 0) { manage_given_port(); }
  * \endcode
  *
- * Checks if the given string represents a numeric value between 0 and 65535.
- * That also means that an empty port string "" returns false.
+ * Checks if the given string represents a numeric port number between 0 and
+ * 65535.
  *
  * \returns
- *   **true** if string represents a port number 0..65535\n
- *   **false** otherwise, inclusive if having an empty port string ""
+ *  - **-1** if *a_port_str* isn't a numeric number, but it may be a valid
+ *           service name (e.g. "https")
+ *  - **0** if *a_port_str* is a valid numeric port number between 0 and 65535
+ *  - **1** if *a_port_str* is an invalid numeric port number > 65535
  */
-bool is_port(const std::string& a_port_str) noexcept;
+int is_numport(const std::string& a_port_str) noexcept;
 
 
 // Netaddress class
@@ -74,6 +76,7 @@ class UPNPLIB_API Netaddr {
     // Destructor
     virtual ~Netaddr();
 
+#if 0
     /*! \name Setter
      * *************
      * @{ */
@@ -112,7 +115,7 @@ class UPNPLIB_API Netaddr {
         /// [in] String with a possible netaddress
         const std::string& a_addr_str) noexcept;
     /// @} Setter
-
+#endif
 
     /*! \name Getter
      * *************
@@ -130,6 +133,8 @@ class UPNPLIB_API Netaddr {
     /// @} Getter
 
   private:
+    friend class CAddrinfo;
+
     SUPPRESS_MSVC_WARN_4251_NEXT_LINE
     std::string m_netaddrp;
 };

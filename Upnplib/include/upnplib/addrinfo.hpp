@@ -1,14 +1,13 @@
 #ifndef UPNPLIB_INCLUDE_ADDRINFO_HPP
 #define UPNPLIB_INCLUDE_ADDRINFO_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-13
+// Redistribution only with this Copyright remark. Last modified: 2024-06-24
 /*!
  * \file
  * \brief Declaration of the Addrinfo class.
  */
 
 #include <upnplib/netaddr.hpp>
-#include <upnplib/sockaddr.hpp>
 
 namespace upnplib {
 
@@ -40,7 +39,12 @@ class UPNPLIB_API CAddrinfo {
               const int a_socktype = SOCK_STREAM, const int a_flags = 0,
               const int a_protocol = 0);
 
+  private:
+    /// \brief Helper method for common tasks on different constructors
+    void set_ai_flags(const int a_family, const int a_socktype,
+                      const int a_flags, const int a_protocol) noexcept;
 
+  public:
     /// \cond
     // Destructor
     virtual ~CAddrinfo();
