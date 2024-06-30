@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-28
+// Redistribution only with this Copyright remark. Last modified: 2024-07-01
 /*!
  * \file
  * \brief Definition of the Addrinfo class and free helper functions.
@@ -32,7 +32,7 @@ CAddrinfo::CAddrinfo(std::string_view a_node, std::string_view a_service,
 CAddrinfo::CAddrinfo(std::string_view a_node, const int a_family,
                      const int a_socktype, const int a_flags,
                      const int a_protocol)
-    : m_node(a_node), m_service("0") {
+    : m_node(a_node) {
     // Just do a simple check for a possible port and split it from address
     // string. Detailed tests will be done with this->init().
     TRACE2(this, " Construct CAddrinfo() without service")
@@ -73,8 +73,9 @@ set_flags:
 
 // Helper method for common tasks on different constructors
 // --------------------------------------------------------
-void CAddrinfo::set_ai_flags(const int a_family, const int a_socktype,
-                             const int a_flags, const int a_protocol) noexcept {
+inline void CAddrinfo::set_ai_flags(const int a_family, const int a_socktype,
+                                    const int a_flags,
+                                    const int a_protocol) noexcept {
     // I cannot use the initialization list of the constructor because the
     // member order in the structure addrinfo is different on Linux, MacOS and
     // win32. I have to use the member names to initialize them, what's not
@@ -83,19 +84,6 @@ void CAddrinfo::set_ai_flags(const int a_family, const int a_socktype,
     m_hints.ai_family = a_family;
     m_hints.ai_socktype = a_socktype;
     m_hints.ai_protocol = a_protocol;
-
-    // Correct weak hints:
-    // Always call is_netaddr() with AF_UNSPEC (default argument) to check
-    // all types. We always set AI_NUMERICHOST if it match, no matter what
-    // 'a_family' was requested by the caller. But if AF_UNSPEC was requested,
-    // the found address family will also be set.
-    const sa_family_t addr_family = is_netaddr(m_node); // noexcept
-    if (addr_family != AF_UNSPEC) { // Here we have a numeric netaddress
-        m_hints.ai_flags |= AI_NUMERICHOST;
-        if (m_hints.ai_family == AF_UNSPEC) { // Correct ai_family, we know it
-            m_hints.ai_family = addr_family;
-        }
-    }
 }
 
 
@@ -130,12 +118,27 @@ void CAddrinfo::free_addrinfo() noexcept {
 void CAddrinfo::init() {
     TRACE2(this, " Executing CAddrinfo::init()")
 
-    // Temporary working copies: modified node and hints to use for syscall
-    // ::getaddrinfo().
+    // Local working copies: modified node, service, and hints to use for
+    // syscall ::getaddrinfo().
     std::string node;
-    ::addrinfo hints{m_hints};
+    std::string service;
+    ::addrinfo hints{m_hints}; // user given opgtions have priority
 
-    if (is_netaddr(m_node, AF_INET6) == AF_INET6) {
+    // Correct weak hints:
+    // Always call upnplib::is_netaddr() with AF_UNSPEC (default argument) to
+    // check all types. I always set AI_NUMERICHOST if it match, no matter what
+    // 'a_family' was requested by the caller. But if AF_UNSPEC was requested,
+    // the found address family will also be set.
+    const sa_family_t addr_family =
+        is_netaddr(m_node, m_hints.ai_family); // noexcept
+    if (addr_family != AF_UNSPEC) { // Here we have a numeric netaddress
+        hints.ai_flags |= AI_NUMERICHOST;
+        if (m_hints.ai_family == AF_UNSPEC) { // Correct ai_family, we know it
+            hints.ai_family = addr_family;
+        }
+    }
+    // Check node name
+    if (addr_family == AF_INET6) {
         // Here we have only ipv6 node strings representing a numeric ip
         // address (netaddress) without port that is at least "[::]". Remove
         // surounding brackets for ::getaddrinfo()
@@ -160,7 +163,9 @@ void CAddrinfo::init() {
     const char* c_node = node.empty() ? nullptr : node.c_str();
     std::string node_out = node.empty() ? "nullptr" : "\"" + node + "\"";
 
-    std::string service;
+    // Check service/port
+    // I have to do this because ::getaddrinfo() does not detect wrong port
+    // numbers >65535. It silently overruns to port number 0, 1, 2...
     switch (is_numport(m_service)) {
     case 0:
         // Valid numeric port number
@@ -193,10 +198,10 @@ void CAddrinfo::init() {
         << (hints.ai_flags & AI_NUMERICHOST ? "AI_NUMERICHOST, " : "")
         << (hints.ai_flags & AI_NUMERICSERV ? "AI_NUMERICSERV, " : "")
         << (hints.ai_flags & AI_PASSIVE ? "AI_PASSIVE, " : "")
-        << (m_hints.ai_family == AF_INET6 ? "AF_INET6" :
-                (m_hints.ai_family == AF_INET ? "AF_INET" :
-                    (m_hints.ai_family == AF_UNSPEC ? "AF_UNSPEC" :
-                        "hints.ai_family=" + std::to_string(m_hints.ai_family))))
+        << (hints.ai_family == AF_INET6 ? "AF_INET6" :
+                (hints.ai_family == AF_INET ? "AF_INET" :
+                    (hints.ai_family == AF_UNSPEC ? "AF_UNSPEC" :
+                        "hints.ai_family=" + std::to_string(hints.ai_family))))
         << (ret != 0
             ? ". Get ERROR"
             : ". Get \"" + to_netaddrp(reinterpret_cast
@@ -232,23 +237,23 @@ void CAddrinfo::init() {
     }
     // Different on platforms: man getsockaddr says "Specifying 0 in
     // hints.ai_socktype indicates that socket addresses of any type can be
-    // returned". Linux returns SOCK_STREAM, MacOS returns SOCK_DGRAM and
-    // win32 returns 0. To be portable we always return 0 in this case, the
-    // same as requested by the user.
+    // returned". Linux returns SOCK_STREAM, MacOS returns SOCK_DGRAM and win32
+    // returns 0. To be portable we always return 0 in this case, the same as
+    // requested by the user.
     if (m_hints.ai_socktype == 0)
         new_res->ai_socktype = 0;
-    // Different on platforms: Ubuntu & MacOS return protocol number,
-    // win32 returns 0. We just return what was requested by the user.
+    // Different on platforms: Ubuntu & MacOS return protocol number, win32
+    // returns 0. We just return what was requested by the user.
     new_res->ai_protocol = m_hints.ai_protocol;
-    // Different on platforms: Ubuntu returns set flags, MacOS & win32
-    // return 0. We just return what was requested by the user.
-    new_res->ai_flags = m_hints.ai_flags;
-    // Man getaddrinfo says: "If service is NULL, then the port number
-    // of the returned socket addresses will be left uninitialized." So
-    // we set it definitely to 0.
-    if (m_service.empty())
-        // port for AF_INET6 is also valid for AF_INET
-        reinterpret_cast<sockaddr_in6*>(new_res->ai_addr)->sin6_port = 0;
+    // Different on platforms: Ubuntu returns set flags, MacOS & win32 return 0.
+    // We just return what was used to query ::getaddrinfo():
+    new_res->ai_flags = hints.ai_flags;
+    // Man getaddrinfo says: "If service is NULL, then the port number of the
+    // returned socket addresses will be left uninitialized." The service is
+    // never set to NULL so we always have a defined service/portnumber.
+    // if (service.empty())
+    //     // port for AF_INET6 is also valid for AF_INET
+    //     reinterpret_cast<sockaddr_in6*>(new_res->ai_addr)->sin6_port = 0;
 
     TRACE2("syscall ::getaddrinfo() with new_res = ", new_res)
     // If init() is called the second time then m_res still points to the
