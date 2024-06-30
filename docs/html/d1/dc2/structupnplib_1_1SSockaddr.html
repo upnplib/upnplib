@@ -180,12 +180,15 @@ Public Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Trivial ::sockaddr structures enhanced with methods. </p>
-<div class="fragment"><div class="line">~$ <span class="comment">// Usage e.g.:</span></div>
-<div class="line">~$ ::sockaddr_storage saddr{};</div>
-<div class="line">~$ <a class="code hl_struct" href="../../d1/dc2/structupnplib_1_1SSockaddr.html">SSockaddr</a> saObj;</div>
-<div class="line">~$ ::memcpy(&amp;saObj.ss, &amp;saddr, saObj.sizeof_ss());</div>
-<div class="line">~$ std::cout &lt;&lt; <span class="stringliteral">&quot;netaddress of saObj is &quot;</span> &lt;&lt; saObj.netaddr() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
+<div class="fragment"><div class="line"><span class="comment">// Usage e.g.:</span></div>
+<div class="line">::sockaddr_storage saddr{};</div>
+<div class="line"><a class="code hl_struct" href="../../d1/dc2/structupnplib_1_1SSockaddr.html">SSockaddr</a> saObj;</div>
+<div class="line">::memcpy(&amp;saObj.<a class="code hl_variable" href="../../d1/dc2/structupnplib_1_1SSockaddr.html#a5b29bed63c23e462546178e4e76c974d">ss</a>, &amp;saddr, saObj.<a class="code hl_function" href="../../d1/dc2/structupnplib_1_1SSockaddr.html#a776aae84b82e1268df7ef75b39a6f528">sizeof_ss</a>());</div>
+<div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;netaddress of saObj is &quot;</span> &lt;&lt; saObj.<a class="code hl_function" href="../../d1/dc2/structupnplib_1_1SSockaddr.html#a7177ca7af8e89e62f3a9ace32d429a0b">netaddr</a>() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="ttc" id="astructupnplib_1_1SSockaddr_html"><div class="ttname"><a href="../../d1/dc2/structupnplib_1_1SSockaddr.html">upnplib::SSockaddr</a></div><div class="ttdoc">Trivial ::sockaddr structures enhanced with methods.</div><div class="ttdef"><b>Definition</b> <a href="../../d7/d1b/sockaddr_8hpp_source.html#l00066">sockaddr.hpp:66</a></div></div>
+<div class="ttc" id="astructupnplib_1_1SSockaddr_html_a5b29bed63c23e462546178e4e76c974d"><div class="ttname"><a href="../../d1/dc2/structupnplib_1_1SSockaddr.html#a5b29bed63c23e462546178e4e76c974d">upnplib::SSockaddr::ss</a></div><div class="ttdeci">sockaddr_storage &amp; ss</div><div class="ttdoc">Reference to sockaddr_storage struct.</div><div class="ttdef"><b>Definition</b> <a href="../../d7/d1b/sockaddr_8hpp_source.html#l00068">sockaddr.hpp:68</a></div></div>
+<div class="ttc" id="astructupnplib_1_1SSockaddr_html_a7177ca7af8e89e62f3a9ace32d429a0b"><div class="ttname"><a href="../../d1/dc2/structupnplib_1_1SSockaddr.html#a7177ca7af8e89e62f3a9ace32d429a0b">upnplib::SSockaddr::netaddr</a></div><div class="ttdeci">virtual const std::string &amp; netaddr()</div><div class="ttdoc">Get the assosiated netaddress without port.</div><div class="ttdef"><b>Definition</b> <a href="../../d7/def/sockaddr_8cpp_source.html#l00286">sockaddr.cpp:286</a></div></div>
+<div class="ttc" id="astructupnplib_1_1SSockaddr_html_a776aae84b82e1268df7ef75b39a6f528"><div class="ttname"><a href="../../d1/dc2/structupnplib_1_1SSockaddr.html#a776aae84b82e1268df7ef75b39a6f528">upnplib::SSockaddr::sizeof_ss</a></div><div class="ttdeci">socklen_t sizeof_ss() const</div><div class="ttdoc">Get sizeof the Sockaddr Structure.</div><div class="ttdef"><b>Definition</b> <a href="../../d7/def/sockaddr_8cpp_source.html#l00321">sockaddr.cpp:321</a></div></div>
 </div><!-- fragment --><p>This structure should be usable on a low level like the trival C <code>struct ::sockaddr_storage</code> but provides additional methods to manage its data. </p>
 
 <p class="definition">Definition at line <a class="el" href="../../d7/d1b/sockaddr_8hpp_source.html#l00066">66</a> of file <a class="el" href="../../d7/d1b/sockaddr_8hpp_source.html">sockaddr.hpp</a>.</p>
@@ -205,7 +208,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00182">182</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00187">187</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
 
 </div>
 </div>
@@ -232,7 +235,7 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00187">187</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00192">192</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
 
 </div>
 </div>
@@ -253,12 +256,12 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Copy constructor, also needed for copy assignment operator. &lt;&ndash; --------------------------------------------------------&mdash; --&gt; </p>
-<div class="fragment"><div class="line">~$ <span class="comment">// Usage e.g.:</span></div>
-<div class="line">~$ <a class="code hl_struct" href="../../d1/dc2/structupnplib_1_1SSockaddr.html">SSockaddr</a> saddr2 = saddr1; <span class="comment">// saddr1 is an instantiated object.</span></div>
-<div class="line">~$ <span class="comment">// or</span></div>
-<div class="line">~$ <a class="code hl_struct" href="../../d1/dc2/structupnplib_1_1SSockaddr.html">SSockaddr</a> saddr2{saddr1};</div>
+<div class="fragment"><div class="line"><span class="comment">// Usage e.g.:</span></div>
+<div class="line"><a class="code hl_struct" href="../../d1/dc2/structupnplib_1_1SSockaddr.html">SSockaddr</a> saddr2 = saddr1; <span class="comment">// saddr1 is an instantiated object.</span></div>
+<div class="line"><span class="comment">// or</span></div>
+<div class="line"><a class="code hl_struct" href="../../d1/dc2/structupnplib_1_1SSockaddr.html">SSockaddr</a> saddr2{saddr1};</div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00201">201</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00206">206</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
 
 </div>
 </div>
@@ -290,7 +293,7 @@ Public Attributes</h2></td></tr>
 
 <p>Reimplemented in <a class="el" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a70afe9ed6de1c17bb59f6c0bcc5bba00">upnplib::CSocket_basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00306">306</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00311">311</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
 <div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-1-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-1-summary" class="dynsummary" style="display:block;">
@@ -338,13 +341,13 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get the assosiated <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a> without port. </p>
-<div class="fragment"><div class="line">~$ <span class="comment">// Usage e.g.:</span></div>
-<div class="line">~$ <a class="code hl_struct" href="../../d1/dc2/structupnplib_1_1SSockaddr.html">SSockaddr</a> saObj;</div>
-<div class="line">~$ <span class="keywordflow">if</span> (saObj.netaddr() == <span class="stringliteral">&quot;[::1]&quot;</span>) { manage_localhost(); }</div>
+<div class="fragment"><div class="line"><span class="comment">// Usage e.g.:</span></div>
+<div class="line"><a class="code hl_struct" href="../../d1/dc2/structupnplib_1_1SSockaddr.html">SSockaddr</a> saObj;</div>
+<div class="line"><span class="keywordflow">if</span> (saObj.<a class="code hl_function" href="../../d1/dc2/structupnplib_1_1SSockaddr.html#a7177ca7af8e89e62f3a9ace32d429a0b">netaddr</a>() == <span class="stringliteral">&quot;[::1]&quot;</span>) { manage_localhost(); }</div>
 </div><!-- fragment --> 
 <p>Reimplemented in <a class="el" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a9e771b73cb9373e1b1f09ffca79dc9b3">upnplib::CSocket_basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00281">281</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00286">286</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
 <div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-2-summary" class="dynsummary" style="display:block;">
@@ -392,13 +395,14 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get the assosiated <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a> with port. </p>
-<div class="fragment"><div class="line">~$ <span class="comment">// Usage e.g.:</span></div>
-<div class="line">~$ <a class="code hl_struct" href="../../d1/dc2/structupnplib_1_1SSockaddr.html">SSockaddr</a> saObj;</div>
-<div class="line">~$ <span class="keywordflow">if</span> (saObj.netaddrp() == <span class="stringliteral">&quot;[::1]:49494&quot;</span>) { manage_localhost(); }</div>
+<div class="fragment"><div class="line"><span class="comment">// Usage e.g.:</span></div>
+<div class="line"><a class="code hl_struct" href="../../d1/dc2/structupnplib_1_1SSockaddr.html">SSockaddr</a> saObj;</div>
+<div class="line"><span class="keywordflow">if</span> (saObj.<a class="code hl_function" href="../../d1/dc2/structupnplib_1_1SSockaddr.html#aa4e5becb3ad27b69d81d517cc66cc3e8">netaddrp</a>() == <span class="stringliteral">&quot;[::1]:49494&quot;</span>) { manage_localhost(); }</div>
+<div class="ttc" id="astructupnplib_1_1SSockaddr_html_aa4e5becb3ad27b69d81d517cc66cc3e8"><div class="ttname"><a href="../../d1/dc2/structupnplib_1_1SSockaddr.html#aa4e5becb3ad27b69d81d517cc66cc3e8">upnplib::SSockaddr::netaddrp</a></div><div class="ttdeci">virtual const std::string &amp; netaddrp()</div><div class="ttdoc">Get the assosiated netaddress with port.</div><div class="ttdef"><b>Definition</b> <a href="../../d7/def/sockaddr_8cpp_source.html#l00299">sockaddr.cpp:299</a></div></div>
 </div><!-- fragment --> 
 <p>Reimplemented in <a class="el" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a24406f0340da2352557ad1ea301410c5">upnplib::CSocket_basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00294">294</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00299">299</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
 <div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-3-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-3-summary" class="dynsummary" style="display:block;">
@@ -554,11 +558,11 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Set <a class="el" href="../../d5/d67/Glossary.html#glossary_port">port number</a> from integer. </p>
-<div class="fragment"><div class="line">~$ <span class="comment">// Usage e.g.:</span></div>
-<div class="line">~$ <a class="code hl_struct" href="../../d1/dc2/structupnplib_1_1SSockaddr.html">SSockaddr</a> saObj;</div>
-<div class="line">~$ saObj = 50001;</div>
+<div class="fragment"><div class="line"><span class="comment">// Usage e.g.:</span></div>
+<div class="line"><a class="code hl_struct" href="../../d1/dc2/structupnplib_1_1SSockaddr.html">SSockaddr</a> saObj;</div>
+<div class="line">saObj = 50001;</div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00266">266</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00271">271</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
 
 </div>
 </div>
@@ -579,12 +583,12 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Set socket address from a <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a>. </p>
-<div class="fragment"><div class="line">~$ <span class="comment">// Usage e.g.:</span></div>
-<div class="line">~$ <a class="code hl_struct" href="../../d1/dc2/structupnplib_1_1SSockaddr.html">SSockaddr</a> saObj;</div>
-<div class="line">~$ saObj = <span class="stringliteral">&quot;[2001:db8::1]&quot;</span>;</div>
-<div class="line">~$ saObj = <span class="stringliteral">&quot;[2001:db8::1]:50001&quot;</span>;</div>
-<div class="line">~$ saObj = <span class="stringliteral">&quot;192.168.1.1&quot;</span>;</div>
-<div class="line">~$ saObj = <span class="stringliteral">&quot;192.168.1.1:50001&quot;</span>;</div>
+<div class="fragment"><div class="line"><span class="comment">// Usage e.g.:</span></div>
+<div class="line"><a class="code hl_struct" href="../../d1/dc2/structupnplib_1_1SSockaddr.html">SSockaddr</a> saObj;</div>
+<div class="line">saObj = <span class="stringliteral">&quot;[2001:db8::1]&quot;</span>;</div>
+<div class="line">saObj = <span class="stringliteral">&quot;[2001:db8::1]:50001&quot;</span>;</div>
+<div class="line">saObj = <span class="stringliteral">&quot;192.168.1.1&quot;</span>;</div>
+<div class="line">saObj = <span class="stringliteral">&quot;192.168.1.1:50001&quot;</span>;</div>
 </div><!-- fragment --><p> An empty netaddress "" clears the address storage. </p><dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname">std::invalid_argument</td><td>Invalid netaddress </td></tr>
@@ -592,7 +596,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00221">221</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00226">226</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
 
 </div>
 </div>
@@ -613,10 +617,10 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Copy assignment operator, needs user defined copy contructor &lt;&ndash; ---------------------------------------------------------&mdash; --&gt; </p>
-<div class="fragment"><div class="line">~$ <span class="comment">// Usage e.g.:</span></div>
-<div class="line">~$ saddr2 = saddr1; <span class="comment">// saddr? are two instantiated valid objects.</span></div>
+<div class="fragment"><div class="line"><span class="comment">// Usage e.g.:</span></div>
+<div class="line">saddr2 = saddr1; <span class="comment">// saddr? are two instantiated valid objects.</span></div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00208">208</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00213">213</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
 
 </div>
 </div>
@@ -641,7 +645,7 @@ Public Attributes</h2></td></tr>
  <b>false</b> otherwise</dd></dl>
 <p>It only supports AF_INET6 and AF_INET. For all other address families it returns false. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00274">274</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00279">279</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
 
 </div>
 </div>
@@ -662,7 +666,7 @@ Public Attributes</h2></td></tr>
 
 <p>Get sizeof the current (sin6 or sin) Sockaddr Structure. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00323">323</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00328">328</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
 
 </div>
 </div>
@@ -683,7 +687,7 @@ Public Attributes</h2></td></tr>
 
 <p>Get sizeof the Sockaddr Structure. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00316">316</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d7/def/sockaddr_8cpp_source.html#l00321">321</a> of file <a class="el" href="../../d7/def/sockaddr_8cpp_source.html">sockaddr.cpp</a>.</p>
 <div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-5-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-5-summary" class="dynsummary" style="display:block;">

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-27
+// Redistribution only with this Copyright remark. Last modified: 2024-07-01
 /*!
  * \file
  * \brief Definition of the Sockaddr class and some free helper functions.
@@ -21,9 +21,9 @@ namespace {
  * sockaddr structure
  * \ingroup upnplib-addrmodul
  * \code
- * ~$ // Usage e.g.:
- * ~$ ::sockaddr_storage saddr{};
- * ~$ std::cout << "netaddress is " << to_netaddr(&saddr) << "\n";
+ * // Usage e.g.:
+ * ::sockaddr_storage saddr{};
+ * std::cout << "netaddress is " << to_netaddr(&saddr) << "\n";
  * \endcode
  */
 std::string to_netaddr(const ::sockaddr_storage* const a_sockaddr) noexcept {
@@ -36,16 +36,19 @@ std::string to_netaddr(const ::sockaddr_storage* const a_sockaddr) noexcept {
 
     // There is no need to test the return value of ::inet_ntop() because its
     // two possible errors are implicit managed by this code.
-    case AF_INET6:
-        ::inet_ntop(AF_INET6,
-                    &reinterpret_cast<const ::sockaddr_in6*>(a_sockaddr)
-                         ->sin6_addr.s6_addr,
-                    addrbuf, sizeof(addrbuf));
+    case AF_INET6: {
+        const ::sockaddr_in6* sin6 =
+            reinterpret_cast<const ::sockaddr_in6*>(a_sockaddr);
+        ::inet_ntop(AF_INET6, sin6->sin6_addr.s6_addr, addrbuf,
+                    sizeof(addrbuf));
         // Next throws 'std::length_error' if the length of the constructed
         // string would exceed max_size(). This should never happen with given
         // length of addrbuf.
+        if (sin6->sin6_scope_id > 0)
+            return '[' + std::string(addrbuf) + '%' +
+                   std::to_string(sin6->sin6_scope_id) + ']';
         return '[' + std::string(addrbuf) + ']';
-
+    }
     case AF_INET:
         ::inet_ntop(AF_INET,
                     &reinterpret_cast<const ::sockaddr_in*>(a_sockaddr)

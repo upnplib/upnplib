@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: r024-06-28
+// Redistribution only with this Copyright remark. Last modified: r024-07-03
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -14,12 +14,15 @@ namespace utest {
 
 using ::testing::_;
 using ::testing::AnyOf;
+using ::testing::DoAll;
 using ::testing::Field;
 using ::testing::Pointee;
 using ::testing::Return;
+using ::testing::SetArgPointee;
 using ::testing::StrictMock;
 
 using ::upnplib::CAddrinfo;
+using ::upnplib::SSockaddr;
 
 
 class NetaddrAssignTest
@@ -75,19 +78,20 @@ INSTANTIATE_TEST_SUITE_P(
         std::make_tuple("[::1]", "[::1]:0"),
         std::make_tuple("[::1]:", "[::1]:0"),
         std::make_tuple("[::1]:0", "[::1]:0"),
-        std::make_tuple("[::1].4", ""), // dot for colon, may be an alphanum
+        // std::make_tuple("[::1].4", ""), // dot for colon, takes long time, mocked later
         std::make_tuple("127.0.0.1", "127.0.0.1:0"),
         std::make_tuple("127.0.0.1:", "127.0.0.1:0"),
         std::make_tuple("127.0.0.1:0", "127.0.0.1:0"),
-        // std::make_tuple("127.0.0.1.4", ""), // dot for colon, tested later
+        // std::make_tuple("127.0.0.1.5", ""), // dot for colon, takes long time, mocked later
         std::make_tuple("[2001:db8::43]:", "[2001:db8::43]:0"),
         std::make_tuple("2001:db8::41:59897", ""), // no brackets
-        /*30*/ std::make_tuple("[2001:db8::fg]", ""),
-        std::make_tuple("[2001:db8::fg]:59877", ""),
+        std::make_tuple("[2001:db8::fg]", ""),
+        /*30*/ std::make_tuple("[2001:db8::fg]:59877", ""),
         // std::make_tuple("[2001:db8::42]:65535", "[2001:db8::42]:65535"), // tested later
         std::make_tuple("[2001:db8::51]:65536", ""), // invalid port
+        std::make_tuple("[2001:db8::52]:9999999999", ""), // invalid port
         std::make_tuple("[2001:db8::52::53]", ""), // double double colon
-        std::make_tuple("[2001:db8::52::53]:65535", ""), // double double colon
+        std::make_tuple("[2001:db8::52::54]:65535", ""), // double double colon
         std::make_tuple("[12.168.88.95]", ""), // IPv4 address with brackets
         std::make_tuple("[12.168.88.96]:", ""),
         std::make_tuple("[12.168.88.97]:9876", ""),
@@ -98,14 +102,13 @@ INSTANTIATE_TEST_SUITE_P(
         // std::make_tuple("garbage:49493", ""), // triggers DNS lookup
         std::make_tuple("[garbage]:49494", ""),
         /*40*/ std::make_tuple("[2001:db8::44]:https", "[2001:db8::44]:443"),
-        std::make_tuple("[2001:db8::44]:httpx", ""),
+        // std::make_tuple("[2001:db8::44]:httpx", ""), // takes long time, mocked later
         std::make_tuple("192.168.88.98:http", "192.168.88.98:80"),
-        std::make_tuple("192.168.88.98:httpy", ""),
-        std::make_tuple("[::1%1]", "[::1]:0"), // should be "[::1%1]:0"),
-        // std::make_tuple("[::1%lo]", "[::1]:0"), // should be "[::1%1]:0"),
-        std::make_tuple("[fe80::acd%2]:ssh", "[fe80::acd]:22") // should be "[fe80::acd%2]:22")
-        // ens1 not given on all platforms
-        // std::make_tuple("[fe80::ace%ens1]:ssh", "[fe80::ace]:22") // "[fe80::acd%ens1]:22")
+        // std::make_tuple("192.168.88.98:httpy", ""), // takes long time, mocked later
+        std::make_tuple("[::1%1]", "[::1%1]:0"),
+        // std::make_tuple("[::1%lo]", ""),
+        std::make_tuple("[fe80::acd%1]:ssh", "[fe80::acd%1]:22") // should be "[fe80::acd%1]:22")
+        // std::make_tuple("[fe80::ace%lo]:ssh", "[fe80::ace]:22") // should be "[fe80::ace%1]:22")
     ));
 // clang-format on
 
@@ -130,10 +133,10 @@ TEST(AddrinfoTestSuite, query_ipv6_addrinfo_successful) {
 
     // Check the initialized object. This is what we have given with the
     // constructor. We get just the initialized hints.
-    EXPECT_EQ(ai1->ai_family, AF_INET6);
+    EXPECT_EQ(ai1->ai_family, AF_UNSPEC);
     EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai1->ai_protocol, 0);
-    EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST);
+    EXPECT_EQ(ai1->ai_flags, 0);
     EXPECT_EQ(ai1->ai_addrlen, 0);
     EXPECT_EQ(ai1->ai_addr, nullptr);
     EXPECT_EQ(ai1->ai_canonname, nullptr);
@@ -154,8 +157,40 @@ TEST(AddrinfoTestSuite, query_ipv6_addrinfo_successful) {
     EXPECT_EQ(ai1.netaddr().str(), "[2001:db8::8]:0");
 }
 
+TEST_F(AddrinfoMockFTestSuite, query_ipv6_addrinfo_successful) {
+    SSockaddr saddr;
+    saddr = "[2001:db8::9]";
+
+    ::addrinfo res;
+    res.ai_flags = AI_NUMERICHOST;
+    res.ai_family = AF_INET6;
+    res.ai_socktype = SOCK_STREAM;
+    res.ai_protocol = 0;
+    res.ai_addrlen = sizeof(saddr.sin6);
+    res.ai_addr = &saddr.sa;
+    res.ai_canonname = nullptr;
+    res.ai_next = nullptr;
+
+    // Mock 'is_netaddr()'.
+    EXPECT_CALL(m_netdbObj,
+                getaddrinfo(Pointee(*"2001:db8::9"), nullptr,
+                            Field(&addrinfo::ai_flags, AI_NUMERICHOST), _))
+        .WillOnce(DoAll(SetArgPointee<3>(&res), Return(0)));
+    // Mock 'CAddrinfo::init()'
+    EXPECT_CALL(m_netdbObj,
+                getaddrinfo(Pointee(*"2001:db8::9"), Pointee(*""),
+                            Field(&addrinfo::ai_flags, AI_NUMERICHOST), _))
+        .WillOnce(DoAll(SetArgPointee<3>(&res), Return(0)));
+    // Mock 'freeaddrinfo()'
+    EXPECT_CALL(m_netdbObj, freeaddrinfo(&res)).Times(2);
+
+    // Test Unit
+    CAddrinfo ai("[2001:db8::9]");
+    ASSERT_NO_THROW(ai.init());
+}
+
 TEST(AddrinfoTestSuite, init_ipv6_addrinfo_and_port_successful) {
-    CAddrinfo ai1("[2001:db8::14]", "59876");
+    CAddrinfo ai1("[2001:db8::14]", "https");
 
     ASSERT_NO_THROW(ai1.init());
 
@@ -167,7 +202,7 @@ TEST(AddrinfoTestSuite, init_ipv6_addrinfo_and_port_successful) {
     EXPECT_NE(ai1->ai_addr, nullptr);
     EXPECT_EQ(ai1->ai_canonname, nullptr);
     // EXPECT_NE(ai1->ai_next, nullptr); // Depends on available interfaces
-    EXPECT_EQ(ai1.netaddr().str(), "[2001:db8::14]:59876");
+    EXPECT_EQ(ai1.netaddr().str(), "[2001:db8::14]:443");
 }
 
 TEST(AddrinfoTestSuite, init_ipv6_addrinfo_port_successful) {
@@ -178,7 +213,7 @@ TEST(AddrinfoTestSuite, init_ipv6_addrinfo_port_successful) {
     EXPECT_EQ(ai1->ai_family, AF_INET6);
     EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai1->ai_protocol, 0);
-    EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST);
+    EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST | AI_NUMERICSERV);
     EXPECT_EQ(ai1->ai_addrlen, 28);
     EXPECT_NE(ai1->ai_addr, nullptr);
     EXPECT_EQ(ai1->ai_canonname, nullptr);
@@ -191,10 +226,10 @@ TEST(AddrinfoTestSuite, query_ipv4_addrinfo_successful) {
 
     // Check the initialized object. This is what we have given with the
     // constructor. We get just the initialized hints.
-    EXPECT_EQ(ai1->ai_family, AF_INET);
+    EXPECT_EQ(ai1->ai_family, AF_UNSPEC);
     EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai1->ai_protocol, 0);
-    EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST);
+    EXPECT_EQ(ai1->ai_flags, 0);
     EXPECT_EQ(ai1->ai_addrlen, 0);
     EXPECT_EQ(ai1->ai_addr, nullptr);
     EXPECT_EQ(ai1->ai_canonname, nullptr);
@@ -223,7 +258,7 @@ TEST(AddrinfoTestSuite, init_ipv4_and_port_addrinfo_successful) {
     EXPECT_EQ(ai1->ai_family, AF_INET);
     EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai1->ai_protocol, 0);
-    EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST);
+    EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST | AI_NUMERICSERV);
     EXPECT_EQ(ai1->ai_addrlen, 16);
     EXPECT_NE(ai1->ai_addr, nullptr);
     EXPECT_EQ(ai1->ai_canonname, nullptr);
@@ -232,7 +267,7 @@ TEST(AddrinfoTestSuite, init_ipv4_and_port_addrinfo_successful) {
 }
 
 TEST(AddrinfoTestSuite, init_ipv4_port_addrinfo_successful) {
-    CAddrinfo ai1("192.168.200.203:54545");
+    CAddrinfo ai1("192.168.200.203:http");
 
     ASSERT_NO_THROW(ai1.init());
 
@@ -244,7 +279,7 @@ TEST(AddrinfoTestSuite, init_ipv4_port_addrinfo_successful) {
     EXPECT_NE(ai1->ai_addr, nullptr);
     EXPECT_EQ(ai1->ai_canonname, nullptr);
     // EXPECT_NE(ai1->ai_next, nullptr); // Depends on available interfaces
-    EXPECT_EQ(ai1.netaddr().str(), "192.168.200.203:54545");
+    EXPECT_EQ(ai1.netaddr().str(), "192.168.200.203:80");
 }
 
 TEST(AddrinfoTestSuite, double_set_addrinfo_successful) {
@@ -266,7 +301,7 @@ TEST(AddrinfoTestSuite, double_set_addrinfo_successful) {
     EXPECT_EQ(ai2->ai_protocol, 0);
     // Different on platforms: Ubuntu returns 1025, MacOS & win32 return 0.
     // We just return that what was requested by the user.
-    EXPECT_EQ(ai2->ai_flags, AI_PASSIVE | AI_NUMERICHOST);
+    EXPECT_EQ(ai2->ai_flags, AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
     // Returns what ::getaddrinfo() returns.
     EXPECT_EQ(ai2.netaddr().str(), "[2001:db8::2]:50048");
     // Returns what ::getaddrinfo() returns.
@@ -282,7 +317,7 @@ TEST(AddrinfoTestSuite, double_set_addrinfo_successful) {
     EXPECT_EQ(ai2->ai_family, AF_INET6);
     EXPECT_EQ(ai2->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai2->ai_protocol, 0);
-    EXPECT_EQ(ai2->ai_flags, AI_PASSIVE | AI_NUMERICHOST);
+    EXPECT_EQ(ai2->ai_flags, AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
     EXPECT_EQ(ai2.netaddr().str(), "[2001:db8::2]:50048");
 }
 
@@ -322,7 +357,7 @@ TEST(AddrinfoTestSuite, get_implicit_address_family) {
     EXPECT_EQ(ai1->ai_family, AF_INET6); // set by syscal ::getaddrinfo
     EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai1->ai_protocol, 0);
-    EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST); // set by syscal ::getaddrinfo
+    EXPECT_EQ(ai1->ai_flags, AI_NUMERICHOST | AI_NUMERICSERV);
     EXPECT_EQ(ai1.netaddr().str(), "[2001:db8::5]:50051");
 
     // Test Unit
@@ -332,7 +367,7 @@ TEST(AddrinfoTestSuite, get_implicit_address_family) {
     EXPECT_EQ(ai2->ai_family, AF_INET); // set by syscal ::getaddrinfo
     EXPECT_EQ(ai2->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai2->ai_protocol, 0);
-    EXPECT_EQ(ai2->ai_flags, AI_NUMERICHOST); // set by syscal ::getaddrinfo
+    EXPECT_EQ(ai2->ai_flags, AI_NUMERICHOST | AI_NUMERICSERV);
     EXPECT_EQ(ai2.netaddr().str(), "192.168.9.10:50096");
 
     // Test Unit, does not trigger a DNS query
@@ -342,7 +377,7 @@ TEST(AddrinfoTestSuite, get_implicit_address_family) {
     EXPECT_EQ(ai3->ai_family, AF_INET6); // set by syscal ::getaddrinfo
     EXPECT_EQ(ai3->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai3->ai_protocol, 0);
-    EXPECT_EQ(ai3->ai_flags, 0);
+    EXPECT_EQ(ai3->ai_flags, AI_NUMERICSERV);
     EXPECT_EQ(ai3.netaddr().str(), "[::1]:50049");
 }
 
@@ -372,17 +407,18 @@ TEST(AddrinfoTestSuite, get_unknown_alphanumeric_host_fails) {
 }
 
 TEST_F(AddrinfoMockFTestSuite, get_addrinfo_out_of_memory) {
-    // Mock is_netaddr() that is called three times
     EXPECT_CALL(m_netdbObj,
                 getaddrinfo(Pointee(*"localhost"), nullptr,
                             Field(&addrinfo::ai_flags, AI_NUMERICHOST), _))
-        .Times(3)
+        .Times(2)
         .WillRepeatedly(Return(EAI_MEMORY));
     // Mock CAddrinfo::init()
     EXPECT_CALL(m_netdbObj,
                 getaddrinfo(Pointee(*"localhost"), Pointee(*"50118"),
                             Field(&addrinfo::ai_flags, AI_NUMERICSERV), _))
         .WillOnce(Return(EAI_MEMORY));
+    // Mock 'freeaddrinfo()'
+    EXPECT_CALL(m_netdbObj, freeaddrinfo(_)).Times(2);
 
     // Test Unit
     CAddrinfo ai("localhost", "50118", AF_UNSPEC, SOCK_STREAM);
@@ -391,39 +427,113 @@ TEST_F(AddrinfoMockFTestSuite, get_addrinfo_out_of_memory) {
 
 TEST_F(AddrinfoMockFTestSuite, get_addrinfo_invalid_ipv4_address) {
     // This test triggers a DNS lookup, so I mock it.
-    // Mock 'is_netaddr()' that is called three times.
+    // Mock 'is_netaddr()' that is called two times.
     EXPECT_CALL(m_netdbObj,
                 getaddrinfo(Pointee(*"192.168.88.256"), nullptr,
                             Field(&addrinfo::ai_flags, AI_NUMERICHOST), _))
-        .Times(3)
+        .Times(2)
         .WillRepeatedly(Return(EAI_NONAME));
     // Mock 'CAddrinfo::init()'
     EXPECT_CALL(m_netdbObj,
                 getaddrinfo(Pointee(*"192.168.88.256"), Pointee(*"59866"),
                             Field(&addrinfo::ai_flags, AI_NUMERICSERV), _))
         .WillOnce(Return(EAI_NONAME));
+    // Mock 'freeaddrinfo()'
+    EXPECT_CALL(m_netdbObj, freeaddrinfo(_)).Times(2);
 
     // Test Unit
     CAddrinfo ai("192.168.88.256:59866");
     EXPECT_THROW(ai.init(), std::runtime_error);
 }
 
-TEST_F(AddrinfoMockFTestSuite, get_addrinfo_service_dot_for_colon) {
-    // This test triggers a DNS lookup, so I mock it.
-    // Mock 'is_netaddr()' that is called three times.
+TEST_F(AddrinfoMockFTestSuite, get_addrinfo_ipv6_service_dot_for_colon) {
+    // Looking for mistaken service tooks long time, so I mock it.
+    ::addrinfo res{};
+    res.ai_family = AF_INET6;
+
+    // Mock 'is_netaddr()'.
     EXPECT_CALL(m_netdbObj,
-                getaddrinfo(Pointee(*"127.0.0.1.4"), nullptr,
+                getaddrinfo(Pointee(*"::1"), nullptr,
                             Field(&addrinfo::ai_flags, AI_NUMERICHOST), _))
-        .Times(3)
-        .WillRepeatedly(Return(EAI_NONAME));
+        .WillOnce(DoAll(SetArgPointee<3>(&res), Return(0)));
     // Mock 'CAddrinfo::init()'
     EXPECT_CALL(m_netdbObj,
-                getaddrinfo(Pointee(*"127.0.0.1.4"), Pointee(*"0"),
-                            Field(&addrinfo::ai_flags, AI_NUMERICSERV), _))
+                getaddrinfo(Pointee(*"::1"), Pointee(*".4"),
+                            Field(&addrinfo::ai_flags, AI_NUMERICHOST), _))
         .WillOnce(Return(EAI_NONAME));
+    // Mock 'freeaddrinfo()'
+    EXPECT_CALL(m_netdbObj, freeaddrinfo(&res)).Times(1);
 
     // Test Unit
-    CAddrinfo ai("127.0.0.1.4");
+    CAddrinfo ai("[::1].4");
+    EXPECT_THROW(ai.init(), std::runtime_error);
+}
+
+TEST_F(AddrinfoMockFTestSuite, get_addrinfo_ipv4_service_dot_for_colon) {
+    // Looking for mistaken service tooks long time, so I mock it.
+    ::addrinfo res{};
+
+    // Mock 'is_netaddr()'.
+    EXPECT_CALL(m_netdbObj,
+                getaddrinfo(Pointee(*"127.0.0.1.5"), nullptr,
+                            Field(&addrinfo::ai_flags, AI_NUMERICHOST), _))
+        .Times(2)
+        .WillRepeatedly(DoAll(SetArgPointee<3>(&res), Return(EAI_NONAME)));
+    // Mock 'CAddrinfo::init()'
+    EXPECT_CALL(m_netdbObj, getaddrinfo(Pointee(*"127.0.0.1.5"), Pointee(*""),
+                                        Field(&addrinfo::ai_flags, 0), _))
+        .WillOnce(Return(EAI_NONAME));
+    // Mock 'freeaddrinfo()'
+    EXPECT_CALL(m_netdbObj, freeaddrinfo(&res)).Times(2);
+
+    // Test Unit
+    CAddrinfo ai("127.0.0.1.5");
+    EXPECT_THROW(ai.init(), std::runtime_error);
+}
+
+TEST_F(AddrinfoMockFTestSuite, get_addrinfo_ipv6_service_undefined_alpha_name) {
+    // Looking for undefined service tooks long time, so I mock it.
+    ::addrinfo res{};
+    res.ai_family = AF_INET6;
+
+    // Mock 'is_netaddr()'.
+    EXPECT_CALL(m_netdbObj,
+                getaddrinfo(Pointee(*"2001:db8::44"), nullptr,
+                            Field(&addrinfo::ai_flags, AI_NUMERICHOST), _))
+        .WillOnce(DoAll(SetArgPointee<3>(&res), Return(0)));
+    // Mock 'CAddrinfo::init()'
+    EXPECT_CALL(m_netdbObj,
+                getaddrinfo(Pointee(*"2001:db8::44"), Pointee(*"httpx"),
+                            Field(&addrinfo::ai_flags, AI_NUMERICHOST), _))
+        .WillOnce(Return(EAI_SERVICE));
+    // Mock 'freeaddrinfo()'
+    EXPECT_CALL(m_netdbObj, freeaddrinfo(&res)).Times(1);
+
+    // Test Unit
+    CAddrinfo ai("[2001:db8::44]:httpx");
+    EXPECT_THROW(ai.init(), std::runtime_error);
+}
+
+TEST_F(AddrinfoMockFTestSuite, get_addrinfo_ipv4_service_undefined_alpha_name) {
+    // Looking for undefined service tooks long time, so I mock it.
+    ::addrinfo res{};
+    res.ai_family = AF_INET;
+
+    // Mock 'is_netaddr()'.
+    EXPECT_CALL(m_netdbObj,
+                getaddrinfo(Pointee(*"192.168.88.98"), nullptr,
+                            Field(&addrinfo::ai_flags, AI_NUMERICHOST), _))
+        .WillOnce(DoAll(SetArgPointee<3>(&res), Return(0)));
+    // Mock 'CAddrinfo::init()'
+    EXPECT_CALL(m_netdbObj,
+                getaddrinfo(Pointee(*"192.168.88.98"), Pointee(*"httpy"),
+                            Field(&addrinfo::ai_flags, AI_NUMERICHOST), _))
+        .WillOnce(Return(EAI_SERVICE));
+    // Mock 'freeaddrinfo()'
+    EXPECT_CALL(m_netdbObj, freeaddrinfo(&res)).Times(1);
+
+    // Test Unit
+    CAddrinfo ai("192.168.88.98:httpy");
     EXPECT_THROW(ai.init(), std::runtime_error);
 }
 
@@ -475,7 +585,7 @@ TEST(AddrinfoTestSuite, get_active_empty_node_address) {
         EXPECT_EQ(ai1->ai_family, AF_INET6);
         EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
         EXPECT_EQ(ai1->ai_protocol, 0);
-        EXPECT_EQ(ai1->ai_flags, 0);
+        EXPECT_EQ(ai1->ai_flags, AI_NUMERICSERV);
         EXPECT_THAT(ai1.netaddr().str(), "[::1]:50007");
 
         // Test Unit for AF_UNSPEC
@@ -485,7 +595,7 @@ TEST(AddrinfoTestSuite, get_active_empty_node_address) {
         EXPECT_EQ(ai2->ai_family, AF_INET6);
         EXPECT_EQ(ai2->ai_socktype, 0);
         EXPECT_EQ(ai2->ai_protocol, 0);
-        EXPECT_EQ(ai2->ai_flags, AI_NUMERICHOST);
+        EXPECT_EQ(ai2->ai_flags, AI_NUMERICHOST | AI_NUMERICSERV);
         EXPECT_THAT(ai2.netaddr().str(), "[::1]:50099");
 
         // Test Unit for AF_INET6
@@ -495,7 +605,7 @@ TEST(AddrinfoTestSuite, get_active_empty_node_address) {
         EXPECT_EQ(ai3->ai_family, AF_INET6);
         EXPECT_EQ(ai3->ai_socktype, SOCK_STREAM);
         EXPECT_EQ(ai3->ai_protocol, 0);
-        EXPECT_EQ(ai3->ai_flags, 0);
+        EXPECT_EQ(ai3->ai_flags, AI_NUMERICSERV);
         EXPECT_EQ(ai3.netaddr().str(), "[::1]:50084");
 
         // Test Unit for AF_INET6
@@ -516,7 +626,7 @@ TEST(AddrinfoTestSuite, get_active_empty_node_address) {
         EXPECT_EQ(ai5->ai_family, AF_INET);
         EXPECT_EQ(ai5->ai_socktype, SOCK_STREAM);
         EXPECT_EQ(ai5->ai_protocol, 0);
-        EXPECT_EQ(ai5->ai_flags, 0);
+        EXPECT_EQ(ai5->ai_flags, AI_NUMERICSERV);
         EXPECT_EQ(ai5.netaddr().str(), "127.0.0.1:50057");
 
         // Test Unit for AF_INET
@@ -526,7 +636,7 @@ TEST(AddrinfoTestSuite, get_active_empty_node_address) {
         EXPECT_EQ(ai6->ai_family, AF_INET);
         EXPECT_EQ(ai6->ai_socktype, 0);
         EXPECT_EQ(ai6->ai_protocol, 0);
-        EXPECT_EQ(ai6->ai_flags, AI_NUMERICHOST);
+        EXPECT_EQ(ai6->ai_flags, AI_NUMERICHOST | AI_NUMERICSERV);
         EXPECT_EQ(ai6.netaddr().str(), "127.0.0.1:50100");
     }
 
@@ -558,7 +668,7 @@ TEST(AddrinfoTestSuite, get_passive_node_address) {
         EXPECT_THAT(ai1->ai_family, AnyOf(AF_INET6, AF_INET));
         EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
         EXPECT_EQ(ai1->ai_protocol, 0);
-        EXPECT_EQ(ai1->ai_flags, AI_PASSIVE);
+        EXPECT_EQ(ai1->ai_flags, AI_PASSIVE | AI_NUMERICSERV);
         EXPECT_THAT(ai1.netaddr().str(), AnyOf("[::]:50106", "0.0.0.0:50106"));
 
         // Test Unit for AF_UNSPEC
@@ -569,7 +679,7 @@ TEST(AddrinfoTestSuite, get_passive_node_address) {
         EXPECT_THAT(ai2->ai_family, AnyOf(AF_INET6, AF_INET));
         EXPECT_EQ(ai2->ai_socktype, 0);
         EXPECT_EQ(ai2->ai_protocol, 0);
-        EXPECT_EQ(ai2->ai_flags, AI_PASSIVE | AI_NUMERICHOST);
+        EXPECT_EQ(ai2->ai_flags, AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
         EXPECT_THAT(ai2.netaddr().str(), AnyOf("[::]:50107", "0.0.0.0:50107"));
 
         // Test Unit for AF_INET6
@@ -579,7 +689,7 @@ TEST(AddrinfoTestSuite, get_passive_node_address) {
         EXPECT_EQ(ai3->ai_family, AF_INET6);
         EXPECT_EQ(ai3->ai_socktype, 0);
         EXPECT_EQ(ai3->ai_protocol, 0);
-        EXPECT_EQ(ai3->ai_flags, AI_PASSIVE);
+        EXPECT_EQ(ai3->ai_flags, AI_PASSIVE | AI_NUMERICSERV);
         EXPECT_EQ(ai3.netaddr().str(), "[::]:50108");
 
         // Test Unit for AF_INET6
@@ -589,7 +699,7 @@ TEST(AddrinfoTestSuite, get_passive_node_address) {
         EXPECT_EQ(ai4->ai_family, AF_INET6);
         EXPECT_EQ(ai4->ai_socktype, 0);
         EXPECT_EQ(ai4->ai_protocol, 0);
-        EXPECT_EQ(ai4->ai_flags, AI_PASSIVE | AI_NUMERICHOST);
+        EXPECT_EQ(ai4->ai_flags, AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
         EXPECT_EQ(ai4.netaddr().str(), "[::]:50109");
 
         // Test Unit for AF_INET
@@ -599,7 +709,7 @@ TEST(AddrinfoTestSuite, get_passive_node_address) {
         EXPECT_EQ(ai5->ai_family, AF_INET);
         EXPECT_EQ(ai5->ai_socktype, 0);
         EXPECT_EQ(ai5->ai_protocol, 0);
-        EXPECT_EQ(ai5->ai_flags, AI_PASSIVE);
+        EXPECT_EQ(ai5->ai_flags, AI_PASSIVE | AI_NUMERICSERV);
         EXPECT_EQ(ai5.netaddr().str(), "0.0.0.0:50110");
 
         // Test Unit for AF_INET
@@ -609,7 +719,7 @@ TEST(AddrinfoTestSuite, get_passive_node_address) {
         EXPECT_EQ(ai6->ai_family, AF_INET);
         EXPECT_EQ(ai6->ai_socktype, 0);
         EXPECT_EQ(ai6->ai_protocol, 0);
-        EXPECT_EQ(ai6->ai_flags, AI_PASSIVE | AI_NUMERICHOST);
+        EXPECT_EQ(ai6->ai_flags, AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
         // This will listen on all local network interfaces.
         EXPECT_EQ(reinterpret_cast<sockaddr_in*>(ai6->ai_addr)->sin_addr.s_addr,
                   INADDR_ANY); // or
@@ -646,7 +756,7 @@ TEST(AddrinfoTestSuite, get_passive_node_address) {
     EXPECT_EQ(ai1->ai_family, AF_INET6);
     EXPECT_EQ(ai1->ai_socktype, SOCK_DGRAM);
     EXPECT_EQ(ai1->ai_protocol, 0);
-    EXPECT_EQ(ai1->ai_flags, AI_PASSIVE | AI_NUMERICHOST);
+    EXPECT_EQ(ai1->ai_flags, AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
     // This will listen on all local network interfaces.
     EXPECT_EQ(ai1.netaddr().str(), "[::]:50006");
 
@@ -660,7 +770,7 @@ TEST(AddrinfoTestSuite, get_passive_node_address) {
     EXPECT_EQ(ai2->ai_family, AF_INET);
     EXPECT_EQ(ai2->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai2->ai_protocol, 0);
-    EXPECT_EQ(ai2->ai_flags, AI_PASSIVE | AI_NUMERICHOST);
+    EXPECT_EQ(ai2->ai_flags, AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
     // This will listen on all local network interfaces.
     EXPECT_EQ(ai2.netaddr().str(), "0.0.0.0:50032");
 }
@@ -705,7 +815,7 @@ TEST(AddrinfoTestSuite, get_info_loopback_interface) {
     EXPECT_EQ(ai1->ai_family, AF_INET6);
     EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai1->ai_protocol, 0);
-    EXPECT_EQ(ai1->ai_flags, AI_PASSIVE | AI_NUMERICHOST);
+    EXPECT_EQ(ai1->ai_flags, AI_PASSIVE | AI_NUMERICHOST | AI_NUMERICSERV);
     EXPECT_EQ(ai1.netaddr().str(), "[::1]:50001");
 
     // Test Unit
@@ -715,7 +825,7 @@ TEST(AddrinfoTestSuite, get_info_loopback_interface) {
     EXPECT_EQ(ai5->ai_family, AF_INET6);
     EXPECT_EQ(ai5->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai5->ai_protocol, 0);
-    EXPECT_EQ(ai5->ai_flags, AI_NUMERICHOST);
+    EXPECT_EQ(ai5->ai_flags, AI_NUMERICHOST | AI_NUMERICSERV);
     EXPECT_EQ(ai5.netaddr().str(), "[::1]:50085");
 
     // Test Unit
@@ -725,7 +835,7 @@ TEST(AddrinfoTestSuite, get_info_loopback_interface) {
     EXPECT_EQ(ai2->ai_family, AF_INET);
     EXPECT_EQ(ai2->ai_socktype, SOCK_DGRAM);
     EXPECT_EQ(ai2->ai_protocol, 0);
-    EXPECT_EQ(ai2->ai_flags, AI_NUMERICHOST);
+    EXPECT_EQ(ai2->ai_flags, AI_NUMERICHOST | AI_NUMERICSERV);
     EXPECT_EQ(ai2.netaddr().str(), "127.0.0.1:50086");
 
     // Test Unit
@@ -735,16 +845,17 @@ TEST(AddrinfoTestSuite, get_info_loopback_interface) {
     EXPECT_EQ(ai3->ai_family, AF_INET6);
     EXPECT_EQ(ai3->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai3->ai_protocol, 0);
-    EXPECT_EQ(ai3->ai_flags, AI_NUMERICHOST);
+    EXPECT_EQ(ai3->ai_flags, AI_NUMERICHOST | AI_NUMERICSERV);
     EXPECT_EQ(ai3.netaddr().str(), "[::1]:50087");
 
     // Test Unit, does not trigger a DNS query
     CAddrinfo ai4("localhost", "50088");
     ASSERT_NO_THROW(ai4.init());
 
+    EXPECT_THAT(ai4->ai_family, AnyOf(AF_INET6, AF_INET));
     EXPECT_EQ(ai4->ai_socktype, SOCK_STREAM);
     EXPECT_EQ(ai4->ai_protocol, 0);
-    EXPECT_EQ(ai4->ai_flags, 0);
+    EXPECT_EQ(ai4->ai_flags, AI_NUMERICSERV);
     EXPECT_THAT(ai4.netaddr().str(), AnyOf("[::1]:50088", "127.0.0.1:50088"));
 }
 

@@ -1,5 +1,5 @@
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-27
+// Redistribution only with this Copyright remark. Last modified: 2024-07-03
 /*!
  * \file
  * \brief Definition of the Netaddr class.
@@ -65,10 +65,11 @@ sa_family_t is_netaddr(const std::string& a_node,
     }
 
     // Call ::getaddrinfo() to check the remaining node string.
-    TRACE("syscall ::getaddrinfo()")
     int rc = umock::netdb_h.getaddrinfo(node.c_str(), nullptr, &hints, &res);
+    TRACE2("syscall ::getaddrinfo() with res = ", res)
     if (rc != 0) {
-        freeaddrinfo(res);
+        TRACE2("syscall ::freeaddrinfo() with res = ", res)
+        umock::netdb_h.freeaddrinfo(res);
         UPNPLIB_LOGINFO "MSG1116: syscall ::getaddrinfo(\""
             << node.c_str() << "\", nullptr, " << &hints << ", " << &res
             << "), (" << rc << ") " << gai_strerror(rc) << '\n';
@@ -76,7 +77,8 @@ sa_family_t is_netaddr(const std::string& a_node,
     }
 
     int af_family = res->ai_family;
-    freeaddrinfo(res);
+    TRACE2("syscall ::freeaddrinfo() with res = ", res)
+    umock::netdb_h.freeaddrinfo(res);
     // Guard different types on different platforms (win32); need to cast to
     // af_family (unsigned short).
     if (af_family < 0 || af_family > 65535) {
@@ -91,7 +93,7 @@ sa_family_t is_netaddr(const std::string& a_node,
 int is_numport(const std::string& a_port_str) noexcept {
     TRACE("Executing is_numport() with port=\"" + a_port_str + "\"")
 
-    // Only non empty strings
+    // Only non empty strings. I have to check this to avoid exception.
     if (a_port_str.empty())
         return -1;
 
