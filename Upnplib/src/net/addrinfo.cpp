@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-07-01
+// Redistribution only with this Copyright remark. Last modified: 2024-07-02
 /*!
  * \file
  * \brief Definition of the Addrinfo class and free helper functions.
@@ -182,6 +182,7 @@ void CAddrinfo::init() {
         service = m_service;
     }
 
+    // Result from ::getaddrinfo()
     ::addrinfo* new_res{nullptr};
 
     // syscall ::getaddrinfo() with prepared arguments
@@ -192,7 +193,7 @@ void CAddrinfo::init() {
     // Very helpful for debugging to see what is given to ::getaddrinfo()
     // clang-format off
     UPNPLIB_LOGINFO << "MSG1114: syscall ::getaddrinfo(" << node_out
-        << ", " << "\"" << m_service << "\", "
+        << ", " << "\"" << service << "\", "
         << &hints << ", " << &new_res
         << ") node=\"" << m_node << "\", "
         << (hints.ai_flags & AI_NUMERICHOST ? "AI_NUMERICHOST, " : "")
@@ -223,7 +224,7 @@ void CAddrinfo::init() {
              ((hints.ai_family == AF_INET6) ? "IPv6_" : "IPv4_")) +
              ((hints.ai_flags & AI_NUMERICHOST) ? "numeric_host=\"" : "alphanum_name=\"") +
               node + "\", service=\"" +
-              m_service + "\"" +
+              service + "\"" +
              ((hints.ai_flags & AI_PASSIVE) ? ", passive_listen" : "") +
              ((hints.ai_flags & AI_NUMERICHOST) ? "" : ", (maybe DNS query temporary failed?)"));
     }

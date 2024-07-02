@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-27
+// Redistribution only with this Copyright remark. Last modified: 2024-07-01
 
 #include <Upnplib/src/net/sockaddr.cpp>
 
@@ -473,6 +473,9 @@ TEST(ToAddrStrTestSuite, sockaddr_to_address_string) {
 
     saddr = "[2001:db8::4]";
     EXPECT_EQ(to_netaddr(&saddr.ss), "[2001:db8::4]");
+
+    // saddr = "[fe80:db8::5%1]";
+    // EXPECT_EQ(to_netaddr(&saddr.ss), "[fe80:db8::5%1]");
 
     saddr = "192.168.88.99";
     EXPECT_EQ(to_netaddr(&saddr.ss), "192.168.88.99");

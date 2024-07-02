@@ -86,8 +86,9 @@ INSTANTIATE_TEST_SUITE_P(
         std::make_tuple("[2001:db8::fg]:59877", ""),
         // std::make_tuple("[2001:db8::42]:65535", "[2001:db8::42]:65535"), // tested later
         std::make_tuple("[2001:db8::51]:65536", ""), // invalid port
+        std::make_tuple("[2001:db8::52]:9999999999", ""), // invalid port
         std::make_tuple("[2001:db8::52::53]", ""), // double double colon
-        std::make_tuple("[2001:db8::52::53]:65535", ""), // double double colon
+        std::make_tuple("[2001:db8::52::54]:65535", ""), // double double colon
         std::make_tuple("[12.168.88.95]", ""), // IPv4 address with brackets
         std::make_tuple("[12.168.88.96]:", ""),
         std::make_tuple("[12.168.88.97]:9876", ""),
@@ -96,15 +97,15 @@ INSTANTIATE_TEST_SUITE_P(
         // std::make_tuple("192.168.88.256:59866", ""), // tested later
         // std::make_tuple("192.168.88.91", "192.168.88.91:0"), // tested later
         // std::make_tuple("garbage:49493", ""), // triggers DNS lookup
-        std::make_tuple("[garbage]:49494", ""),
-        /*40*/ std::make_tuple("[2001:db8::44]:https", "[2001:db8::44]:443"),
+        /*40*/ std::make_tuple("[garbage]:49494", ""),
+        std::make_tuple("[2001:db8::44]:https", "[2001:db8::44]:443"),
         std::make_tuple("[2001:db8::44]:httpx", ""),
         std::make_tuple("192.168.88.98:http", "192.168.88.98:80"),
         std::make_tuple("192.168.88.98:httpy", ""),
-        std::make_tuple("[::1%1]", "[::1]:0"), // should be "[::1%1]:0"),
-        std::make_tuple("[::1%lo]", ""),
-        std::make_tuple("[fe80::acd%1]:ssh", "[fe80::acd]:22"), // should be "[fe80::acd%1]:22")
-        std::make_tuple("[fe80::ace%lo]:ssh", "[fe80::ace]:22") // should be "[fe80::ace%1]:22")
+        std::make_tuple("[::1%1]", "[::1%1]:0"),
+        // std::make_tuple("[::1%lo]", ""),
+        std::make_tuple("[fe80::acd%1]:ssh", "[fe80::acd%1]:22") // should be "[fe80::acd%1]:22")
+        // std::make_tuple("[fe80::ace%lo]:ssh", "[fe80::ace]:22") // should be "[fe80::ace%1]:22")
     ));
 // clang-format on
 

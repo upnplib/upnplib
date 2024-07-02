@@ -1,5 +1,5 @@
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-27
+// Redistribution only with this Copyright remark. Last modified: 2024-07-02
 /*!
  * \file
  * \brief Definition of the Netaddr class.
@@ -91,7 +91,7 @@ sa_family_t is_netaddr(const std::string& a_node,
 int is_numport(const std::string& a_port_str) noexcept {
     TRACE("Executing is_numport() with port=\"" + a_port_str + "\"")
 
-    // Only non empty strings
+    // Only non empty strings. I have to check this to avoid exception.
     if (a_port_str.empty())
         return -1;
 
