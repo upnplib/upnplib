@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-06-13
+ * Redistribution only with this Copyright remark. Last modified: 2024-07-03
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -869,7 +869,7 @@ int get_miniserver_sockets(
             out->miniServerPort4 = out->MiniSvrSock4Obj->get_port();
             retval = UPNP_E_SUCCESS;
         } catch (const std::exception& e) {
-            UPNPLIB_LOGCATCH "MSG1112: catched next line...\n" << e.what();
+            UPNPLIB_LOGCATCH "MSG1114: catched next line...\n" << e.what();
         }
     }
 

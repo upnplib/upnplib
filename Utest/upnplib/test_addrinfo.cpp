@@ -36,9 +36,9 @@ TEST_P(NetaddrAssignTest, netaddress_assign) {
     // Test Unit
     CAddrinfo aiObj(std::get<0>(params));
     if (std::get<1>(params) == "") {
-        EXPECT_THROW(aiObj.init(), std::runtime_error);
+        EXPECT_THROW(aiObj.load(), std::runtime_error);
     } else {
-        aiObj.init();
+        aiObj.load();
         EXPECT_EQ(aiObj.netaddr().str(), std::get<1>(params));
     }
 }
@@ -144,7 +144,7 @@ TEST(AddrinfoTestSuite, query_ipv6_addrinfo_successful) {
     // There is no address information
     EXPECT_EQ(ai1.netaddr().str(), "");
 
-    ASSERT_NO_THROW(ai1.init());
+    ASSERT_NO_THROW(ai1.load());
 
     EXPECT_EQ(ai1->ai_family, AF_INET6);
     EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
@@ -176,7 +176,7 @@ TEST_F(AddrinfoMockFTestSuite, query_ipv6_addrinfo_successful) {
                 getaddrinfo(Pointee(*"2001:db8::9"), nullptr,
                             Field(&addrinfo::ai_flags, AI_NUMERICHOST), _))
         .WillOnce(DoAll(SetArgPointee<3>(&res), Return(0)));
-    // Mock 'CAddrinfo::init()'
+    // Mock 'CAddrinfo::load()'
     EXPECT_CALL(m_netdbObj,
                 getaddrinfo(Pointee(*"2001:db8::9"), Pointee(*""),
                             Field(&addrinfo::ai_flags, AI_NUMERICHOST), _))
@@ -186,13 +186,13 @@ TEST_F(AddrinfoMockFTestSuite, query_ipv6_addrinfo_successful) {
 
     // Test Unit
     CAddrinfo ai("[2001:db8::9]");
-    ASSERT_NO_THROW(ai.init());
+    ASSERT_NO_THROW(ai.load());
 }
 
-TEST(AddrinfoTestSuite, init_ipv6_addrinfo_and_port_successful) {
+TEST(AddrinfoTestSuite, load_ipv6_addrinfo_and_port_successful) {
     CAddrinfo ai1("[2001:db8::14]", "https");
 
-    ASSERT_NO_THROW(ai1.init());
+    ASSERT_NO_THROW(ai1.load());
 
     EXPECT_EQ(ai1->ai_family, AF_INET6);
     EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
@@ -205,10 +205,10 @@ TEST(AddrinfoTestSuite, init_ipv6_addrinfo_and_port_successful) {
     EXPECT_EQ(ai1.netaddr().str(), "[2001:db8::14]:443");
 }
 
-TEST(AddrinfoTestSuite, init_ipv6_addrinfo_port_successful) {
+TEST(AddrinfoTestSuite, load_ipv6_addrinfo_port_successful) {
     CAddrinfo ai1("[2001:db8::15]:59877");
 
-    ASSERT_NO_THROW(ai1.init());
+    ASSERT_NO_THROW(ai1.load());
 
     EXPECT_EQ(ai1->ai_family, AF_INET6);
     EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
@@ -237,7 +237,7 @@ TEST(AddrinfoTestSuite, query_ipv4_addrinfo_successful) {
     // There is no address information
     EXPECT_EQ(ai1.netaddr().str(), "");
 
-    ASSERT_NO_THROW(ai1.init());
+    ASSERT_NO_THROW(ai1.load());
 
     EXPECT_EQ(ai1->ai_family, AF_INET);
     EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
@@ -250,10 +250,10 @@ TEST(AddrinfoTestSuite, query_ipv4_addrinfo_successful) {
     EXPECT_EQ(ai1.netaddr().str(), "192.168.200.201:0");
 }
 
-TEST(AddrinfoTestSuite, init_ipv4_and_port_addrinfo_successful) {
+TEST(AddrinfoTestSuite, load_ipv4_and_port_addrinfo_successful) {
     CAddrinfo ai1("192.168.200.202", "54544");
 
-    ASSERT_NO_THROW(ai1.init());
+    ASSERT_NO_THROW(ai1.load());
 
     EXPECT_EQ(ai1->ai_family, AF_INET);
     EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
@@ -266,10 +266,10 @@ TEST(AddrinfoTestSuite, init_ipv4_and_port_addrinfo_successful) {
     EXPECT_EQ(ai1.netaddr().str(), "192.168.200.202:54544");
 }
 
-TEST(AddrinfoTestSuite, init_ipv4_port_addrinfo_successful) {
+TEST(AddrinfoTestSuite, load_ipv4_port_addrinfo_successful) {
     CAddrinfo ai1("192.168.200.203:http");
 
-    ASSERT_NO_THROW(ai1.init());
+    ASSERT_NO_THROW(ai1.load());
 
     EXPECT_EQ(ai1->ai_family, AF_INET);
     EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
@@ -290,7 +290,7 @@ TEST(AddrinfoTestSuite, double_set_addrinfo_successful) {
     // Test Unit with numeric port number
     CAddrinfo ai2("[2001:db8::2]", "50048", AF_INET6, SOCK_STREAM,
                   AI_PASSIVE | AI_NUMERICHOST);
-    ASSERT_NO_THROW(ai2.init());
+    ASSERT_NO_THROW(ai2.load());
 
     // Returns what ::getaddrinfo() returns.
     EXPECT_EQ(ai2->ai_family, AF_INET6);
@@ -311,7 +311,7 @@ TEST(AddrinfoTestSuite, double_set_addrinfo_successful) {
     // Because the same node, service and hints are used the result is exactly
     // the same as before.
     int* old_res{&ai2->ai_flags};
-    ASSERT_NO_THROW(ai2.init());
+    ASSERT_NO_THROW(ai2.load());
 
     EXPECT_NE(old_res, &ai2->ai_flags);
     EXPECT_EQ(ai2->ai_family, AF_INET6);
@@ -321,7 +321,7 @@ TEST(AddrinfoTestSuite, double_set_addrinfo_successful) {
     EXPECT_EQ(ai2.netaddr().str(), "[2001:db8::2]:50048");
 }
 
-TEST(AddrinfoTestSuite, instantiate_not_init_numeric_host_successful) {
+TEST(AddrinfoTestSuite, instantiate_not_load_numeric_host_successful) {
     // If node is not empty AI_PASSIVE is ignored.
     // Flag AI_NUMERICHOST should be set if possible to avoid expensive name
     // resolution from external DNS server.
@@ -352,7 +352,7 @@ TEST(AddrinfoTestSuite, get_implicit_address_family) {
     CAddrinfo ai1("[2001:db8::5]", "50051");
     // Same as
     // CAddrinfo ai1("[2001:db8::5]", "50051", AF_UNSPEC, SOCK_STREAM);
-    ASSERT_NO_THROW(ai1.init());
+    ASSERT_NO_THROW(ai1.load());
 
     EXPECT_EQ(ai1->ai_family, AF_INET6); // set by syscal ::getaddrinfo
     EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
@@ -362,7 +362,7 @@ TEST(AddrinfoTestSuite, get_implicit_address_family) {
 
     // Test Unit
     CAddrinfo ai2("192.168.9.10", "50096");
-    ASSERT_NO_THROW(ai2.init());
+    ASSERT_NO_THROW(ai2.load());
 
     EXPECT_EQ(ai2->ai_family, AF_INET); // set by syscal ::getaddrinfo
     EXPECT_EQ(ai2->ai_socktype, SOCK_STREAM);
@@ -372,7 +372,7 @@ TEST(AddrinfoTestSuite, get_implicit_address_family) {
 
     // Test Unit, does not trigger a DNS query
     CAddrinfo ai3("localhost", "50049");
-    ASSERT_NO_THROW(ai3.init());
+    ASSERT_NO_THROW(ai3.load());
 
     EXPECT_EQ(ai3->ai_family, AF_INET6); // set by syscal ::getaddrinfo
     EXPECT_EQ(ai3->ai_socktype, SOCK_STREAM);
@@ -387,23 +387,23 @@ TEST(AddrinfoTestSuite, get_unknown_numeric_host_fails) {
 
     // Test Unit
     CAddrinfo ai1("localhost", "50031", AF_INET, SOCK_STREAM, AI_NUMERICHOST);
-    EXPECT_THROW(ai1.init(), std::runtime_error);
+    EXPECT_THROW(ai1.load(), std::runtime_error);
 
     // Does not call ::getaddrinfo(), because invalid numeric IPv6 is detected
     // before.
     CAddrinfo ai2("localhost:50052", AF_INET6, SOCK_DGRAM, AI_NUMERICHOST);
-    EXPECT_THROW(ai2.init(), std::runtime_error);
+    EXPECT_THROW(ai2.load(), std::runtime_error);
 
     CAddrinfo ai3("localhost", "50053", AF_UNSPEC, SOCK_STREAM, AI_NUMERICHOST);
-    EXPECT_THROW(ai3.init(), std::runtime_error);
+    EXPECT_THROW(ai3.load(), std::runtime_error);
 }
 
 TEST(AddrinfoTestSuite, get_unknown_alphanumeric_host_fails) {
     CAddrinfo ai1("[localhost]", "50055", AF_UNSPEC, SOCK_DGRAM);
-    EXPECT_THROW(ai1.init(), std::runtime_error);
+    EXPECT_THROW(ai1.load(), std::runtime_error);
 
     CAddrinfo ai2("[localhost]:50005", AF_UNSPEC, SOCK_DGRAM);
-    EXPECT_THROW(ai2.init(), std::runtime_error);
+    EXPECT_THROW(ai2.load(), std::runtime_error);
 }
 
 TEST_F(AddrinfoMockFTestSuite, get_addrinfo_out_of_memory) {
@@ -412,7 +412,7 @@ TEST_F(AddrinfoMockFTestSuite, get_addrinfo_out_of_memory) {
                             Field(&addrinfo::ai_flags, AI_NUMERICHOST), _))
         .Times(2)
         .WillRepeatedly(Return(EAI_MEMORY));
-    // Mock CAddrinfo::init()
+    // Mock CAddrinfo::load()
     EXPECT_CALL(m_netdbObj,
                 getaddrinfo(Pointee(*"localhost"), Pointee(*"50118"),
                             Field(&addrinfo::ai_flags, AI_NUMERICSERV), _))
@@ -422,7 +422,7 @@ TEST_F(AddrinfoMockFTestSuite, get_addrinfo_out_of_memory) {
 
     // Test Unit
     CAddrinfo ai("localhost", "50118", AF_UNSPEC, SOCK_STREAM);
-    EXPECT_THROW(ai.init(), std::invalid_argument);
+    EXPECT_THROW(ai.load(), std::invalid_argument);
 }
 
 TEST_F(AddrinfoMockFTestSuite, get_addrinfo_invalid_ipv4_address) {
@@ -433,7 +433,7 @@ TEST_F(AddrinfoMockFTestSuite, get_addrinfo_invalid_ipv4_address) {
                             Field(&addrinfo::ai_flags, AI_NUMERICHOST), _))
         .Times(2)
         .WillRepeatedly(Return(EAI_NONAME));
-    // Mock 'CAddrinfo::init()'
+    // Mock 'CAddrinfo::load()'
     EXPECT_CALL(m_netdbObj,
                 getaddrinfo(Pointee(*"192.168.88.256"), Pointee(*"59866"),
                             Field(&addrinfo::ai_flags, AI_NUMERICSERV), _))
@@ -443,7 +443,7 @@ TEST_F(AddrinfoMockFTestSuite, get_addrinfo_invalid_ipv4_address) {
 
     // Test Unit
     CAddrinfo ai("192.168.88.256:59866");
-    EXPECT_THROW(ai.init(), std::runtime_error);
+    EXPECT_THROW(ai.load(), std::runtime_error);
 }
 
 TEST_F(AddrinfoMockFTestSuite, get_addrinfo_ipv6_service_dot_for_colon) {
@@ -456,7 +456,7 @@ TEST_F(AddrinfoMockFTestSuite, get_addrinfo_ipv6_service_dot_for_colon) {
                 getaddrinfo(Pointee(*"::1"), nullptr,
                             Field(&addrinfo::ai_flags, AI_NUMERICHOST), _))
         .WillOnce(DoAll(SetArgPointee<3>(&res), Return(0)));
-    // Mock 'CAddrinfo::init()'
+    // Mock 'CAddrinfo::load()'
     EXPECT_CALL(m_netdbObj,
                 getaddrinfo(Pointee(*"::1"), Pointee(*".4"),
                             Field(&addrinfo::ai_flags, AI_NUMERICHOST), _))
@@ -466,7 +466,7 @@ TEST_F(AddrinfoMockFTestSuite, get_addrinfo_ipv6_service_dot_for_colon) {
 
     // Test Unit
     CAddrinfo ai("[::1].4");
-    EXPECT_THROW(ai.init(), std::runtime_error);
+    EXPECT_THROW(ai.load(), std::runtime_error);
 }
 
 TEST_F(AddrinfoMockFTestSuite, get_addrinfo_ipv4_service_dot_for_colon) {
@@ -479,7 +479,7 @@ TEST_F(AddrinfoMockFTestSuite, get_addrinfo_ipv4_service_dot_for_colon) {
                             Field(&addrinfo::ai_flags, AI_NUMERICHOST), _))
         .Times(2)
         .WillRepeatedly(DoAll(SetArgPointee<3>(&res), Return(EAI_NONAME)));
-    // Mock 'CAddrinfo::init()'
+    // Mock 'CAddrinfo::load()'
     EXPECT_CALL(m_netdbObj, getaddrinfo(Pointee(*"127.0.0.1.5"), Pointee(*""),
                                         Field(&addrinfo::ai_flags, 0), _))
         .WillOnce(Return(EAI_NONAME));
@@ -488,7 +488,7 @@ TEST_F(AddrinfoMockFTestSuite, get_addrinfo_ipv4_service_dot_for_colon) {
 
     // Test Unit
     CAddrinfo ai("127.0.0.1.5");
-    EXPECT_THROW(ai.init(), std::runtime_error);
+    EXPECT_THROW(ai.load(), std::runtime_error);
 }
 
 TEST_F(AddrinfoMockFTestSuite, get_addrinfo_ipv6_service_undefined_alpha_name) {
@@ -501,7 +501,7 @@ TEST_F(AddrinfoMockFTestSuite, get_addrinfo_ipv6_service_undefined_alpha_name) {
                 getaddrinfo(Pointee(*"2001:db8::44"), nullptr,
                             Field(&addrinfo::ai_flags, AI_NUMERICHOST), _))
         .WillOnce(DoAll(SetArgPointee<3>(&res), Return(0)));
-    // Mock 'CAddrinfo::init()'
+    // Mock 'CAddrinfo::load()'
     EXPECT_CALL(m_netdbObj,
                 getaddrinfo(Pointee(*"2001:db8::44"), Pointee(*"httpx"),
                             Field(&addrinfo::ai_flags, AI_NUMERICHOST), _))
@@ -511,7 +511,7 @@ TEST_F(AddrinfoMockFTestSuite, get_addrinfo_ipv6_service_undefined_alpha_name) {
 
     // Test Unit
     CAddrinfo ai("[2001:db8::44]:httpx");
-    EXPECT_THROW(ai.init(), std::runtime_error);
+    EXPECT_THROW(ai.load(), std::runtime_error);
 }
 
 TEST_F(AddrinfoMockFTestSuite, get_addrinfo_ipv4_service_undefined_alpha_name) {
@@ -524,7 +524,7 @@ TEST_F(AddrinfoMockFTestSuite, get_addrinfo_ipv4_service_undefined_alpha_name) {
                 getaddrinfo(Pointee(*"192.168.88.98"), nullptr,
                             Field(&addrinfo::ai_flags, AI_NUMERICHOST), _))
         .WillOnce(DoAll(SetArgPointee<3>(&res), Return(0)));
-    // Mock 'CAddrinfo::init()'
+    // Mock 'CAddrinfo::load()'
     EXPECT_CALL(m_netdbObj,
                 getaddrinfo(Pointee(*"192.168.88.98"), Pointee(*"httpy"),
                             Field(&addrinfo::ai_flags, AI_NUMERICHOST), _))
@@ -534,25 +534,25 @@ TEST_F(AddrinfoMockFTestSuite, get_addrinfo_ipv4_service_undefined_alpha_name) {
 
     // Test Unit
     CAddrinfo ai("192.168.88.98:httpy");
-    EXPECT_THROW(ai.init(), std::runtime_error);
+    EXPECT_THROW(ai.load(), std::runtime_error);
 }
 
 TEST(AddrinfoTestSuite, invalid_ipv6_node_address) {
     // Test Unit. Node address must be surounded with brackets.
     CAddrinfo ai1("::1", "", AF_INET6, 0, AI_NUMERICHOST);
-    EXPECT_THROW(ai1.init(), std::runtime_error);
+    EXPECT_THROW(ai1.load(), std::runtime_error);
 
     CAddrinfo ai2("[::1", "", AF_INET6, 0, AI_NUMERICHOST);
-    EXPECT_THROW(ai2.init(), std::runtime_error);
+    EXPECT_THROW(ai2.load(), std::runtime_error);
 
     CAddrinfo ai3("::1]", "", AF_INET6, 0, AI_NUMERICHOST);
-    EXPECT_THROW(ai3.init(), std::runtime_error);
+    EXPECT_THROW(ai3.load(), std::runtime_error);
 }
 
 TEST(AddrinfoTestSuite, get_unknown_node_address) {
     // Test Unit with unspecified ipv6 address
     CAddrinfo ai3("[::]", "0", AF_INET6, 0, AI_NUMERICHOST | AI_NUMERICSERV);
-    ASSERT_NO_THROW(ai3.init());
+    ASSERT_NO_THROW(ai3.load());
 
     EXPECT_EQ(ai3->ai_family, AF_INET6);
     EXPECT_EQ(ai3->ai_socktype, 0);
@@ -562,7 +562,7 @@ TEST(AddrinfoTestSuite, get_unknown_node_address) {
 
     // Test Unit with unspecified ipv4 address
     CAddrinfo ai4("0.0.0.0", "0", AF_INET, 0, AI_NUMERICHOST | AI_NUMERICSERV);
-    ASSERT_NO_THROW(ai4.init());
+    ASSERT_NO_THROW(ai4.load());
 
     EXPECT_EQ(ai4->ai_family, AF_INET);
     EXPECT_EQ(ai4->ai_socktype, 0);
@@ -578,7 +578,7 @@ TEST(AddrinfoTestSuite, get_active_empty_node_address) {
     { // Scoped to reduce memory usage for testing with node "".
         // Test Unit for AF_UNSPEC
         CAddrinfo ai1("", "50007");
-        ASSERT_NO_THROW(ai1.init());
+        ASSERT_NO_THROW(ai1.load());
 
         // Address family set by syscal ::getaddrinfo(). Maybe interface with
         // index number 1 is used and its address_family is returned?
@@ -590,7 +590,7 @@ TEST(AddrinfoTestSuite, get_active_empty_node_address) {
 
         // Test Unit for AF_UNSPEC
         CAddrinfo ai2("", "50099", AF_UNSPEC, 0, AI_NUMERICHOST);
-        ASSERT_NO_THROW(ai2.init());
+        ASSERT_NO_THROW(ai2.load());
 
         EXPECT_EQ(ai2->ai_family, AF_INET6);
         EXPECT_EQ(ai2->ai_socktype, 0);
@@ -600,7 +600,7 @@ TEST(AddrinfoTestSuite, get_active_empty_node_address) {
 
         // Test Unit for AF_INET6
         CAddrinfo ai3("", "50084", AF_INET6, SOCK_STREAM);
-        ASSERT_NO_THROW(ai3.init());
+        ASSERT_NO_THROW(ai3.load());
 
         EXPECT_EQ(ai3->ai_family, AF_INET6);
         EXPECT_EQ(ai3->ai_socktype, SOCK_STREAM);
@@ -611,7 +611,7 @@ TEST(AddrinfoTestSuite, get_active_empty_node_address) {
         // Test Unit for AF_INET6
         CAddrinfo ai4("", "50058", AF_INET6, SOCK_STREAM,
                       AI_NUMERICHOST | AI_NUMERICSERV);
-        ASSERT_NO_THROW(ai4.init());
+        ASSERT_NO_THROW(ai4.load());
 
         EXPECT_EQ(ai4->ai_family, AF_INET6);
         EXPECT_EQ(ai4->ai_socktype, SOCK_STREAM);
@@ -621,7 +621,7 @@ TEST(AddrinfoTestSuite, get_active_empty_node_address) {
 
         // Test Unit for AF_INET
         CAddrinfo ai5("", "50057", AF_INET);
-        ASSERT_NO_THROW(ai5.init());
+        ASSERT_NO_THROW(ai5.load());
 
         EXPECT_EQ(ai5->ai_family, AF_INET);
         EXPECT_EQ(ai5->ai_socktype, SOCK_STREAM);
@@ -631,7 +631,7 @@ TEST(AddrinfoTestSuite, get_active_empty_node_address) {
 
         // Test Unit for AF_INET
         CAddrinfo ai6("", "50100", AF_INET, 0, AI_NUMERICHOST);
-        ASSERT_NO_THROW(ai6.init());
+        ASSERT_NO_THROW(ai6.load());
 
         EXPECT_EQ(ai6->ai_family, AF_INET);
         EXPECT_EQ(ai6->ai_socktype, 0);
@@ -643,15 +643,15 @@ TEST(AddrinfoTestSuite, get_active_empty_node_address) {
     { // Scoped to reduce memory usage for testing with node "[]".
         // Test Unit for AF_UNSPEC
         CAddrinfo ai2("[]", "50101", AF_UNSPEC, 0, AI_NUMERICHOST);
-        EXPECT_THROW(ai2.init(), std::runtime_error);
+        EXPECT_THROW(ai2.load(), std::runtime_error);
 
         // Test Unit AF_INET6 to be numeric, important test of special case.
         CAddrinfo ai4("[]", "50103", AF_INET6, 0, AI_NUMERICHOST);
-        EXPECT_THROW(ai4.init(), std::runtime_error);
+        EXPECT_THROW(ai4.load(), std::runtime_error);
 
         // Test Unit AF_INET
         CAddrinfo ai6("[]", "50105", AF_INET, 0, AI_NUMERICHOST);
-        EXPECT_THROW(ai6.init(), std::runtime_error);
+        EXPECT_THROW(ai6.load(), std::runtime_error);
     }
 }
 
@@ -662,7 +662,7 @@ TEST(AddrinfoTestSuite, get_passive_node_address) {
     { // Scoped to reduce memory usage for testing with node "".
         // Test Unit for AF_UNSPEC
         CAddrinfo ai1("", "50106", AF_UNSPEC, SOCK_STREAM, AI_PASSIVE);
-        ASSERT_NO_THROW(ai1.init());
+        ASSERT_NO_THROW(ai1.load());
 
         // Ubuntu returns AF_INET, MacOS and Microsoft Windows return AF_INET6
         EXPECT_THAT(ai1->ai_family, AnyOf(AF_INET6, AF_INET));
@@ -673,7 +673,7 @@ TEST(AddrinfoTestSuite, get_passive_node_address) {
 
         // Test Unit for AF_UNSPEC
         CAddrinfo ai2("", "50107", AF_UNSPEC, 0, AI_PASSIVE | AI_NUMERICHOST);
-        ASSERT_NO_THROW(ai2.init());
+        ASSERT_NO_THROW(ai2.load());
 
         // Ubuntu returns AF_INET, MacOS and Microsoft Windows return AF_INET6
         EXPECT_THAT(ai2->ai_family, AnyOf(AF_INET6, AF_INET));
@@ -684,7 +684,7 @@ TEST(AddrinfoTestSuite, get_passive_node_address) {
 
         // Test Unit for AF_INET6
         CAddrinfo ai3("", "50108", AF_INET6, 0, AI_PASSIVE);
-        ASSERT_NO_THROW(ai3.init());
+        ASSERT_NO_THROW(ai3.load());
 
         EXPECT_EQ(ai3->ai_family, AF_INET6);
         EXPECT_EQ(ai3->ai_socktype, 0);
@@ -694,7 +694,7 @@ TEST(AddrinfoTestSuite, get_passive_node_address) {
 
         // Test Unit for AF_INET6
         CAddrinfo ai4("", "50109", AF_INET6, 0, AI_PASSIVE | AI_NUMERICHOST);
-        ASSERT_NO_THROW(ai4.init());
+        ASSERT_NO_THROW(ai4.load());
 
         EXPECT_EQ(ai4->ai_family, AF_INET6);
         EXPECT_EQ(ai4->ai_socktype, 0);
@@ -704,7 +704,7 @@ TEST(AddrinfoTestSuite, get_passive_node_address) {
 
         // Test Unit for AF_INET
         CAddrinfo ai5("", "50110", AF_INET, 0, AI_PASSIVE);
-        ASSERT_NO_THROW(ai5.init());
+        ASSERT_NO_THROW(ai5.load());
 
         EXPECT_EQ(ai5->ai_family, AF_INET);
         EXPECT_EQ(ai5->ai_socktype, 0);
@@ -714,7 +714,7 @@ TEST(AddrinfoTestSuite, get_passive_node_address) {
 
         // Test Unit for AF_INET
         CAddrinfo ai6("", "50111", AF_INET, 0, AI_PASSIVE | AI_NUMERICHOST);
-        ASSERT_NO_THROW(ai6.init());
+        ASSERT_NO_THROW(ai6.load());
 
         EXPECT_EQ(ai6->ai_family, AF_INET);
         EXPECT_EQ(ai6->ai_socktype, 0);
@@ -734,16 +734,16 @@ TEST(AddrinfoTestSuite, get_passive_node_address) {
 
         // Test Unit for AF_UNSPEC
         CAddrinfo ai2("[]", "50113", AF_UNSPEC, 0, AI_PASSIVE | AI_NUMERICHOST);
-        EXPECT_THROW(ai2.init(), std::runtime_error);
+        EXPECT_THROW(ai2.load(), std::runtime_error);
 
         // Test Unit for AF_INET6
         CAddrinfo ai4("[]", "50115", AF_INET6, 0, AI_PASSIVE | AI_NUMERICHOST);
-        EXPECT_THROW(ai4.init(), std::runtime_error);
+        EXPECT_THROW(ai4.load(), std::runtime_error);
 
         // Test Unit for AF_INET
         // Wrong address family
         CAddrinfo ai6("[]", "50117", AF_INET, 0, AI_PASSIVE | AI_NUMERICHOST);
-        EXPECT_THROW(ai6.init(), std::runtime_error);
+        EXPECT_THROW(ai6.load(), std::runtime_error);
     }
 
     // Test Unit
@@ -751,7 +751,7 @@ TEST(AddrinfoTestSuite, get_passive_node_address) {
     // in6addr_any passive listening socket info.
     CAddrinfo ai1("[::]", "50006", AF_INET6, SOCK_DGRAM,
                   AI_PASSIVE | AI_NUMERICHOST);
-    ASSERT_NO_THROW(ai1.init());
+    ASSERT_NO_THROW(ai1.load());
 
     EXPECT_EQ(ai1->ai_family, AF_INET6);
     EXPECT_EQ(ai1->ai_socktype, SOCK_DGRAM);
@@ -765,7 +765,7 @@ TEST(AddrinfoTestSuite, get_passive_node_address) {
     // INADDR_ANY passive listening socket info.
     CAddrinfo ai2("0.0.0.0", "50032", AF_INET, SOCK_STREAM,
                   AI_PASSIVE | AI_NUMERICHOST);
-    ASSERT_NO_THROW(ai2.init());
+    ASSERT_NO_THROW(ai2.load());
 
     EXPECT_EQ(ai2->ai_family, AF_INET);
     EXPECT_EQ(ai2->ai_socktype, SOCK_STREAM);
@@ -781,27 +781,27 @@ TEST(AddrinfoTestSuite, get_two_brackets_alphanum_node_address) {
 
     // Test Unit
     CAddrinfo ai7("[]", "50098");
-    EXPECT_THROW(ai7.init(), std::runtime_error);
+    EXPECT_THROW(ai7.load(), std::runtime_error);
 
     // Test Unit for AF_UNSPEC
     CAddrinfo ai1("[]", "50112", AF_UNSPEC, SOCK_STREAM, AI_PASSIVE);
-    EXPECT_THROW(ai1.init(), std::runtime_error);
+    EXPECT_THROW(ai1.load(), std::runtime_error);
     CAddrinfo ai2("[]", "50112", AF_UNSPEC, SOCK_STREAM);
-    EXPECT_THROW(ai2.init(), std::runtime_error);
+    EXPECT_THROW(ai2.load(), std::runtime_error);
 
     // Test Unit for AF_INET6
     CAddrinfo ai3("[]", "50114", AF_INET6, 0, AI_PASSIVE);
-    EXPECT_THROW(ai3.init(), std::runtime_error);
+    EXPECT_THROW(ai3.load(), std::runtime_error);
     CAddrinfo ai4("[]", "50114", AF_INET6);
-    EXPECT_THROW(ai4.init(), std::runtime_error);
+    EXPECT_THROW(ai4.load(), std::runtime_error);
 
     // Test Unit for AF_INET
     // This alphanumeric address is never a valid IPv4 address but it
     // invokes an expensive DNS lookup.
     CAddrinfo ai5("[]", "50116", AF_INET, 0, AI_PASSIVE);
-    EXPECT_THROW(ai5.init(), std::runtime_error);
+    EXPECT_THROW(ai5.load(), std::runtime_error);
     CAddrinfo ai6("[]", "50116", AF_INET);
-    EXPECT_THROW(ai6.init(), std::runtime_error);
+    EXPECT_THROW(ai6.load(), std::runtime_error);
 }
 
 TEST(AddrinfoTestSuite, get_info_loopback_interface) {
@@ -810,7 +810,7 @@ TEST(AddrinfoTestSuite, get_info_loopback_interface) {
     // Test Unit with string port number
     CAddrinfo ai1("[::1]", "50001", AF_INET6, SOCK_STREAM,
                   AI_PASSIVE | AI_NUMERICHOST);
-    ASSERT_NO_THROW(ai1.init());
+    ASSERT_NO_THROW(ai1.load());
 
     EXPECT_EQ(ai1->ai_family, AF_INET6);
     EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
@@ -820,7 +820,7 @@ TEST(AddrinfoTestSuite, get_info_loopback_interface) {
 
     // Test Unit
     CAddrinfo ai5("[::1]", "50085", AF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(ai5.init());
+    ASSERT_NO_THROW(ai5.load());
 
     EXPECT_EQ(ai5->ai_family, AF_INET6);
     EXPECT_EQ(ai5->ai_socktype, SOCK_STREAM);
@@ -830,7 +830,7 @@ TEST(AddrinfoTestSuite, get_info_loopback_interface) {
 
     // Test Unit
     CAddrinfo ai2("127.0.0.1", "50086", AF_INET, SOCK_DGRAM);
-    ASSERT_NO_THROW(ai2.init());
+    ASSERT_NO_THROW(ai2.load());
 
     EXPECT_EQ(ai2->ai_family, AF_INET);
     EXPECT_EQ(ai2->ai_socktype, SOCK_DGRAM);
@@ -840,7 +840,7 @@ TEST(AddrinfoTestSuite, get_info_loopback_interface) {
 
     // Test Unit
     CAddrinfo ai3("[::1]", "50087", AF_INET6);
-    ASSERT_NO_THROW(ai3.init());
+    ASSERT_NO_THROW(ai3.load());
 
     EXPECT_EQ(ai3->ai_family, AF_INET6);
     EXPECT_EQ(ai3->ai_socktype, SOCK_STREAM);
@@ -850,7 +850,7 @@ TEST(AddrinfoTestSuite, get_info_loopback_interface) {
 
     // Test Unit, does not trigger a DNS query
     CAddrinfo ai4("localhost", "50088");
-    ASSERT_NO_THROW(ai4.init());
+    ASSERT_NO_THROW(ai4.load());
 
     EXPECT_THAT(ai4->ai_family, AnyOf(AF_INET6, AF_INET));
     EXPECT_EQ(ai4->ai_socktype, SOCK_STREAM);
@@ -865,7 +865,7 @@ TEST(AddrinfoTestSuite, empty_service) {
 
     // Test Unit
     CAddrinfo ai1("[2001:db8::8]", "", AF_INET6, SOCK_STREAM, AI_NUMERICHOST);
-    ASSERT_NO_THROW(ai1.init());
+    ASSERT_NO_THROW(ai1.load());
 
     EXPECT_EQ(ai1->ai_family, AF_INET6);
     EXPECT_EQ(ai1->ai_socktype, SOCK_STREAM);
@@ -880,9 +880,9 @@ TEST(AddrinfoTestSuite, get_fails) {
     CAddrinfo ai1("192.168.155.15", "50003", AF_INET6, SOCK_STREAM,
                   AI_NUMERICHOST);
 #if defined(__GNUC__) && !defined(__clang__)
-    EXPECT_THROW(ai1.init(), std::invalid_argument);
+    EXPECT_THROW(ai1.load(), std::invalid_argument);
 #else
-    EXPECT_THROW(ai1.init(), std::runtime_error);
+    EXPECT_THROW(ai1.load(), std::runtime_error);
 #endif
 }
 

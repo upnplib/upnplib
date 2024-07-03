@@ -1,6 +1,6 @@
 <map id="upnplib::is_numport" name="upnplib::is_numport">
 <area shape="rect" id="Node000001" title="Check if a given string represents a port number." alt="" coords="1176,68,1327,93"/>
-<area shape="rect" id="Node000002" href="$da/dad/classupnplib_1_1CAddrinfo.html#a307094d37736d609bde57f810f7b8ba5" title="Initialize address information that is returned from the operating system." alt="" coords="971,13,1114,53"/>
+<area shape="rect" id="Node000002" href="$da/dad/classupnplib_1_1CAddrinfo.html#a5a9dc9b0ec4397230b37db8d792175b0" title="load address information from the operating system" alt="" coords="971,13,1114,53"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1181,67,1113,52,1115,46,1183,62"/>
 <area shape="rect" id="Node000008" href="$d0/dd8/group__upnplib-addrmodul.html#gae717eb4b8c4749ec70fcf88294e826ee" title="Get the port number from a string." alt="" coords="957,101,1128,156"/>
 <area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="1182,99,1129,112,1127,106,1181,94"/>

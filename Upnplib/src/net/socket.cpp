@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-19
+// Redistribution only with this Copyright remark. Last modified: 2024-07-03
 /*!
  * \file
  * \brief Definition of the 'class Socket'.
@@ -423,7 +423,7 @@ void CSocket::bind(const std::string& a_node, const std::string& a_port,
     // Get an adress info to bind.
     CAddrinfo ai(a_node, a_port, addr_family, this->get_socktype(),
                  AI_NUMERICHOST | AI_NUMERICSERV | a_flags);
-    ai.init(); // may throw exception
+    ai.load(); // may throw exception
 
     // Here we bind the socket to an address.
     /// \todo Improve CSocketErr for specific ::bind() error messages.

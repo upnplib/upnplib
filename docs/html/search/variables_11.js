@@ -8,7 +8,7 @@ var searchData=
   ['searchtarget_5',['searchTarget',['../da/db2/ssdp__ctrlpt_8hpp.html#a6841622214f32defec87b9bc4ff9657e',1,'SsdpSearchArg']]],
   ['seek_6',['seek',['../d6/d92/VirtualDir_8hpp.html#ac4e78f73e448288f260974034a6522d1',1,'VirtualDirCallbacks']]],
   ['serviceid_7',['serviceId',['../db/d74/service__table_8hpp.html#a7af5ed1510a78ada06836b7c625f21c5',1,'service_info']]],
-  ['servicelist_8',['servicelist',['../d3/da9/upnpapi_8hpp.html#a14d2c72150844989c3470c5424a7a947',1,'Handle_Info::ServiceList'],['../db/d74/service__table_8hpp.html#a0726d4726d81d70731c0fb23b84f0f30',1,'service_table::serviceList']]],
+  ['servicelist_8',['servicelist',['../db/d74/service__table_8hpp.html#a0726d4726d81d70731c0fb23b84f0f30',1,'service_table::serviceList'],['../d3/da9/upnpapi_8hpp.html#a14d2c72150844989c3470c5424a7a947',1,'Handle_Info::ServiceList']]],
   ['servicetable_9',['ServiceTable',['../d3/da9/upnpapi_8hpp.html#a532ced075e5ad2f9e30ad2f77381e2d2',1,'Handle_Info']]],
   ['servicetype_10',['servicetype',['../d0/d19/ssdp__common_8hpp.html#a606f9ecc0623cf90d105e8b3fea36771',1,'SsdpEvent::ServiceType'],['../d3/da9/upnpapi_8hpp.html#af26d07dbeb0311a1c0135e2434dc8502',1,'UpnpNonblockParam::ServiceType'],['../db/d74/service__table_8hpp.html#a8d38e0493364b98d9136eabbe5f44f05',1,'service_info::serviceType']]],
   ['servicever_11',['ServiceVer',['../d3/da9/upnpapi_8hpp.html#a8e9d52f6ff4940f156f4cba1e15a8699',1,'UpnpNonblockParam']]],

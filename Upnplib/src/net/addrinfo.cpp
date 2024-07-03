@@ -19,6 +19,7 @@ namespace upnplib {
 
 // Constructor for getting an address information with service name that can
 // also be a port number string.
+// -------------------------------------------------------------------------
 CAddrinfo::CAddrinfo(std::string_view a_node, std::string_view a_service,
                      const int a_family, const int a_socktype,
                      const int a_flags, const int a_protocol)
@@ -34,7 +35,7 @@ CAddrinfo::CAddrinfo(std::string_view a_node, const int a_family,
                      const int a_protocol)
     : m_node(a_node) {
     // Just do a simple check for a possible port and split it from address
-    // string. Detailed tests will be done with this->init().
+    // string. Detailed tests will be done with this->load().
     TRACE2(this, " Construct CAddrinfo() without service")
 
     size_t pos;
@@ -79,7 +80,7 @@ inline void CAddrinfo::set_ai_flags(const int a_family, const int a_socktype,
     // I cannot use the initialization list of the constructor because the
     // member order in the structure addrinfo is different on Linux, MacOS and
     // win32. I have to use the member names to initialize them, what's not
-    // possible for structures in the constructors init list.
+    // possible for structures in the constructors initialization list.
     m_hints.ai_flags = a_flags;
     m_hints.ai_family = a_family;
     m_hints.ai_socktype = a_socktype;
@@ -112,11 +113,11 @@ void CAddrinfo::free_addrinfo() noexcept {
 ::addrinfo* CAddrinfo::operator->() const noexcept { return m_res; }
 
 
-// Setter to initialize an addrinfo and set it to the object
-// ---------------------------------------------------------
+// Setter to load an addrinfo from the operating system to the object
+// ------------------------------------------------------------------
 // Get address information with cached hints.
-void CAddrinfo::init() {
-    TRACE2(this, " Executing CAddrinfo::init()")
+void CAddrinfo::load() {
+    TRACE2(this, " Executing CAddrinfo::load()")
 
     // Local working copies: modified node, service, and hints to use for
     // syscall ::getaddrinfo().
@@ -149,8 +150,8 @@ void CAddrinfo::init() {
         // with getting addr_family above.
         node = m_node;
     } else if (is_netaddr('[' + m_node + ']', AF_INET6) == AF_INET6) {
-        // ipv6 Netaddresses without brackets would be accepted by
-        // ::getaddrinfo(). So I make them invalid.
+        // ipv6 addresses without brackets would be accepted by ::getaddrinfo()
+        // but they are not valid netaddresses. So I make them invalid.
         hints.ai_flags |= AI_NUMERICHOST;
         node = m_node + "(no_brackets)";
     } else if (m_node.find_first_of("[]:") != m_node.npos) { // noexcept
@@ -197,7 +198,7 @@ void CAddrinfo::init() {
 
     // Very helpful for debugging to see what is given to ::getaddrinfo()
     // clang-format off
-    UPNPLIB_LOGINFO << "MSG1114: syscall ::getaddrinfo(" << node_out
+    UPNPLIB_LOGINFO << "MSG1111: syscall ::getaddrinfo(" << node_out
         << ", " << "\"" << service << "\", "
         << &hints << ", " << &new_res
         << ") node=\"" << m_node << "\", "
@@ -223,7 +224,7 @@ void CAddrinfo::init() {
         // depends on extern available DNS server the error can occur
         // unexpectedly at any time. We have no influence on it but I will give
         // an extended error message.
-        throw std::runtime_error(UPNPLIB_LOGEXCEPT + "MSG1111: errid(" +
+        throw std::runtime_error(UPNPLIB_LOGEXCEPT + "MSG1112: errid(" +
              std::to_string(ret) + ")=\"" + ::gai_strerror(ret) + "\", " +
              ((hints.ai_family == AF_UNSPEC) ? "IPv?_" :
              ((hints.ai_family == AF_INET6) ? "IPv6_" : "IPv4_")) +
@@ -261,7 +262,7 @@ void CAddrinfo::init() {
     //     // port for AF_INET6 is also valid for AF_INET
     //     reinterpret_cast<sockaddr_in6*>(new_res->ai_addr)->sin6_port = 0;
 
-    // If init() is called the second time then m_res still points to the
+    // If load() is called the second time then m_res still points to the
     // previous allocated memory. To avoid a memory leak it must be freed
     // before pointing to the new allocated memory.
     this->free_addrinfo();
@@ -270,7 +271,7 @@ void CAddrinfo::init() {
     m_res = new_res;
 }
 
-// Getter for the assosiated ip address with port
+// Getter for the assosiated netaddress with port
 // ----------------------------------------------
 // e.g. "[2001:db8::2]:50001" or "192.168.254.253:50001".
 Netaddr CAddrinfo::netaddr() const noexcept {

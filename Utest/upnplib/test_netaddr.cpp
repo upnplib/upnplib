@@ -1,5 +1,5 @@
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-30
+// Redistribution only with this Copyright remark. Last modified: 2024-07-03
 
 #include <upnplib/netaddr.hpp>
 
@@ -22,7 +22,7 @@ using ::upnplib::Netaddr;
 
 TEST(NetaddrTestSuite, netaddr_successful) {
     CAddrinfo aiObj("[2001:db8::1]", "61234");
-    aiObj.init();
+    aiObj.load();
     Netaddr napObj = aiObj.netaddr();
     EXPECT_EQ(napObj.str(), "[2001:db8::1]:61234");
 

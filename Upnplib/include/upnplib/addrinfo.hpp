@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_ADDRINFO_HPP
 #define UPNPLIB_INCLUDE_ADDRINFO_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-24
+// Redistribution only with this Copyright remark. Last modified: 2024-07-03
 /*!
  * \file
  * \brief Declaration of the Addrinfo class.
@@ -64,24 +64,23 @@ class UPNPLIB_API CAddrinfo {
     /*! \name Setter
      * *************
      * @{ */
-    /*! \brief Initialize address information that is returned from the
-     * operating system
+    /*! \brief load address information from the operating system
      * \code
 // Usage e.g.:
 CAddrinfo ai("[2001:db8::1]", "50050", AF_INET6, SOCK_STREAM, AI_NUMERICHOST);
 // or
 CAddrinfo ai("[2001:db8::1]:50050");
 try {
-    ai.init();
+    ai.load();
 } catch (const std::runtime_error& e) { handle_failed_address_info();
 } catch (const std::invalid_argument& e) { handle_other_error();
 }
 normal_execution();
      * \endcode
-     * \note It is important to careful check the error situation because this
-     * initialization depends on the real environment over which we have no
-     * influence. Name resolution may fail because to be unspecified, DNS
-     * server may be temporary down, etc.
+     * \note It is important to careful check the error situation because
+     * loading information depends on the real environment that we cannot
+     * control. Name resolution may fail because to be unspecified, DNS server
+     * may be temporary down, etc.
      *
      * Usually this setter is called one time after constructing the object.
      * This gets an address information from the operating system that may also
@@ -97,13 +96,13 @@ normal_execution();
      * \exception std::runtime_error Failed to get address information, node or
      * service not known. Maybe an alphanumeric node name that cannot be
      * resolved. Or the DNS server is temporary not available.
-     * \exception std::invalid_argument Other system error, e.g. address family
-     * or socket type not supported, etc.
+     * \exception std::invalid_argument Other system error, e.g. no memory
+     * resources, address family or socket type not supported, etc.
      *
      * Provides strong exception guarantee. It should be noted that are
      * different error messages returned by different platforms.
      */
-    void init();
+    void load();
     /// @} Setter
 
 
@@ -117,7 +116,7 @@ normal_execution();
      * // Usage e.g.:
      * CAddrinfo ai("localhost", "50001", AF_UNSPEC, SOCK_STREAM);
      * try {
-     *     ai.init();
+     *     ai.load();
      * } catch (xcp) { handle_error(); }
      * if (ai->ai_socktype == SOCK_DGRAM) {} // is SOCK_STREAM in this example
      * if (ai->ai_family == AF_INET6) { handle_ipv6(); };
@@ -133,7 +132,7 @@ normal_execution();
      * // Usage e.g.:
      * CAddrinfo ai("localhost", "50001", AF_UNSPEC, SOCK_STREAM);
      * try {
-     *     ai.init();
+     *     ai.load();
      * } catch (xcp) { handle_error(); }
      * std::string netaddrp = ai.netaddr().str();
      * if (netaddrp == "[::1]:50001") { manage_ipv6_interface();
@@ -154,8 +153,8 @@ normal_execution();
     // Pointer to the address information returned from systemcall
     // ::getaddrinfo(). This pointer must be freed. That is done with the
     // destructor. It is initialized to point to the hints so there is never a
-    // dangling pointer that segfaults. Pointing to the hints means there is no
-    // information available.
+    // dangling pointer that may segfault. Pointing to the hints means there is
+    // no information available.
     addrinfo* m_res{&m_hints};
 
     // Private method to free allocated memory for address information.

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-19
+// Redistribution only with this Copyright remark. Last modified: 2024-07-03
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -46,7 +46,6 @@ using ::testing::SetArgPointee;
 using ::testing::SetErrnoAndReturn;
 using ::testing::StrictMock;
 
-using ::upnplib::CAddrinfo;
 using ::upnplib::CSocket_basic;
 using ::upnplib::errStrEx;
 using ::upnplib::g_dbug;
@@ -2001,27 +2000,24 @@ TEST_F(StartMiniServerMockFTestSuite, get_port_successful) {
 
     // Provide needed data for the Unit
     constexpr SOCKET sockfd{umock::sfd_base + 23};
-    constexpr char text_addr[] = "192.168.154.188";
-    constexpr uint16_t actual_port{55555};
+    constexpr in_port_t actual_port{55555};
     // This is for the returned port number
-    uint16_t port{0xAAAA};
+    in_port_t port{0xAAAA};
 
     // Provide a sockaddr structure that will be returned by mocked
     // getsockname().
-    CAddrinfo ai(std::string(text_addr), std::to_string(actual_port), AF_INET,
-                 SOCK_STREAM, AI_NUMERICHOST | AI_NUMERICSERV);
-    ai.init();
+    SSockaddr saObj;
+    saObj = "192.168.154.188:" + std::to_string(actual_port);
 
     // Mock system functions
     EXPECT_CALL(
         m_sys_socketObj,
         getsockname(sockfd, _,
-                    Pointee(Ge(static_cast<socklen_t>(ai->ai_addrlen)))))
+                    Pointee(Ge(static_cast<socklen_t>(sizeof(saObj.sin))))))
         .WillOnce(
-            DoAll(SetArgPointee<1>(*ai->ai_addr),
-                  SetArgPointee<2>(static_cast<socklen_t>(ai->ai_addrlen)),
+            DoAll(SetArgPointee<1>(saObj.sa),
+                  SetArgPointee<2>(static_cast<socklen_t>(sizeof(saObj.sin))),
                   Return(0)));
-
 
     // Test Unit
     EXPECT_EQ(get_port(sockfd, &port), 0);
