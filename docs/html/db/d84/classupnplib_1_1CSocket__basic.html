@@ -188,7 +188,7 @@ Public Member Functions</h2></td></tr>
 <p>This class takes the resources and results as given by the platform (Unix, MacOS, MS Windows). It does not perform any emulations for unification. The behavior can be different on different platforms.</p>
 <p>An object of this class does not take ownership of the raw socket file descriptor and will never close it. This is also the reason why you cannot modify the socket and only have getter available (except the setter '<a class="el" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a669306da2efd858996bd66fc3de5c621" title="Initialize a given raw socket file descriptor to the object.">init()</a>' for the raw socket file descriptor itself). But it is helpful to easily get information about an existing raw socket file descriptor. Closing the file descriptor is in the responsibility of the caller who created the socket. If you need to manage a socket you must use <a class="el" href="../../d8/d73/classupnplib_1_1CSocket.html" title="Manage all aspects of a network socket.">CSocket</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../da/dfc/socket_8hpp_source.html#l00115">115</a> of file <a class="el" href="../../da/dfc/socket_8hpp_source.html">socket.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../da/dfc/socket_8hpp_source.html#l00122">122</a> of file <a class="el" href="../../da/dfc/socket_8hpp_source.html">socket.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a07e859ed163d5b040c51bc69955db924" name="a07e859ed163d5b040c51bc69955db924"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a07e859ed163d5b040c51bc69955db924">&#9670;&#160;</a></span>CSocket_basic() <span class="overload">[1/2]</span></h2>
@@ -417,7 +417,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Get the <a class="el" href="../../d5/d67/Glossary.html#glossary_socktype">socket type</a> <code>SOCK_STREAM</code> or <code>SOCK_DGRAM</code>. </p>
 <p>Throws exception std::runtime_error if query option fails.</p>
-<dl class="todo"><dt><b><a class="el" href="../../dd/da0/todo.html#_todo000001">Todo:</a></b></dt><dd>Check if SOCK_UNDEF is also possible, maybe with an empty socket </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="../../dd/da0/todo.html#_todo000002">Todo:</a></b></dt><dd>Check if SOCK_UNDEF is also possible, maybe with an empty socket </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00146">146</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
 <div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -484,7 +484,7 @@ Public Member Functions</h2></td></tr>
 <div class="line">}</div>
 <div class="line">::close(sfd);</div>
 <div class="ttc" id="aUpnpInet_8hpp_html_a8dc8083897335125630f1af5dafd5831"><div class="ttname"><a href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a></div><div class="ttdeci">int SOCKET</div><div class="ttdef"><b>Definition</b> <a href="../../da/dc0/UpnpInet_8hpp_source.html#l00049">UpnpInet.hpp:49</a></div></div>
-<div class="ttc" id="aclassupnplib_1_1CSocket__basic_html"><div class="ttname"><a href="../../db/d84/classupnplib_1_1CSocket__basic.html">upnplib::CSocket_basic</a></div><div class="ttdoc">Get information from a raw network socket file descriptor.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00115">socket.hpp:115</a></div></div>
+<div class="ttc" id="aclassupnplib_1_1CSocket__basic_html"><div class="ttname"><a href="../../db/d84/classupnplib_1_1CSocket__basic.html">upnplib::CSocket_basic</a></div><div class="ttdoc">Get information from a raw network socket file descriptor.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00122">socket.hpp:122</a></div></div>
 </div><!-- fragment --><p>The socket file descriptor was given with the constructor. This object does not take ownership of the socket file descriptor and will never close it. Closing is in the responsibility of the caller who created the socket. Initializing it again is possible but is only waste of resources. The result is the same as before.</p>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">

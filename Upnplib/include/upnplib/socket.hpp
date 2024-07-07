@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-19
+// Redistribution only with this Copyright remark. Last modified: 2024-07-17
 /*!
  * \file
  * \brief **Socket Module:** manage properties and methods but not connections
@@ -65,6 +65,13 @@
  * I don't set the option to immediately reuse an address and I always set the
  * option `SO_EXCLUSIVEADDRUSE` on Microsoft Windows. For more details of this
  * have a look at [Socket option "reuse address"](\ref overview_reuseaddr).
+ *
+ * References
+ * ----------
+ * - <!--REF:--><a href="https://www.rfc-editor.org/rfc/rfc3493">RFC 3493</a> -
+ *   Basic Socket Interface Extensions for IPv6
+ * - <!--REF:--><a href="https://www.rfc-editor.org/rfc/rfc3542">RFC 3542</a> -
+ *   Advanced Sockets Application Program Interface (API) for IPv6
  */
 
 #include <upnplib/sockaddr.hpp>

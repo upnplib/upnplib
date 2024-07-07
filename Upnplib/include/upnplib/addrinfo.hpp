@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_INCLUDE_ADDRINFO_HPP
 #define UPNPLIB_INCLUDE_ADDRINFO_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-07-03
+// Redistribution only with this Copyright remark. Last modified: 2024-07-22
 /*!
  * \file
  * \brief Declaration of the Addrinfo class.
@@ -114,12 +114,12 @@ normal_execution();
      * structure</a>
      * \code
      * // Usage e.g.:
-     * CAddrinfo ai("localhost", "50001", AF_UNSPEC, SOCK_STREAM);
+     * CAddrinfo aiObj("localhost", "50001", AF_UNSPEC, SOCK_STREAM);
      * try {
-     *     ai.load();
+     *     aiObj.load();
      * } catch (xcp) { handle_error(); }
-     * if (ai->ai_socktype == SOCK_DGRAM) {} // is SOCK_STREAM in this example
-     * if (ai->ai_family == AF_INET6) { handle_ipv6(); };
+     * if (aiObj->ai_socktype == SOCK_DGRAM) {} // is SOCK_STREAM here
+     * if (aiObj->ai_family == AF_INET6) { handle_ipv6(); };
      * \endcode
      *
      * The operating system returns the information in a structure that you can
@@ -130,15 +130,36 @@ normal_execution();
     /*! \brief Get the assosiated [netaddress](\ref glossary_netaddr)
      * \code
      * // Usage e.g.:
-     * CAddrinfo ai("localhost", "50001", AF_UNSPEC, SOCK_STREAM);
+     * CAddrinfo aiObj("localhost", "50001", AF_UNSPEC, SOCK_STREAM);
      * try {
-     *     ai.load();
+     *     aiObj.load();
      * } catch (xcp) { handle_error(); }
-     * std::string netaddrp = ai.netaddr().str();
+     * std::string netaddrp = aiObj.netaddr().str();
      * if (netaddrp == "[::1]:50001") { manage_ipv6_interface();
      * } else if (netaddrp == "127.0.0.1:50001") { manage_ipv4_interface(); }
      * \endcode */
-    virtual Netaddr netaddr() const noexcept;
+    Netaddr netaddr() const noexcept;
+
+    /*! \brief Get next available address information
+     * \code
+     * // Usage e.g.:
+     * CAddrinfo aiObj("localhost");
+     * try {
+     *     aiObj.load();
+     * } catch (xcp) { handle_error(); }
+     * do {
+     *     int af = aiObj->ai_family;
+     *     Netaddr netaddrObj = aiObj.netaddr();
+     *     std::cout << "AF=" << af << ", " << netaddrObj.str() << "\n";
+     * } while (aiObj.get_next()) { // handle next addrinfo
+     * \endcode
+     *
+     * If more than one address information is available this is used to switch
+     * to the next addrinfo that is used to get its information with the object.
+     * \returns
+     *  \b true if address information is available\n
+     *  \b false otherwise */
+    bool get_next() noexcept;
     /// @} Getter
 
   private:
@@ -155,7 +176,10 @@ normal_execution();
     // destructor. It is initialized to point to the hints so there is never a
     // dangling pointer that may segfault. Pointing to the hints means there is
     // no information available.
-    addrinfo* m_res{&m_hints};
+    ::addrinfo* m_res{&m_hints};
+    // This points to the current used address info. If more than one address
+    // info is available it is selected with this->get_next().
+    ::addrinfo* m_res_current{&m_hints};
 
     // Private method to free allocated memory for address information.
     void free_addrinfo() noexcept;

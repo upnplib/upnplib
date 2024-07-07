@@ -187,7 +187,6 @@ jobs:
           cd ./build/Utest
           UPNPLIB_DEBUG=true ctest --timeout 6 --output-on-failure
 
-
   # Job: Configure, build and test with Visual Studio
   #--------------------------------------------------
   Build_with_Visual_Studio:

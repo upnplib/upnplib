@@ -1,5 +1,6 @@
 var NAVTREEINDEX8 =
 {
+"dc/d80/namespaceanonymous__namespace_02upnptools_8cpp_03.html#d9/d56/structanonymous__namespace_02upnptools_8cpp_03_1_1ErrorString":[8,0,2,1,0,0,0],
 "dc/d9a/namespacepupnp.html":[6,0,23],
 "dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html":[6,0,18],
 "dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a1425dfc37b98f61a0b49a36ac07660d1":[6,0,18,3],
@@ -204,14 +205,14 @@ var NAVTREEINDEX8 =
 "dd/da6/UpnpFileInfo_8cpp_source.html":[8,0,0,1,0,8],
 "dd/dad/Upnplib_2include_2upnplib_2httpreadwrite_8hpp.html":[8,0,2,0,0,6],
 "dd/dad/Upnplib_2include_2upnplib_2httpreadwrite_8hpp_source.html":[8,0,2,0,0,6],
-"dd/db5/classupnplib_1_1CUri.html":[7,0,7,6],
 "dd/db5/classupnplib_1_1CUri.html":[6,0,24,8],
-"dd/db5/classupnplib_1_1CUri.html#aa0bd5796ad47818a282392e1cf7f7d7c":[7,0,7,6,0],
+"dd/db5/classupnplib_1_1CUri.html":[7,0,7,6],
 "dd/db5/classupnplib_1_1CUri.html#aa0bd5796ad47818a282392e1cf7f7d7c":[6,0,24,8,0],
-"dd/db5/classupnplib_1_1CUri.html#aac477637704d2107135ff0cac185f954":[7,0,7,6,1],
+"dd/db5/classupnplib_1_1CUri.html#aa0bd5796ad47818a282392e1cf7f7d7c":[7,0,7,6,0],
 "dd/db5/classupnplib_1_1CUri.html#aac477637704d2107135ff0cac185f954":[6,0,24,8,1],
-"dd/db5/classupnplib_1_1CUri.html#ae59cb0be0f7f79a7da3ee09dfda75803":[7,0,7,6,2],
+"dd/db5/classupnplib_1_1CUri.html#aac477637704d2107135ff0cac185f954":[7,0,7,6,1],
 "dd/db5/classupnplib_1_1CUri.html#ae59cb0be0f7f79a7da3ee09dfda75803":[6,0,24,8,2],
+"dd/db5/classupnplib_1_1CUri.html#ae59cb0be0f7f79a7da3ee09dfda75803":[7,0,7,6,2],
 "dd/dbe/group__upnplib-connection.html":[5,3,0,2],
 "dd/de6/gena__device_8cpp.html":[8,0,0,1,1,2],
 "dd/de6/gena__device_8cpp.html#a11f6b8370b141ab90b844dbf1092265c":[8,0,0,1,1,2,21],
@@ -248,6 +249,5 @@ var NAVTREEINDEX8 =
 "de/d27/group__SSDP-common__functions.html#ga46870802a16adadb9cd145c80345e4ec":[5,1,1,1,10],
 "de/d27/group__SSDP-common__functions.html#ga5a4b040176be9d1dd4eb98e84c263fb8":[5,1,1,1,6],
 "de/d27/group__SSDP-common__functions.html#ga60739b2f340e6bdeedcf8f282d9578c8":[5,1,1,1,0],
-"de/d27/group__SSDP-common__functions.html#ga62ab1e0cf1a64b52ce402504c7feab95":[5,1,1,1,13],
-"de/d27/group__SSDP-common__functions.html#ga6f360c6b4cce127d24d3cdf25caaee78":[5,1,1,1,4]
+"de/d27/group__SSDP-common__functions.html#ga62ab1e0cf1a64b52ce402504c7feab95":[5,1,1,1,13]
 };

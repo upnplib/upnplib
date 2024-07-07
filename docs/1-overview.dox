@@ -1,5 +1,5 @@
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-01
+// Redistribution only with this Copyright remark. Last modified: 2024-07-17
 
 /*!
 \page Overview
@@ -30,7 +30,7 @@ The order shows the dependency. Each component depends on its predecessor. For e
 
 \subsection noexcept Promise to throw "no exception"
 
-There are several functions and methods that are specified to <a href="https://en.cppreference.com/w/cpp/language/noexcept_spec">**noexcept**</a>. This may not always be true with debugging or TRACE enabled because there we have extended use of std::string objects for output to std::cerr. Both may throw exceptions in rare cases like exceeding max. length of a std::string or error on memory allocation or modified output flags of the std::cerr output stream by the program using the library. The result of such an unexpected exception is the immediate termination of the program as specified for **noexcept**. But I assume that this is only a temporary setting and is under special observation by the developer so that he can evaluate these exceptions.
+There are several functions and methods that are specified to <a href="https://en.cppreference.com/w/cpp/language/noexcept_spec">**noexcept**</a>. This may not always be true with debugging or TRACE enabled because there we have extended use of std::string objects for output to std::cerr. Both may throw exceptions in rare cases like exceeding max. length of a std::string or error on memory allocation or modified output flags of the std::cerr output stream by the program using the library. The result of such an unexpected exception is the immediate termination of the program as specified for **noexcept**. But I assume that debugging or TRACE is only a temporary setting not used for production code and is under special observation by the developer so that he can evaluate these exceptions.
 
 \subsection overview_reuseaddr Socket option "reuse address"
 

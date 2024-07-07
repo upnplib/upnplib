@@ -129,9 +129,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abe3d30cae8c8464fd580373cb8704386" id="r_abe3d30cae8c8464fd580373cb8704386"><td class="memItemLeft" align="right" valign="top">::addrinfo *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dad/classupnplib_1_1CAddrinfo.html#abe3d30cae8c8464fd580373cb8704386">operator-&gt;</a> () const noexcept</td></tr>
 <tr class="memdesc:abe3d30cae8c8464fd580373cb8704386"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read access to members of the <a href="https://www.man7.org/linux/man-pages/man3/getaddrinfo.3.html#DESCRIPTION">addrinfo structure</a>  <br /></td></tr>
 <tr class="separator:abe3d30cae8c8464fd580373cb8704386"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a938842ec8b629bc03581116942327aab" id="r_a938842ec8b629bc03581116942327aab"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d8/d44/classupnplib_1_1Netaddr.html">Netaddr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dad/classupnplib_1_1CAddrinfo.html#a938842ec8b629bc03581116942327aab">netaddr</a> () const noexcept</td></tr>
+<tr class="memitem:a938842ec8b629bc03581116942327aab" id="r_a938842ec8b629bc03581116942327aab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d8/d44/classupnplib_1_1Netaddr.html">Netaddr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dad/classupnplib_1_1CAddrinfo.html#a938842ec8b629bc03581116942327aab">netaddr</a> () const noexcept</td></tr>
 <tr class="memdesc:a938842ec8b629bc03581116942327aab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the assosiated <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a>.  <br /></td></tr>
 <tr class="separator:a938842ec8b629bc03581116942327aab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a626edce4c4e0c7bed72c3f9543f7a8ae" id="r_a626edce4c4e0c7bed72c3f9543f7a8ae"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dad/classupnplib_1_1CAddrinfo.html#a626edce4c4e0c7bed72c3f9543f7a8ae">get_next</a> () noexcept</td></tr>
+<tr class="memdesc:a626edce4c4e0c7bed72c3f9543f7a8ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get next available address information.  <br /></td></tr>
+<tr class="separator:a626edce4c4e0c7bed72c3f9543f7a8ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Get information from the operating system about a <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a>. </p>
@@ -247,6 +250,48 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a626edce4c4e0c7bed72c3f9543f7a8ae" name="a626edce4c4e0c7bed72c3f9543f7a8ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a626edce4c4e0c7bed72c3f9543f7a8ae">&#9670;&#160;</a></span>get_next()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool upnplib::CAddrinfo::get_next </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get next available address information. </p>
+<div class="fragment"><div class="line"><span class="comment">// Usage e.g.:</span></div>
+<div class="line"><a class="code hl_class" href="../../da/dad/classupnplib_1_1CAddrinfo.html">CAddrinfo</a> aiObj(<span class="stringliteral">&quot;localhost&quot;</span>);</div>
+<div class="line"><span class="keywordflow">try</span> {</div>
+<div class="line">    aiObj.load();</div>
+<div class="line">} <span class="keywordflow">catch</span> (xcp) { handle_error(); }</div>
+<div class="line"><span class="keywordflow">do</span> {</div>
+<div class="line">    <span class="keywordtype">int</span> af = aiObj-&gt;ai_family;</div>
+<div class="line">    Netaddr netaddrObj = aiObj.netaddr();</div>
+<div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;AF=&quot;</span> &lt;&lt; af &lt;&lt; <span class="stringliteral">&quot;, &quot;</span> &lt;&lt; netaddrObj.str() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
+<div class="line">} <span class="keywordflow">while</span> (aiObj.get_next()) { <span class="comment">// handle next addrinfo</span></div>
+<div class="ttc" id="aclassupnplib_1_1CAddrinfo_html"><div class="ttname"><a href="../../da/dad/classupnplib_1_1CAddrinfo.html">upnplib::CAddrinfo</a></div><div class="ttdoc">Get information from the operating system about a netaddress.</div><div class="ttdef"><b>Definition</b> <a href="../../d6/dbf/addrinfo_8hpp_source.html#l00026">addrinfo.hpp:26</a></div></div>
+</div><!-- fragment --><p>If more than one address information is available this is used to switch to the next addrinfo that is used to get its information with the object. </p><dl class="section return"><dt>Returns</dt><dd><b>true</b> if address information is available<br  />
+ <b>false</b> otherwise </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html#l00308">308</a> of file <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html">addrinfo.cpp</a>.</p>
+
+</div>
+</div>
 <a id="a5a9dc9b0ec4397230b37db8d792175b0" name="a5a9dc9b0ec4397230b37db8d792175b0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5a9dc9b0ec4397230b37db8d792175b0">&#9670;&#160;</a></span>load()</h2>
 
@@ -273,7 +318,6 @@ Public Member Functions</h2></td></tr>
 <div class="line">} <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::invalid_argument&amp; e) { handle_other_error();</div>
 <div class="line">}</div>
 <div class="line">normal_execution();</div>
-<div class="ttc" id="aclassupnplib_1_1CAddrinfo_html"><div class="ttname"><a href="../../da/dad/classupnplib_1_1CAddrinfo.html">upnplib::CAddrinfo</a></div><div class="ttdoc">Get information from the operating system about a netaddress.</div><div class="ttdef"><b>Definition</b> <a href="../../d6/dbf/addrinfo_8hpp_source.html#l00026">addrinfo.hpp:26</a></div></div>
 </div><!-- fragment --> <dl class="section note"><dt>Note</dt><dd>It is important to careful check the error situation because loading information depends on the real environment that we cannot control. Name resolution may fail because to be unspecified, DNS server may be temporary down, etc.</dd></dl>
 <p>Usually this setter is called one time after constructing the object. This gets an address information from the operating system that may also use its internal name resolver inclusive contacting external DNS server. If you use the flag <b>AI_NUMERICHOST</b> with the constructor then a possible expensive name resolution to DNS server is suppressed.</p>
 <p>Because always the same cached hints given with the constructor are used we also get the same information but with new allocated memory. So it doesn't make much sense to call it more than one time, but doesn't hurt except waste of resources.</p>
@@ -285,8 +329,9 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <p>Provides strong exception guarantee. It should be noted that are different error messages returned by different platforms. </p>
+<dl class="todo"><dt><b><a class="el" href="../../dd/da0/todo.html#_todo000003">Todo:</a></b></dt><dd>Manage to use WSAEAFNOSUPPORT for EAI_ADDRFAMILY that isn't defined on win32. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html#l00119">119</a> of file <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html">addrinfo.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html#l00120">120</a> of file <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html">addrinfo.cpp</a>.</p>
 <div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-0-summary" class="dynsummary" style="display:block;">
@@ -344,22 +389,22 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">noexcept</span></span>  </td>
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Get the assosiated <a class="el" href="../../d5/d67/Glossary.html#glossary_netaddr">netaddress</a>. </p>
 <div class="fragment"><div class="line"><span class="comment">// Usage e.g.:</span></div>
-<div class="line"><a class="code hl_class" href="../../da/dad/classupnplib_1_1CAddrinfo.html">CAddrinfo</a> ai(<span class="stringliteral">&quot;localhost&quot;</span>, <span class="stringliteral">&quot;50001&quot;</span>, AF_UNSPEC, SOCK_STREAM);</div>
+<div class="line"><a class="code hl_class" href="../../da/dad/classupnplib_1_1CAddrinfo.html">CAddrinfo</a> aiObj(<span class="stringliteral">&quot;localhost&quot;</span>, <span class="stringliteral">&quot;50001&quot;</span>, AF_UNSPEC, SOCK_STREAM);</div>
 <div class="line"><span class="keywordflow">try</span> {</div>
-<div class="line">    ai.load();</div>
+<div class="line">    aiObj.load();</div>
 <div class="line">} <span class="keywordflow">catch</span> (xcp) { handle_error(); }</div>
-<div class="line">std::string netaddrp = ai.netaddr().str();</div>
+<div class="line">std::string netaddrp = aiObj.netaddr().str();</div>
 <div class="line"><span class="keywordflow">if</span> (netaddrp == <span class="stringliteral">&quot;[::1]:50001&quot;</span>) { manage_ipv6_interface();</div>
 <div class="line">} <span class="keywordflow">else</span> <span class="keywordflow">if</span> (netaddrp == <span class="stringliteral">&quot;127.0.0.1:50001&quot;</span>) { manage_ipv4_interface(); }</div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html#l00277">277</a> of file <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html">addrinfo.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html#l00292">292</a> of file <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html">addrinfo.cpp</a>.</p>
 <div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-2-summary" class="dynsummary" style="display:block;">
@@ -422,15 +467,15 @@ Public Member Functions</h2></td></tr>
 
 <p>Read access to members of the <a href="https://www.man7.org/linux/man-pages/man3/getaddrinfo.3.html#DESCRIPTION">addrinfo structure</a> </p>
 <div class="fragment"><div class="line"><span class="comment">// Usage e.g.:</span></div>
-<div class="line"><a class="code hl_class" href="../../da/dad/classupnplib_1_1CAddrinfo.html">CAddrinfo</a> ai(<span class="stringliteral">&quot;localhost&quot;</span>, <span class="stringliteral">&quot;50001&quot;</span>, AF_UNSPEC, SOCK_STREAM);</div>
+<div class="line"><a class="code hl_class" href="../../da/dad/classupnplib_1_1CAddrinfo.html">CAddrinfo</a> aiObj(<span class="stringliteral">&quot;localhost&quot;</span>, <span class="stringliteral">&quot;50001&quot;</span>, AF_UNSPEC, SOCK_STREAM);</div>
 <div class="line"><span class="keywordflow">try</span> {</div>
-<div class="line">    ai.load();</div>
+<div class="line">    aiObj.load();</div>
 <div class="line">} <span class="keywordflow">catch</span> (xcp) { handle_error(); }</div>
-<div class="line"><span class="keywordflow">if</span> (ai-&gt;ai_socktype == SOCK_DGRAM) {} <span class="comment">// is SOCK_STREAM in this example</span></div>
-<div class="line"><span class="keywordflow">if</span> (ai-&gt;ai_family == AF_INET6) { handle_ipv6(); };</div>
+<div class="line"><span class="keywordflow">if</span> (aiObj-&gt;ai_socktype == SOCK_DGRAM) {} <span class="comment">// is SOCK_STREAM here</span></div>
+<div class="line"><span class="keywordflow">if</span> (aiObj-&gt;ai_family == AF_INET6) { handle_ipv6(); };</div>
 </div><!-- fragment --><p>The operating system returns the information in a structure that you can read to get all details. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html#l00113">113</a> of file <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html">addrinfo.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html#l00114">114</a> of file <a class="el" href="../../dc/d59/addrinfo_8cpp_source.html">addrinfo.cpp</a>.</p>
 
 </div>
 </div>

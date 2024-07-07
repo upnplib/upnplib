@@ -222,7 +222,7 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Manage all aspects of a network socket. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../da/dfc/socket_8hpp_source.html#l00245">245</a> of file <a class="el" href="../../da/dfc/socket_8hpp_source.html">socket.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../da/dfc/socket_8hpp_source.html#l00252">252</a> of file <a class="el" href="../../da/dfc/socket_8hpp_source.html">socket.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="abea09f4baf9e720499481b69965c04c6" name="abea09f4baf9e720499481b69965c04c6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abea09f4baf9e720499481b69965c04c6">&#9670;&#160;</a></span>CSocket() <span class="overload">[1/3]</span></h2>
@@ -307,7 +307,7 @@ Public Member Functions</h2></td></tr>
 <div class="line">    sock1Obj.init();</div>
 <div class="line">} <span class="keywordflow">catch</span>(xcp) { <span class="comment">// handle error }</span></div>
 <div class="line"><a class="code hl_class" href="../../d8/d73/classupnplib_1_1CSocket.html">CSocket</a> sock2Obj{std::move(sock1Obj)};</div>
-<div class="ttc" id="aclassupnplib_1_1CSocket_html"><div class="ttname"><a href="../../d8/d73/classupnplib_1_1CSocket.html">upnplib::CSocket</a></div><div class="ttdoc">Manage all aspects of a network socket.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00245">socket.hpp:245</a></div></div>
+<div class="ttc" id="aclassupnplib_1_1CSocket_html"><div class="ttname"><a href="../../d8/d73/classupnplib_1_1CSocket.html">upnplib::CSocket</a></div><div class="ttdoc">Manage all aspects of a network socket.</div><div class="ttdef"><b>Definition</b> <a href="../../da/dfc/socket_8hpp_source.html#l00252">socket.hpp:252</a></div></div>
 </div><!-- fragment --> 
 <p class="definition">Definition at line <a class="el" href="../../d8/d81/socket_8cpp_source.html#l00251">251</a> of file <a class="el" href="../../d8/d81/socket_8cpp_source.html">socket.cpp</a>.</p>
 
@@ -390,7 +390,7 @@ Public Member Functions</h2></td></tr>
 <div class="line">sockObj.bind(<span class="stringliteral">&quot;&quot;</span>, <span class="stringliteral">&quot;51593&quot;</span>); <span class="comment">// uses &quot;[::1]:51593&quot; or &quot;127.0.0.1:51593&quot;</span></div>
 </div><!-- fragment --><p>With protocol family PF_INET6 I internally always set IPV6_V6ONLY to true to be portable with same behavior on all platforms. This is default on Unix platforms when binding the address and cannot be modified. MacOS does not modify IPV6_V6ONLY with binding. On Microsoft Windows IPV6_V6ONLY is already set by default.</p>
 <p>There is additional information at <a class="el" href="../../d8/d73/classupnplib_1_1CSocket.html#a558451398ca27e8a0311df14e3441e6b" title="Set IPV6_V6ONLY.">set_v6only()</a> </p>
-<dl class="todo"><dt><b><a class="el" href="../../dd/da0/todo.html#_todo000003">Todo:</a></b></dt><dd>Improve <a class="el" href="../../d2/dd2/classupnplib_1_1CSocketErr.html" title="Class for portable handling of network socket errors.">CSocketErr</a> for specific <a class="el" href="../../d8/d73/classupnplib_1_1CSocket.html#a7548ff82d122192ae5ee7855b7dec846" title="Bind socket to a local interface address.">bind()</a> error messages. </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="../../dd/da0/todo.html#_todo000005">Todo:</a></b></dt><dd>Improve <a class="el" href="../../d2/dd2/classupnplib_1_1CSocketErr.html" title="Class for portable handling of network socket errors.">CSocketErr</a> for specific <a class="el" href="../../d8/d73/classupnplib_1_1CSocket.html#a7548ff82d122192ae5ee7855b7dec846" title="Bind socket to a local interface address.">bind()</a> error messages. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">a_node</td><td>local interface address  </td></tr>

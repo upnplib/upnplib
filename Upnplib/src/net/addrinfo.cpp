@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-07-03
+// Redistribution only with this Copyright remark. Last modified: 2024-07-23
 /*!
  * \file
  * \brief Definition of the Addrinfo class and free helper functions.
@@ -104,13 +104,14 @@ void CAddrinfo::free_addrinfo() noexcept {
         TRACE2("syscall ::freeaddrinfo() with m_res = ", m_res)
         umock::netdb_h.freeaddrinfo(m_res);
         m_res = &m_hints;
+        m_res_current = &m_hints;
     }
 }
 
 
 // Member access operator ->
 // -------------------------
-::addrinfo* CAddrinfo::operator->() const noexcept { return m_res; }
+::addrinfo* CAddrinfo::operator->() const noexcept { return m_res_current; }
 
 
 // Setter to load an addrinfo from the operating system to the object
@@ -125,7 +126,8 @@ void CAddrinfo::load() {
     std::string service;
     ::addrinfo hints{m_hints}; // user given opgtions have priority
 
-    // Correct weak hints:
+    // Correct weak hints
+    // ------------------
     // Always call upnplib::is_netaddr() with AF_UNSPEC (default argument) to
     // check all types. I always set AI_NUMERICHOST if it match, no matter what
     // 'a_family' was requested by the caller. But if AF_UNSPEC was requested,
@@ -139,6 +141,7 @@ void CAddrinfo::load() {
         }
     }
     // Check node name
+    // ---------------
     if (addr_family == AF_INET6) {
         // Here we have only ipv6 node strings representing a numeric ip
         // address (netaddress) without port that is at least "[::]". Remove
@@ -169,6 +172,7 @@ void CAddrinfo::load() {
     std::string node_out = node.empty() ? "nullptr" : "\"" + node + "\"";
 
     // Check service/port
+    // ------------------
     // I have to do this because ::getaddrinfo() does not detect wrong port
     // numbers >65535. It silently overruns to port number 0, 1, 2...
     switch (is_numport(m_service)) {
@@ -186,12 +190,14 @@ void CAddrinfo::load() {
         // Any alphanumeric port name
         service = m_service;
     }
-
-    // Result from ::getaddrinfo()
-    ::addrinfo* new_res{nullptr};
+    if (service.empty()) {
+        service = "0";
+        hints.ai_flags |= AI_NUMERICSERV;
+    }
 
     // syscall ::getaddrinfo() with prepared arguments
     // -----------------------------------------------
+    ::addrinfo* new_res{nullptr}; // Result from ::getaddrinfo()
     int ret =
         umock::netdb_h.getaddrinfo(c_node, service.c_str(), &hints, &new_res);
     TRACE2("syscall ::getaddrinfo() with new_res = ", new_res)
@@ -211,13 +217,17 @@ void CAddrinfo::load() {
                         "hints.ai_family=" + std::to_string(hints.ai_family))))
         << (ret != 0
             ? ". Get GAI_ERROR(" + std::to_string(ret) + ")"
-            : ". Get \"" + to_netaddrp(reinterpret_cast
-              <const sockaddr_storage*>(new_res->ai_addr)) + "\"") << "\n";
+            : ". Get first \"" + to_netaddrp(reinterpret_cast
+              <const sockaddr_storage*>(new_res->ai_addr)) + "\"") << " (maybe more)\n";
 
     if (ret == EAI_SERVICE    /* Servname not supported for ai_socktype */
         || ret == EAI_NONAME  /* Node or service not known */
         || ret == EAI_AGAIN   /* The name server returned a temporary failure indication, try again later */
-        || ret == EAI_NODATA) /* No address associated with hostname */ {
+        /*! \todo Manage to use WSAEAFNOSUPPORT for EAI_ADDRFAMILY that isn't defined on win32. */
+#ifndef _MSC_VER
+        || ret == EAI_ADDRFAMILY /* Address family for NAME not supported */
+#endif
+        || ret == EAI_NODATA)  /* No address associated with hostname */ {
         // Error numbers definded in netdb.h.
         // Maybe an alphanumeric node name that cannot be resolved (e.g. by
         // DNS)? Anyway, the user has to decide what to do. Because this
@@ -242,19 +252,23 @@ void CAddrinfo::load() {
             "MSG1037: Failed to get address information: errid(" +
             std::to_string(ret) + ")=\"" + ::gai_strerror(ret) + "\"\n");
     }
-    // Different on platforms: man getsockaddr says "Specifying 0 in
-    // hints.ai_socktype indicates that socket addresses of any type can be
-    // returned". Linux returns SOCK_STREAM, MacOS returns SOCK_DGRAM and win32
-    // returns 0. To be portable we always return 0 in this case, the same as
-    // requested by the user.
-    if (m_hints.ai_socktype == 0)
-        new_res->ai_socktype = 0;
-    // Different on platforms: Ubuntu & MacOS return protocol number, win32
-    // returns 0. We just return what was requested by the user.
-    new_res->ai_protocol = m_hints.ai_protocol;
-    // Different on platforms: Ubuntu returns set flags, MacOS & win32 return 0.
-    // We just return what was used to query ::getaddrinfo():
-    new_res->ai_flags = hints.ai_flags;
+
+    for (::addrinfo* res{new_res}; res != nullptr; res = res->ai_next) {
+        // First ai_socktype is different on platforms: man getsockaddr says
+        // "Specifying 0 in hints.ai_socktype indicates that socket addresses
+        // of any type can be returned". Linux returns SOCK_STREAM first, MacOS
+        // returns SOCK_DGRAM first and win32 returns 0.
+        // if (hints.ai_socktype == 0)
+        //     res->ai_socktype = 0;
+        //
+        // Different on platforms: Ubuntu & MacOS return protocol number, win32
+        // returns 0. I just return what was used to call ::getaddrinfo().
+        res->ai_protocol = hints.ai_protocol;
+        //
+        // Different on platforms: Ubuntu returns set flags, MacOS & win32
+        // return 0. I just return what was used to call ::getaddrinfo().
+        res->ai_flags = hints.ai_flags;
+    }
     // Man getaddrinfo says: "If service is NULL, then the port number of the
     // returned socket addresses will be left uninitialized." The service is
     // never set to NULL so we always have a defined service/portnumber.
@@ -269,6 +283,7 @@ void CAddrinfo::load() {
     // finaly point to the new address information from the operating
     // system.
     m_res = new_res;
+    m_res_current = new_res;
 }
 
 // Getter for the assosiated netaddress with port
@@ -278,13 +293,27 @@ Netaddr CAddrinfo::netaddr() const noexcept {
     // TRACE not usable with chained output.
     // TRACE2(this, " Executing SSockaddr::get_netaddrp()")
     Netaddr netaddr;
-    if (m_res == &m_hints)
+    if (m_res_current == &m_hints)
         return netaddr; // no information available
 
+    // We can set private netaddr.m_netaddrp as friend
     netaddr.m_netaddrp = to_netaddrp( // noexcept
-        reinterpret_cast<sockaddr_storage*>(m_res->ai_addr));
+        reinterpret_cast<sockaddr_storage*>(m_res_current->ai_addr));
 
-    return netaddr;
+    return netaddr; // Return as copy
+}
+
+// Getter for the next available address information
+// -------------------------------------------------
+bool CAddrinfo::get_next() noexcept {
+    if (m_res_current->ai_next == nullptr) {
+        // It doesn't matter if already pointing to m_hints. m_hints->ai_next is
+        // also nullptr.
+        m_res_current = &m_hints;
+        return false;
+    }
+    m_res_current = m_res_current->ai_next;
+    return true;
 }
 
 } // namespace upnplib

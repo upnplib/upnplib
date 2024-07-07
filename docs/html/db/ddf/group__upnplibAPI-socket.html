@@ -139,7 +139,13 @@ valid socket file descriptor</h2>
 <p>I get this from the C standard library function: <code>int ::socket(address_family, socket_type, protocol)</code>. Other arguments than address family and socket type do not instantiate a valid socket object and throw an exception. For the protocol argument is always the default one used that is internal hard coded with argument 0.</p>
 <h2><a class="anchor" id="autotoc_md17"></a>
 options SO_REUSEADDR and SO_EXCLUSIVEADDRUSE</h2>
-<p>I don't set the option to immediately reuse an address and I always set the option <code>SO_EXCLUSIVEADDRUSE</code> on Microsoft Windows. For more details of this have a look at <a class="el" href="../../d2/d59/Overview.html#overview_reuseaddr">Socket option &quot;reuse address&quot;</a>.   </p>
+<p>I don't set the option to immediately reuse an address and I always set the option <code>SO_EXCLUSIVEADDRUSE</code> on Microsoft Windows. For more details of this have a look at <a class="el" href="../../d2/d59/Overview.html#overview_reuseaddr">Socket option &quot;reuse address&quot;</a>.</p>
+<h2><a class="anchor" id="autotoc_md18"></a>
+References</h2>
+<ul>
+<li><a href="https://www.rfc-editor.org/rfc/rfc3493">RFC 3493</a> - Basic Socket Interface Extensions for IPv6</li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc3542">RFC 3542</a> - Advanced Sockets Application Program Interface (API) for IPv6   </li>
+</ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

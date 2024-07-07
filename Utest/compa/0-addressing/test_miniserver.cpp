@@ -2009,7 +2009,7 @@ TEST_F(StartMiniServerMockFTestSuite, get_port_successful) {
     SSockaddr saObj;
     saObj = "192.168.154.188:" + std::to_string(actual_port);
 
-    // Mock system functions
+    // Mock system functions, static_cast needed for _MSC_VER
     EXPECT_CALL(
         m_sys_socketObj,
         getsockname(sockfd, _,
