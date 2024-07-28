@@ -106,8 +106,10 @@ $(document).ready(function(){initNavTree('de/d2c/A__general__TODO-list_8dox.html
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A general TODO-list. </p>
 <dl class="todo"><dt><b><a class="el" href="../../dd/da0/todo.html#_todo000001">Todo:</a></b></dt><dd><ul>
+<li>Check UPNPLIB_LOG* messages in <a class="el" href="../../d9/d54/group__compaAPI.html#ga2affaa74c16d9973f812ad0dbb95d05c" title="Registers one UPnP device object for a specific address family with the UPnP library and get a handle...">UpnpRegisterRootDevice3()</a>.</li>
+<li>Productive use of UPnPlib with sample program.</li>
 <li>Install UPnPlib for use.</li>
-<li>Productive use of UPnPlib.</li>
+<li>Remove random port number generator.</li>
 <li>Fix "time used" on sock_read and sock_write.</li>
 <li>Improve tests for sock read_ssl and sock write_ssl.</li>
 <li>Remove a_service argument from CAddrinfo constructor.</li>
@@ -117,7 +119,17 @@ $(document).ready(function(){initNavTree('de/d2c/A__general__TODO-list_8dox.html
 <li>Test openssl. <br  />
  - Improve test_sock.cpp with ssl tests</li>
 <li>Rework test_httpreadwrite.cpp.</li>
-<li>Add AI_IDN and AI_CANONIDN support to CAddrinfo. </li>
+<li>Add AI_IDN and AI_CANONIDN support to CAddrinfo.</li>
+<li>Improve test_http_Download.cpp, start with error conditions for <a class="el" href="../../da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#af5981cc2f7cc76c3e6b6700c5f27c472" title="Generate an HTTP message based on the format that is specified in the input parameters.">http_MakeMessage()</a>.</li>
+<li>Create gtests for ssdp/.., start with get_ssdp_sockets (needed for miniserver).</li>
+<li>Use poll() and WSAPoll() instead of select().</li>
+<li>Parse_uri should except "http://127.000.000.001:50001/tvdevicedesc.xml" as valid.</li>
+<li>Create gtests for web_server_callback.</li>
+<li>Check bugfix in pupnp/upnp/src/urlconfig/urlconfig.cpp with a gtest.</li>
+<li>Move pupnp/upnp/src/inc/sock.hpp:79:static UPNP_INLINE int <a class="el" href="../../d6/df0/sock_8hpp.html#a703577f3b40fc1c9e865b798beab18e5" title="Closes the socket if it is different from -1.">sock_close()</a> to <a class="el" href="../../d5/db2/miniserver_8cpp.html" title="Implements the functionality and utility functions used by the Miniserver module.">miniserver.cpp</a> and rework.</li>
+<li>Rework README.md.</li>
+<li>Create own Url class.</li>
+<li>Replace <a class="el" href="../../d5/d91/ThreadPool_8hpp.html#d0/d41/structThreadPool" title="A thread pool.">ThreadPool</a> and multithreading with C++ standard library functions. </li>
 </ul>
 </dd></dl>
 

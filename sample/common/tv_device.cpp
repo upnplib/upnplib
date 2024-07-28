@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-06-04
+ * Redistribution only with this Copyright remark. Last modified: 2024-07-27
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -1254,7 +1254,7 @@ int TvDeviceCallbackEventHandler(Upnp_EventType EventType, const void* Event,
 
 int TvDeviceStart(const char* iface, in_port_t port, const char* desc_doc_name,
                   const char* web_dir_path, const int ip_mode,
-                  const print_string pfunc, const int combo) {
+                  const int combo) {
     TRACE("Executing TvDeviceStart()");
     int ret{UPNP_E_SUCCESS};
     // example for desc_doc_url: http://192.168.47.11:50001/tvdevicedesc.xml
@@ -1266,13 +1266,12 @@ int TvDeviceStart(const char* iface, in_port_t port, const char* desc_doc_name,
     if (upnplib::g_dbug) {
         UpnpSetLogFileNames(NULL, NULL);
         UpnpSetLogLevel(UPNP_INFO);
-        UpnpInitLog();
     }
 
-    SampleUtil_Initialize(pfunc);
-    SampleUtil_Print("UpnpInit2 started, initializing UPnP Sdk with interface "
-                     "= \"%s\", port = %u\n",
-                     iface, port);
+    SampleUtil_Print(
+        "UpnpInit2 starting, initializing UPnP SDK with network interface "
+        "= \"%s\", local port = %u\n",
+        iface, port);
     ret = UpnpInit2(iface, port);
     if (ret != UPNP_E_SUCCESS) {
         SampleUtil_Print("Error with UpnpInit2 -- %s(%d)\n",
@@ -1304,7 +1303,7 @@ int TvDeviceStart(const char* iface, in_port_t port, const char* desc_doc_name,
     }
 
     SampleUtil_Print("UpnpInit2 finished, UPnP Initialized, "
-                     "ipaddress = %s, port = %u\n",
+                     "local IP address = %s, local port = %u\n",
                      ip_address ? ip_address : "{NULL}", port);
 
     if (!desc_doc_name) {
@@ -1484,6 +1483,5 @@ int device_main(const int argc, char* argv[]) {
         }
     }
     port = (unsigned short)portTemp;
-    return TvDeviceStart(iface, port, desc_doc_name, web_dir_path, ip_mode,
-                         linux_print, 0);
+    return TvDeviceStart(iface, port, desc_doc_name, web_dir_path, ip_mode, 0);
 }

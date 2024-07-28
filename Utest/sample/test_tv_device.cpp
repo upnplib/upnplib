@@ -386,9 +386,8 @@ TEST_F(SampleTvDeviceFTestSuite, TvDeviceStart_successful) {
     // Test Unit
     // with default settings as far as possible. With nullptr for the
     // webdir path, the hard coded webdir path is used.
-    int ret_TvDeviceStart =
-        TvDeviceStart(iface, port, desc_doc_name, nullptr /*web_dir_path*/,
-                      ip_mode, linux_print, 0);
+    int ret_TvDeviceStart = TvDeviceStart(iface, port, desc_doc_name,
+                                          nullptr /*web_dir_path*/, ip_mode, 0);
     EXPECT_EQ(ret_TvDeviceStart, UPNP_E_SUCCESS)
         << errStrEx(ret_TvDeviceStart, UPNP_E_SUCCESS);
 

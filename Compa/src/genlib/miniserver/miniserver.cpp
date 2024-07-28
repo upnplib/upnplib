@@ -1003,11 +1003,11 @@ int StartMiniServer([[maybe_unused]] in_port_t* listen_port4,
     InitMiniServerSockArray(miniSocket);
 
     // Instantiate socket objects and point to them in miniSocket
-    upnplib::CSocket Sock6LlaObj(AF_INET6, SOCK_STREAM);
+    static upnplib::CSocket Sock6LlaObj(AF_INET6, SOCK_STREAM);
     miniSocket->MiniSvrSock6LlaObj = &Sock6LlaObj;
-    upnplib::CSocket Sock6UadObj(AF_INET6, SOCK_STREAM);
+    static upnplib::CSocket Sock6UadObj(AF_INET6, SOCK_STREAM);
     miniSocket->MiniSvrSock6UadObj = &Sock6UadObj;
-    upnplib::CSocket Sock4Obj(AF_INET, SOCK_STREAM);
+    static upnplib::CSocket Sock4Obj(AF_INET, SOCK_STREAM);
     miniSocket->MiniSvrSock4Obj = &Sock4Obj;
 
 #ifdef COMPA_HAVE_WEBSERVER
@@ -1060,6 +1060,7 @@ int StartMiniServer([[maybe_unused]] in_port_t* listen_port4,
         return ret_code;
     }
 #endif
+    // Run miniserver in a new thread.
     TPJobInit(&job, (start_routine)RunMiniServer_f, (void*)miniSocket);
     TPJobSetPriority(&job, MED_PRIORITY);
     TPJobSetFreeFunction(&job, (free_routine)free);

@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-24
+// Redistribution only with this Copyright remark. Last modified: 2024-07-29
 
 // Include source code for testing. So we have also direct access to static
 // functions which need to be tested.
@@ -407,8 +407,12 @@ TEST_F(PrivateConnectFTestSuite, connect_fails) {
                 connect(m_sockfd, (sockaddr*)&m_saddr.ss, sizeof(m_saddr.ss)))
         .WillOnce(SetErrnoAndReturn(ENETUNREACH, SOCKET_ERROR));
 #ifdef _WIN32
-    // WSAGetLastError
-    EXPECT_CALL(m_winsock2Obj, WSAGetLastError()).Times(0);
+    if (old_code)
+        // No error checking in old_code.
+        EXPECT_CALL(m_winsock2Obj, WSAGetLastError()).Times(0);
+    else
+        // WSAGetLastError called in CSocketErr.
+        EXPECT_CALL(m_winsock2Obj, WSAGetLastError()).Times(1);
 #endif
     // select()
     EXPECT_CALL(m_sys_socketObj, select(_, _, _, _, _)).Times(0);

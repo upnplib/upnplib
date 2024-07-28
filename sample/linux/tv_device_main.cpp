@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-21
+ * Redistribution only with this Copyright remark. Last modified: 2024-07-28
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,19 +30,27 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
+/*!
+ * \file
+ * \brief The main() program entry for the TV device sample program.
+ */
 
 #include "tv_device.hpp"
-#include <signal.h>
+#include <upnplib/synclog.hpp>
+#include <signal.h> // needed for MacOS for some configurations
 
 int main(int argc, char* argv[]) {
+    TRACE("Executing main()");
     pthread_t cmdloop_thread;
 #ifndef _WIN32
     int sig;
     sigset_t sigs_to_catch;
 #endif
 
+    // Start TV device
     int rc = device_main(argc, argv);
     if (rc != UPNP_E_SUCCESS) {
+        SampleUtil_Print("Error starting UPnP TV Device\n");
         return rc;
     }
 

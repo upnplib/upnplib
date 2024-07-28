@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-05-26
+ * Redistribution only with this Copyright remark. Last modified: 2024-07-28
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -496,8 +496,8 @@ int MakeGetMessageEx(const char* url_str, membuffer* request, uri_type* url,
  * 111: ECONNREFUSED "Connection refused" if there is a remote host but no
  * server service listening.
  */
+// Due to compatibility with Umock for Pupnp this has to be defined static.
 static int private_connect(
-    // Due to compatibility with Umock for Pupnp this has to be defined static.
     const SOCKET sockfd, ///< [in] Socket file descriptor.
     const sockaddr* const
         serv_addr,          ///< [in] Socket address of a remote network node.
@@ -507,6 +507,8 @@ static int private_connect(
           std::string(unblock_tcp_connections ? "false" : "true"))
 
     if (unblock_tcp_connections) {
+        // This is never used due to SDK specification. It is only presevered
+        // for historical reasons.
 
         int ret{SOCKET_ERROR};
         // returns 0 if successful, else SOCKET_ERROR.
@@ -525,9 +527,17 @@ static int private_connect(
 
         return ret == 0 ? 0 : SOCKET_ERROR;
 
-    } else { // unblock_tcp_connections == false
+    } else { // tcp_connection is blocking
 
-        return umock::sys_socket_h.connect(sockfd, serv_addr, addrlen);
+        upnplib::CSocketErr serrObj;
+        if (umock::sys_socket_h.connect(sockfd, serv_addr, addrlen) != 0) {
+            serrObj.catch_error();
+            UPNPLIB_LOGERR "MSG1020: failed to connect() socket("
+                << sockfd << "): " << serrObj.error_str() << "\n";
+
+            return SOCKET_ERROR;
+        }
+        return 0;
     }
 }
 /// @}
@@ -656,9 +666,8 @@ int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
             status = parser_append(parser, buf, (size_t)num_read);
             switch (status) {
             case PARSE_SUCCESS:
-                UPNPLIB_LOGINFO << "MSG1031: <<< (RECVD) <<<\n"
-                                << parser->msg.msg.buf
-                                << "UPnPlib -----------------\n";
+                UPNPLIB_LOGINFO "MSG1031: <<< (RECVD) <<<\n"
+                    << parser->msg.msg.buf << "UPnPlib -----------------\n";
                 print_http_headers(&parser->msg);
                 if (g_maxContentLength > (size_t)0 &&
                     parser->content_length > (unsigned int)g_maxContentLength) {
@@ -690,9 +699,8 @@ int http_RecvMessage(SOCKINFO* info, http_parser_t* parser,
             }
         } else if (num_read == 0) {
             if (ok_on_close) {
-                UPNPLIB_LOGINFO << "MSG1047: <<< (RECVD) <<<\n"
-                                << parser->msg.msg.buf
-                                << "\n-----------------\n";
+                UPNPLIB_LOGINFO "MSG1047: <<< (RECVD) <<<\n"
+                    << parser->msg.msg.buf << "\n-----------------\n";
                 print_http_headers(&parser->msg);
                 line = __LINE__;
                 ret = UPNP_E_SUCCESS;
@@ -933,9 +941,10 @@ ExitFunction:
 int http_RequestAndResponse(uri_type* destination, const char* request,
                             size_t request_length, http_method_t req_method,
                             int timeout_secs, http_parser_t* response) {
+    TRACE("Executing http_RequestAndResponse()")
     SOCKET tcp_connection;
     int ret_code;
-    size_t sockaddr_len;
+    socklen_t sockaddr_len;
     int http_error_code;
     SOCKINFO info;
 
@@ -952,11 +961,11 @@ int http_RequestAndResponse(uri_type* destination, const char* request,
     }
     /* connect */
     sockaddr_len = destination->hostport.IPaddress.ss_family == AF_INET6
-                       ? sizeof(struct sockaddr_in6)
-                       : sizeof(struct sockaddr_in);
+                       ? sizeof(sockaddr_in6)
+                       : sizeof(sockaddr_in);
     ret_code = umock::pupnp_httprw.private_connect(
         info.socket, (sockaddr*)&(destination->hostport.IPaddress),
-        (socklen_t)sockaddr_len);
+        sockaddr_len);
     if (ret_code == -1) {
         parser_response_init(response, req_method);
         ret_code = UPNP_E_SOCKET_CONNECT;
@@ -999,7 +1008,7 @@ int http_Download(const char* url_str, int timeout_secs, char** document,
 
     url_str_len = strlen(url_str);
     /*ret_code = parse_uri( (char*)url_str, url_str_len, &url ); */
-    UPNPLIB_LOGINFO "MSG1098: DOWNLOAD URL=\"" << url_str << "\"\n";
+    UPNPLIB_LOGINFO "MSG1098: DOWNLOAD URL=\"" << url_str << "\".\n";
     ret_code = http_FixStrUrl((char*)url_str, url_str_len, &url);
     if (ret_code != UPNP_E_SUCCESS) {
         return ret_code;

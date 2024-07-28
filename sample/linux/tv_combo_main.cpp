@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-21
+ * Redistribution only with this Copyright remark. Last modified: 2024-07-27
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,22 +32,21 @@
  ******************************************************************************/
 /*!
  * \file
- * \brief The main() program entry.
+ * \brief The main() program entry for the TV device and control point (combo)
+ * sample program.
  */
 
-#include "sample_util.hpp"
-#include "tv_ctrlpt.hpp"
 #include "tv_device.hpp"
+#include "tv_ctrlpt.hpp"
+#include <upnplib/synclog.hpp>
 
 #include <stdio.h>
 #include <string.h>
 
 int main(int argc, char* argv[]) {
-    char* iface = NULL;
-    int rc;
+    TRACE("Executing main()");
+    char* iface = nullptr;
     pthread_t cmdloop_thread;
-    int i = 0;
-    int code;
 #ifndef _WIN32
     int sig;
     sigset_t sigs_to_catch;
@@ -55,7 +54,7 @@ int main(int argc, char* argv[]) {
 
     SampleUtil_Initialize(linux_print);
     /* Parse options */
-    for (i = 1; i < argc; i++) {
+    for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-i") == 0) {
             iface = argv[++i];
         } else if (strcmp(argv[i], "-help") == 0) {
@@ -68,18 +67,24 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    device_main(argc, argv);
-    rc = TvCtrlPointStart(iface, NULL, 1);
-    if (rc != TV_SUCCESS) {
-        SampleUtil_Print("Error starting UPnP TV Control Point\n");
-        return rc;
+    // Start TV device and the control point
+    int rc_dev = device_main(argc, argv);
+    if (rc_dev != UPNP_E_SUCCESS) {
+        SampleUtil_Print("Error starting UPnP TV Device\n");
+        return rc_dev;
     }
+    int rc_cpt = TvCtrlPointStart(iface, NULL, 1);
+    if (rc_cpt != TV_SUCCESS) {
+        SampleUtil_Print("Error starting UPnP TV Control Point\n");
+        return rc_cpt;
+    }
+
     /* start a command loop thread */
-    code = pthread_create(&cmdloop_thread, NULL, TvCtrlPointCommandLoop, NULL);
-    if (code != 0) {
+    if (pthread_create(&cmdloop_thread, NULL, TvCtrlPointCommandLoop, NULL) !=
+        0) {
         return UPNP_E_INTERNAL_ERROR;
     }
-#ifdef _WIN32
+#ifdef _MSC_VER
     pthread_join(cmdloop_thread, NULL);
 #else
     /* Catch Ctrl-C and properly shutdown */
@@ -88,8 +93,10 @@ int main(int argc, char* argv[]) {
     sigwait(&sigs_to_catch, &sig);
     SampleUtil_Print("Shutting down on signal %d...\n", sig);
 #endif
-    TvDeviceStop();
-    rc = TvCtrlPointStop();
 
-    return rc;
+    rc_dev = TvDeviceStop();
+    rc_cpt = TvCtrlPointStop();
+    if (rc_dev != UPNP_E_SUCCESS)
+        return rc_dev;
+    return rc_cpt;
 }

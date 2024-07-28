@@ -1,12 +1,17 @@
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-07-25
+// Redistribution only with this Copyright remark. Last modified: 2024-07-29
 /*!
  * \file
  * \brief A general TODO-list
  *
  * \todo
+ * - Check UPNPLIB_LOG* messages in UpnpRegisterRootDevice3().
+ * - Update Pupnp version.
+ * - Productive use of UPnPlib with sample program.
  * - Install UPnPlib for use.
- * - Productive use of UPnPlib.
+ * - Remove random port number generator.
+ * - Eleminate static listing socket objects in miniserver.
+ * - Create connection class.
  * - Fix "time used" on sock_read and sock_write.
  * - Improve tests for sock read_ssl and sock write_ssl.
  * - Remove a_service argument from CAddrinfo constructor.
@@ -17,17 +22,16 @@
  *   \n - Improve test_sock.cpp with ssl tests
  * - Rework test_httpreadwrite.cpp.
  * - Add AI_IDN and AI_CANONIDN support to CAddrinfo.
+ * - Improve test_http_Download.cpp, start with error conditions for http_MakeMessage().
+ * - Create gtests for ssdp/.., start with get_ssdp_sockets (needed for miniserver).
+ * - Use poll() and WSAPoll() instead of select().
+ * - Parse_uri should except "http://127.000.000.001:50001/tvdevicedesc.xml" as valid.
+ * - Create gtests for web_server_callback.
+ * - Check bugfix in pupnp/upnp/src/urlconfig/urlconfig.cpp with a gtest.
+ * - Move pupnp/upnp/src/inc/sock.hpp:79:static UPNP_INLINE int sock_close() to miniserver.cpp and rework.
+ * - Rework README.md.
+ * - Create own Url class.
+ * - Replace ThreadPool and multithreading with C++ standard library functions.
  */
 
-// * Improve test_http_Download.cpp, start with error conditions for http_MakeMessage()
-// * Create gtests for ssdp/*, start with get_ssdp_sockets (needed for miniserver).
-// * Use poll() and WSAPoll() instead of select().
-// * parse_uri should except "http://127.000.000.001:50001/tvdevicedesc.xml" as valid.
-// * Create gtests for web_server_callback.
-// * Check bugfix in pupnp/upnp/src/urlconfig/urlconfig.cpp with a gtest.
 // * [set EXPECT_CALL to redirect the call to the original method](https://stackoverflow.com/questions/25556601/set-expect-call-to-redirect-the-call-to-the-original-method)
-// * Move pupnp/upnp/src/inc/sock.hpp:79:static UPNP_INLINE int sock_close() to miniserver.cpp and rework.
-// * Check if all fields in struct s_SocketStuff.serverAddr4 are used.
-// * Rework README.md.
-// * Create own Url class.
-// * Replace ThreadPool and multithreading with C++ standard library functions.

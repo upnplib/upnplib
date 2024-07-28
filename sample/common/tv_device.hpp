@@ -5,7 +5,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-04-16
+ * Redistribution only with this Copyright remark. Last modified: 2024-07-27
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -474,24 +474,21 @@ int TvDeviceDecreaseBrightness(
  *  On error: Other UPnPlib error code.
  */
 int TvDeviceStart(
-    /*! [in] Network interface to initialize the SDK (may be a nullptr) if
-     * nullptr, then the first interface (specified by its index) except
-     * localhost is used. */
+    /*! [in] Network interface to initialize the SDK. If nullptr, then the first
+       interface (specified by its index) except localhost is used. */
     const char* iface,
-    /*! [in] Port number to initialize the SDK (may be 0) if zero, then a
-     * random number is used. */
+    /*! [in] Local port number to initialize the SDK. If 0, then a random number
+       is used. */
     in_port_t port,
-    /*! [in] name of description document.
-     * may be a nullptr. Default is tvdevicedesc.xml. */
+    /*! [in] Name of description document. May be a nullptr. Default is
+       tvdevicedesc.xml. */
     const char* desc_doc_name,
     /*! [in] path of web directory.
-     * may be a nullptr. Default is ./sample/web (for Linux). */
+     * may be a nullptr. Default is ./Sample/web (for Linux). */
     const char* web_dir_path,
     /*! [in] IP mode: IP_MODE_IPV4, IP_MODE_IPV6_LLA or
      * IP_MODE_IPV6_ULA_GUA. Default is IP_MODE_IPV6_LLA. */
     const int ip_mode,
-    /*! [in] print function to use. */
-    const print_string pfunc,
     /*! [in] Non-zero if called from the combo application. */
     const int combo);
 

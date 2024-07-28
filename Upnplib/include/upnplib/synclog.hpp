@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SYNCLOG_HPP
 #define UPNPLIB_SYNCLOG_HPP
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-05
+// Redistribution only with this Copyright remark. Last modified: 2024-07-26
 /*!
  * \file
  * \brief Define macro for synced logging to the console for detailed info and
@@ -36,8 +36,8 @@ UPNPLIB_EXTERN bool g_dbug;
 // Trace messages
 // --------------
 #ifdef UPNPLIB_WITH_TRACE
-  #define TRACE(s) SYNC(std::cout)<<"TRACE["<<(static_cast<const char*>(__FILE__) + UPNPLIB_PROJECT_PATH_LENGTH)<<":"<<__LINE__<<"] "<<(s)<<"\n";
-  #define TRACE2(a, b) SYNC(std::cout)<<"TRACE["<<(static_cast<const char*>(__FILE__) + UPNPLIB_PROJECT_PATH_LENGTH)<<":"<<__LINE__<<"] "<<(a)<<(b)<<"\n";
+  #define TRACE(s) SYNC(std::cerr)<<"TRACE["<<(static_cast<const char*>(__FILE__) + UPNPLIB_PROJECT_PATH_LENGTH)<<":"<<__LINE__<<"] "<<(s)<<"\n";
+  #define TRACE2(a, b) SYNC(std::cerr)<<"TRACE["<<(static_cast<const char*>(__FILE__) + UPNPLIB_PROJECT_PATH_LENGTH)<<":"<<__LINE__<<"] "<<(a)<<(b)<<"\n";
 #else // no UPNPLIB_WITH_TRACE
   #define TRACE(s)
   #define TRACE2(a, b)

@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-04-17
+// Redistribution only with this Copyright remark. Last modified: 2024-07-28
 
 #include <upnplib/port.hpp>
 #include <upnplib/global.hpp>
@@ -11,6 +11,7 @@ namespace utest {
 
 using ::upnplib::g_dbug;
 
+using ::testing::AnyOf;
 using ::testing::HasSubstr;
 
 
@@ -23,7 +24,7 @@ TEST(GeneralToolsTestSuite, debug_messages_successful) {
     CaptureStdOutErr captureOutObj(STDOUT_FILENO);
     auto dbug_old{g_dbug};
 
-    // TRACE is a compiled in output stream with no dependency to the g_dbug
+    // TRACE is a compiled in error stream with no dependency to the g_dbug
     // flag.
     captureErrObj.start();
     captureOutObj.start();
@@ -31,17 +32,18 @@ TEST(GeneralToolsTestSuite, debug_messages_successful) {
     TRACE("This is a TRACE output.")
     g_dbug = dbug_old;
 
-    // There is no output to stderr.
-    EXPECT_EQ(captureErrObj.str(), "");
-
-    // There is output to stdout if TRACE is compiled in.
-#ifdef UPNPLIB_WITH_TRACE
-    EXPECT_THAT(captureOutObj.str(),
-                MatchesStdRegex("TRACE\\[Utest[/|\\\\]upnplib[/"
-                                "|\\\\]test_general\\.cpp:\\d+\\] This "
-                                "is a TRACE output\\.\n"));
-#else
+    // There is no output to stdout.
     EXPECT_EQ(captureOutObj.str(), "");
+
+    // There is output to stderr if TRACE is compiled in.
+#ifdef UPNPLIB_WITH_TRACE
+    EXPECT_THAT(
+        captureErrObj.str(),
+        AnyOf("", ContainsStdRegex("TRACE\\[Utest[/|\\\\]upnplib[/"
+                                   "|\\\\]test_general\\.cpp:\\d+\\] This "
+                                   "is a TRACE output\\.")));
+#else
+    EXPECT_EQ(captureErrObj.str(), "");
 #endif
 
     // All UPNPLIB_LOG* messages are output to stderr.

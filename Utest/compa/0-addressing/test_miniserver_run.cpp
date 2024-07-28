@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-19
+// Redistribution only with this Copyright remark. Last modified: 2024-07-28
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -31,6 +31,7 @@
 namespace utest {
 
 using ::testing::_;
+using ::testing::AnyOf;
 using ::testing::Between;
 using ::testing::DoAll;
 using ::testing::EndsWith;
@@ -42,6 +43,7 @@ using ::testing::Pointee;
 using ::testing::Return;
 using ::testing::SetArgPointee;
 using ::testing::SetErrnoAndReturn;
+using ::testing::StartsWith;
 using ::testing::StrictMock;
 
 using ::upnplib::CSocket;
@@ -640,7 +642,10 @@ TEST_F(RunMiniServerMockFTestSuite, receive_from_stopsock_not_selected) {
     EXPECT_EQ(receive_from_stopSock(sockfd, &rdSet), 0);
     g_dbug = dbug_old;
 
-    EXPECT_EQ(captureObj.str(), "");
+    EXPECT_THAT(
+        captureObj.str(),
+        AnyOf("", ContainsStdRegex(
+                      "^TRACE\\[.*\\] Executing receive_from_stopSock\\(\\)")));
 }
 
 TEST_F(RunMiniServerMockFTestSuite, receive_from_stopsock_receiving_fails) {
@@ -843,9 +848,10 @@ TEST_F(RunMiniServerMockFTestSuite, ssdp_read_successful) {
 
     EXPECT_THAT(
         captureObj.str(),
-        AnyOf("",
-              HasSubstr(
-                  "Some SSDP test data for a request of a remote client.")));
+        AnyOf(
+            "",
+            HasSubstr("Some SSDP test data for a request of a remote client."),
+            ContainsStdRegex("^TRACE\\[.*\\] Executing ssdp_read\\(\\)")));
     EXPECT_NE(ssdp_sockfd, INVALID_SOCKET);
 }
 
@@ -898,8 +904,10 @@ TEST_F(RunMiniServerMockFTestSuite, ssdp_read_fails) {
 
     EXPECT_THAT(
         captureObj.str(),
-        AnyOf("", HasSubstr("]: miniserver: Error in readFromSSDPSocket(46): "
-                            "closing socket")));
+        AnyOf("",
+              HasSubstr("]: miniserver: Error in readFromSSDPSocket(46): "
+                        "closing socket"),
+              ContainsStdRegex("^TRACE\\[.*\\] Executing ssdp_read\\(\\)")));
     EXPECT_EQ(ssdp_sockfd, INVALID_SOCKET);
 }
 
@@ -1244,7 +1252,10 @@ TEST_F(RunMiniServerMockFTestSuite,
             getNumericHostRedirection(sockfd, host_port, sizeof(host_port));
 
         // Get captured output
-        EXPECT_EQ(captureObj.str(), "");
+        EXPECT_THAT(
+            captureObj.str(),
+            AnyOf("", ContainsStdRegex("^TRACE\\[.*\\] Executing "
+                                       "getNumericHostRedirection\\(\\)")));
         EXPECT_TRUE(ret_getNumericHostRedirection); // Doesn't matter because it
                                                     // is never used.
         EXPECT_STREQ(host_port, ""); // Set to an unknown netaddress.
