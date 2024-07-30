@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-07-03
+// Redistribution only with this Copyright remark. Last modified: 2024-07-30
 /*!
  * \file
  * \brief Definition of the 'class Socket'.
@@ -77,15 +77,15 @@ CSocket_basic::CSocket_basic(){
     TRACE2(this, " Construct default CSocket_basic()") //
 }
 
-// Constructor for the socket file descriptor. Before use, it must be init().
+// Constructor for the socket file descriptor. Before use, it must be load().
 CSocket_basic::CSocket_basic(SOCKET a_sfd)
     : m_sfd_hint(a_sfd) {
     TRACE2(this, " Construct CSocket_basic(SOCKET)") //
 }
 
 // Setter with given file desciptor
-void CSocket_basic::init() {
-    TRACE2(this, " Executing CSocket_basic::init()")
+void CSocket_basic::load() {
+    TRACE2(this, " Executing CSocket_basic::load()")
 
     CSocketErr serrObj;
     // Check if we have a valid socket file descriptor
@@ -241,7 +241,7 @@ CSocket::CSocket(){
 }
 
 // clang-format off
-// \brief Constructor for a new socket file descriptor that must be init()
+// \brief Constructor for a new socket file descriptor that must be load()
 CSocket::CSocket(sa_family_t a_family, int a_socktype)
     : m_pf_hint(a_family), m_socktype_hint(a_socktype) {
     TRACE2(this, " Construct CSocket() for socket fd") //
@@ -283,8 +283,8 @@ CSocket::~CSocket() {
 // Setter
 // ------
 // Setter to initialize the object with the hints given by the constructor
-void CSocket::init() {
-    TRACE2(this, " Executing CSocket::init(af, socktype)")
+void CSocket::load() {
+    TRACE2(this, " Executing CSocket::load(af, socktype)")
 
     // Do some general checks that must always be fulfilled according to the
     // specification.
@@ -300,7 +300,7 @@ void CSocket::init() {
             std::to_string(m_socktype_hint) + "\n");
 
     // Do nothing if there is already a valid socket file descriptor from a
-    // previous init().
+    // previous load().
     if (m_sfd != INVALID_SOCKET)
         return;
 

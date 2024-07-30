@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_SOCKET_HPP
 #define UPNPLIB_SOCKET_HPP
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-07-17
+// Redistribution only with this Copyright remark. Last modified: 2024-07-30
 /*!
  * \file
  * \brief **Socket Module:** manage properties and methods but not connections
@@ -13,6 +13,7 @@
  * network sockets.
  * \addtogroup upnplib-socket
  *
+ * \anchor socket_module
  * This module mainly consists of the CSocket class but
  * also provides free functions to manage a socket. The problem is that socket
  * handling isn't very good portable. There is different behavior on the
@@ -40,7 +41,13 @@
  * moving a socket object, the left over source object is also empty. An empty
  * socket object has an `INVALID_SOCKET` defined and no valid content. It
  * throws an exception if using any of its Setter and Getter. Moving and
- * assigning it is possible.
+ * assigning it is possible. You can test for an empty socket by looking for an
+ * `INVALID_SOCKET`, e.g.
+ * \code
+ * CSocket sockObj; // or CSocket_basic sockObj;
+ * if (static_cast<SOCKET>(sockObj) != INVALID_SOCKET) {
+ *     in_port_t port = sockObj.get_port(); };
+ * \endcode
  *
  * protocol family
  * ---------------
@@ -56,9 +63,9 @@
  * ----------------------------
  * I get this from the C standard library function:
  * `int ::%socket(address_family, socket_type, protocol)`.
- * Other arguments than address family and socket type do not instantiate a
- * valid socket object and throw an exception. For the protocol argument is
- * always the default one used that is internal hard coded with argument 0.
+ * Other arguments than address family and socket type are not accepted. For
+ * the protocol argument is always the default one used that is internal hard
+ * coded with argument 0.
  *
  * options SO_REUSEADDR and SO_EXCLUSIVEADDRUSE
  * --------------------------------------------
@@ -107,13 +114,15 @@ namespace upnplib {
  * \ingroup upnplibAPI-socket
  * \ingroup upnplib-socket
  *
+ * For general information have a look at \ref socket_module.
+ *
  * This class takes the resources and results as given by the platform (Unix,
  * MacOS, MS Windows). It does not perform any emulations for unification. The
  * behavior can be different on different platforms.
  *
  * An object of this class does not take ownership of the raw socket file
  * descriptor and will never close it. This is also the reason why you cannot
- * modify the socket and only have getter available (except the setter 'init()'
+ * modify the socket and only have getter available (except the setter 'load()'
  * for the raw socket file descriptor itself). But it is helpful to easily get
  * information about an existing raw socket file descriptor. Closing the file
  * descriptor is in the responsibility of the caller who created the socket. If
@@ -121,45 +130,37 @@ namespace upnplib {
  */
 class UPNPLIB_API CSocket_basic : private SSockaddr {
   public:
-    // Default constructor
+    // Default constructor for an empty basic socket object
     CSocket_basic();
 
     /*! \brief Constructor for the socket file descriptor. Before use, it must
-     * be init(). */
+     * be load(). */
     CSocket_basic(SOCKET a_sfd);
 
+    /// \cond
     // I want to restrict to only move the resource.
     // No copy constructor
     CSocket_basic(const CSocket_basic&) = delete;
     // No copy assignment operator
     CSocket_basic& operator=(CSocket_basic) = delete;
+    /// \endcond
 
     // Destructor
     virtual ~CSocket_basic();
-
-    /*! \brief Get raw socket file descriptor.
-     * \code
-     * // Usage e.g.:
-     * CSocket_basic sockObj(valid_socket_fd);
-     * try {
-     *     sockObj.init();
-     * } catch(xcp) { handle_error(); };
-     * SOCKET sfd = sockObj;
-     * \endcode */
-    operator const SOCKET&() const;
 
 
     /*! \name Setter
      * *************
      * @{ */
-    /*! \brief Initialize a given raw socket file descriptor to the object
+    /*! \brief Load the raw socket file descriptor from the constructor into
+     * the object
      * \code
      * // Usage e.g.:
      * SOCKET sfd = ::socket(PF_INET6, SOCK_STREAM);
      * {   // Scope for sockObj, sfd must longer exist than sockObj
      *     CSocket_basic sockObj(sfd);
      *     try {
-     *         sockObj.init();
+     *         sockObj.load();
      *     } catch(xcp) { handle_error(); };
      *     // Use the getter from sockObj
      * }
@@ -173,13 +174,24 @@ class UPNPLIB_API CSocket_basic : private SSockaddr {
      * resources. The result is the same as before.
      *
      * \exception std::runtime_error Given socket file descriptor is invalid. */
-    void init();
+    void load();
     /// @} Setter
 
 
     /*! \name Getter
      * *************
      * @{ */
+    /*! \brief Get raw socket file descriptor.
+     * \code
+     * // Usage e.g.:
+     * CSocket_basic sockObj(valid_socket_fd);
+     * try {
+     *     sockObj.load();
+     * } catch(xcp) { handle_error(); };
+     * SOCKET sfd = sockObj;
+     * \endcode */
+    operator const SOCKET&() const;
+
     /*! \brief Get socket [address family](\ref glossary_af) */
     sa_family_t get_family() const;
 
@@ -203,8 +215,8 @@ class UPNPLIB_API CSocket_basic : private SSockaddr {
     /*! \brief Get the error that is given from the socket as option.
      *
      * This is not a system error from the operating system (with POSIX
-     * returned in errno). It is the more specific error that can be queried as
-     * option from the socket.
+     * returned in \b errno). It is the error that can be queried as option
+     * from the socket.
      *
      * Throws exception std::runtime_error if query option fails. */
     int get_sockerr() const;
@@ -248,6 +260,8 @@ class UPNPLIB_API CSocket_basic : private SSockaddr {
  * \brief Manage all aspects of a network socket.
  * \ingroup upnplibAPI-socket
  * \ingroup upnplib-socket
+ *
+ * For general information have a look at \ref socket_module.
  *********************************************** */
 class UPNPLIB_API CSocket : public CSocket_basic {
   public:
@@ -255,7 +269,7 @@ class UPNPLIB_API CSocket : public CSocket_basic {
      * [empty socket object](\ref empty_socket) */
     CSocket();
 
-    /// \brief Constructor for a new socket file descriptor that must be init()
+    /// \brief Constructor for a new socket file descriptor that must be load()
     CSocket(sa_family_t a_family, /*!<  [in] PF_INET6 or PF_INET. PF_UNSPEC is
                                              not accepted */
             int a_socktype /*!<         [in] SOCK_STREAM or SOCK_DGRAM */);
@@ -272,7 +286,7 @@ class UPNPLIB_API CSocket : public CSocket_basic {
      * // Usage e.g.:
      * CSocket sock1Obj(PF_INET6, SOCK_STREAM);
      * try {
-     *     sock1Obj.init();
+     *     sock1Obj.load();
      * } catch(xcp) { // handle error }
      * CSocket sock2Obj{std::move(sock1Obj)};
      * \endcode
@@ -293,7 +307,7 @@ class UPNPLIB_API CSocket : public CSocket_basic {
      * // Usage e.g.:
      * CSocket sock1Obj(PF_INET6, SOCK_STREAM);
      * try {
-     *     sock1Obj.init();
+     *     sock1Obj.load();
      * } catch(xcp) { // handle error }
      * CSocket sock2Obj;
      * sock2Obj = std::move(sock1Obj);
@@ -312,10 +326,10 @@ class UPNPLIB_API CSocket : public CSocket_basic {
      * // Usage e.g.:
      * CSocket sockObj(PF_INET6, SOCK_STREAM);
      * try {
-     *     sockObj.init();
+     *     sockObj.load();
      * } catch(xcp) { handle_error(); }
      * \endcode */
-    void init();
+    void load();
 
     /*! \brief Set IPV6_V6ONLY
      * - IPV6_V6ONLY = **true**: the socket is restricted to sending and
@@ -348,7 +362,7 @@ class UPNPLIB_API CSocket : public CSocket_basic {
      * // Usage e.g.:
      * CSocket sockObj(PF_INET6, SOCK_STREAM);
      * try {
-     *     sockObj.init();
+     *     sockObj.load();
      *     sockObj.bind("[::1]", "8080");
      * } catch(xcp) { // handle error }
      * \endcode

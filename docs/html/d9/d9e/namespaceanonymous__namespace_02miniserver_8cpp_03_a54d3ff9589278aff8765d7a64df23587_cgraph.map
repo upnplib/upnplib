@@ -16,7 +16,7 @@
 <area shape="poly" id="edge25_Node000001_Node000021" title=" " alt="" coords="184,382,257,403,408,430,542,446,541,451,407,435,255,408,183,387"/>
 <area shape="rect" id="Node000023" href="$d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement." alt="" coords="322,519,413,545"/>
 <area shape="poly" id="edge26_Node000001_Node000023" title=" " alt="" coords="129,383,182,446,218,479,257,506,282,516,309,523,308,528,281,521,255,510,214,483,178,450,125,387"/>
-<area shape="rect" id="Node000003" href="$db/d84/classupnplib_1_1CSocket__basic.html#a669306da2efd858996bd66fc3de5c621" title="Initialize a given raw socket file descriptor to the object." alt="" coords="531,120,702,160"/>
+<area shape="rect" id="Node000003" href="$db/d84/classupnplib_1_1CSocket__basic.html#aaf22a3ac7cca9158898a859af2cfdf37" title="Load the raw socket file descriptor from the constructor into the object." alt="" coords="531,120,702,160"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="479,137,517,137,517,143,479,143"/>
 <area shape="rect" id="Node000006" href="$db/d84/classupnplib_1_1CSocket__basic.html#a24406f0340da2352557ad1ea301410c5" title="Get netaddress with port." alt="" coords="531,5,702,45"/>
 <area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="423,110,526,62,555,48,557,53,528,66,426,115"/>

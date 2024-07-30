@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-07-03
+// Redistribution only with this Copyright remark. Last modified: 2024-07-30
 
 // All functions of the miniserver module have been covered by a gtest. Some
 // tests are skipped and must be completed when missed information is
@@ -2103,7 +2103,7 @@ TEST(StartMiniServerTestSuite, get_miniserver_stopsock) {
 
     // Get socket object from the bound socket
     CSocket_basic sockObj(out.miniServerStopSock);
-    sockObj.init();
+    sockObj.load();
 
     // and verify its settings
     EXPECT_EQ(sockObj.get_family(), AF_INET);

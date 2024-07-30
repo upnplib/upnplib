@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-07-03
+ * Redistribution only with this Copyright remark. Last modified: 2024-07-30
  * Cloned from pupnp ver 1.14.15.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -152,9 +152,9 @@ int getNumericHostRedirection(
     size_t a_hp_size   ///< [in] size of the buffer.
 ) {
     TRACE("Executing getNumericHostRedirection()")
+    upnplib::CSocket_basic socketObj(a_socket);
     try {
-        upnplib::CSocket_basic socketObj(a_socket);
-        socketObj.init();
+        socketObj.load();
         std::string host_port = socketObj.netaddrp();
         memcpy(a_host_port, host_port.c_str(), a_hp_size);
         return true;
@@ -427,9 +427,9 @@ void fdset_if_valid( //
         return;
     }
     // Check if socket is valid and bound
+    upnplib::CSocket_basic sockObj(a_sock);
     try {
-        upnplib::CSocket_basic sockObj(a_sock);
-        sockObj.init();
+        sockObj.load();
         if (sockObj.is_bound())
 
             FD_SET(a_sock, a_set);
@@ -440,7 +440,7 @@ void fdset_if_valid( //
 
     } catch (const std::exception& e) {
         if (upnplib::g_dbug)
-            std::clog << e.what();
+            std::cerr << e.what();
         UPNPLIB_LOGCATCH "MSG1009: Invalid socket "
             << a_sock << " not set to be monitored by ::select().\n";
     }
@@ -828,7 +828,7 @@ int get_miniserver_sockets(
 
     if (out->MiniSvrSock6LlaObj != nullptr && gIF_IPV6[0] != '\0') {
         try {
-            out->MiniSvrSock6LlaObj->init();
+            out->MiniSvrSock6LlaObj->load();
             out->MiniSvrSock6LlaObj->bind('[' + std::string(gIF_IPV6) + ']',
                                           std::to_string(listen_port6));
             out->MiniSvrSock6LlaObj->listen();
@@ -846,7 +846,7 @@ int get_miniserver_sockets(
 
     if (out->MiniSvrSock6UadObj != nullptr && gIF_IPV6_ULA_GUA[0] != '\0') {
         try {
-            out->MiniSvrSock6UadObj->init();
+            out->MiniSvrSock6UadObj->load();
             out->MiniSvrSock6UadObj->bind('[' + std::string(gIF_IPV6_ULA_GUA) +
                                               ']',
                                           std::to_string(listen_port6UlaGua));
@@ -861,7 +861,7 @@ int get_miniserver_sockets(
 
     if (out->MiniSvrSock4Obj != nullptr && gIF_IPV4[0] != '\0') {
         try {
-            out->MiniSvrSock4Obj->init();
+            out->MiniSvrSock4Obj->load();
             out->MiniSvrSock4Obj->bind(std::string(gIF_IPV4),
                                        std::to_string(listen_port4));
             out->MiniSvrSock4Obj->listen();

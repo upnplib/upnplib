@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['init_0',['init',['../d8/d73/classupnplib_1_1CSocket.html#af4e7af61b6999fdfb49a97d9ceecf9db',1,'upnplib::CSocket::init()'],['../db/d84/classupnplib_1_1CSocket__basic.html#a669306da2efd858996bd66fc3de5c621',1,'upnplib::CSocket_basic::init()']]],
+  ['init_0',['init',['../d8/d73/classupnplib_1_1CSocket.html#af4e7af61b6999fdfb49a97d9ceecf9db',1,'upnplib::CSocket']]],
   ['init_5ftable_1',['init_table',['../df/dd2/namespaceanonymous__namespace_02statcodes_8cpp_03.html#aa8720c71e46ee6041f745bc51190be1a',1,'anonymous_namespace{statcodes.cpp}']]],
   ['init_5ftables_2',['init_tables',['../df/dd2/namespaceanonymous__namespace_02statcodes_8cpp_03.html#a67ec6f35b83046df716768cadc353e39',1,'anonymous_namespace{statcodes.cpp}']]],
   ['initminiserversockarray_3',['InitMiniServerSockArray',['../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a5d8a62e1d3813dc7cc3bcfca83d918a5',1,'anonymous_namespace{miniserver.cpp}']]],

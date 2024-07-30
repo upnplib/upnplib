@@ -1,10 +1,11 @@
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-07-29
+// Redistribution only with this Copyright remark. Last modified: 2024-07-30
 /*!
  * \file
  * \brief A general TODO-list
  *
  * \todo
+ * - Remove Compa/inc/UpnpInet.hpp.
  * - Check UPNPLIB_LOG* messages in UpnpRegisterRootDevice3().
  * - Update Pupnp version.
  * - Productive use of UPnPlib with sample program.

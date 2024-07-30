@@ -1,0 +1,18 @@
+<map id="upnplib::CSocket_basic::load" name="upnplib::CSocket_basic::load">
+<area shape="rect" id="Node000001" title="Load the raw socket file descriptor from the constructor into the object." alt="" coords="1495,53,1665,93"/>
+<area shape="rect" id="Node000002" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a937a0eae18a69c7e034aa982345d9a50" title="Add a socket file descriptor to an &#39;fd_set&#39; structure as needed for ::select()." alt="" coords="985,5,1165,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1481,68,1165,42,1165,37,1481,62"/>
+<area shape="rect" id="Node000004" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a6f40d51e41632f61e7147d7a42dea58e" title="Returns the ip address with port as text that is bound to a socket." alt="" coords="1224,77,1447,132"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="1481,88,1447,93,1447,87,1481,83"/>
+<area shape="rect" id="Node000003" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a29857662f54c55aa7e6023b37b08af76" title="Run the miniserver." alt="" coords="5,43,205,97"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="971,39,253,66,206,68,206,63,253,61,970,34"/>
+<area shape="rect" id="Node000005" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a54d3ff9589278aff8765d7a64df23587" title="Based on the type of message, appropriate callback is issued." alt="" coords="973,84,1176,139"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="1211,111,1176,111,1176,106,1210,105"/>
+<area shape="rect" id="Node000006" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a9b4b32cfbe825a3f7cc9906b33d50872" title="Receive the request and dispatch it for handling." alt="" coords="735,77,925,132"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="960,111,926,110,926,105,960,106"/>
+<area shape="rect" id="Node000007" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a4a107199de415d50f725a5c6a327c1be" title="Initilize the thread pool to handle a request, sets priority for the job and adds the job to the thre..." alt="" coords="481,75,687,129"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="721,106,687,106,687,100,721,101"/>
+<area shape="rect" id="Node000008" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a34abbc6e410d0cfd24057c79c9f1b9c3" title="Accept requested connection from a remote control point and run it in a new thread." alt="" coords="253,75,433,129"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="468,105,434,105,434,99,468,99"/>
+<area shape="poly" id="edge8_Node000008_Node000003" title=" " alt="" coords="239,91,205,86,206,81,240,85"/>
+</map>

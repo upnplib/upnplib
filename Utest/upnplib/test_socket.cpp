@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-07-28
+// Redistribution only with this Copyright remark. Last modified: 2024-07-30
 
 #include <upnplib/global.hpp>
 #include <upnplib/socket.hpp>
@@ -89,7 +89,7 @@ TEST(SockTestSuite, sock_connect_to_host) {
 
     // Get a socket
     upnplib::CSocket sockObj(ai->ai_addr->sa_family, ai->ai_socktype);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
 
     // Connect to the remote host
     upnplib::CSocketErr sockerrObj;
@@ -164,7 +164,7 @@ TEST(SocketBasicTestSuite, instantiate_socket_successful) {
 
     // Test Unit
     CSocket_basic sockObj(sfd);
-    sockObj.init();
+    sockObj.load();
 
     EXPECT_EQ(static_cast<SOCKET>(sockObj), sfd);
     EXPECT_EQ(sockObj.get_family(), PF_INET6);
@@ -178,10 +178,43 @@ TEST(SocketBasicTestSuite, instantiate_socket_successful) {
     CLOSE_SOCKET_P(sfd);
 }
 
+TEST(SocketBasicTestSuite, instantiate_empty_socket) {
+    // Test Unit
+    CSocket_basic sockObj;
+    EXPECT_EQ(static_cast<SOCKET>(sockObj), INVALID_SOCKET);
+    // All getter from an INVALID_SOCKET throw an exception.
+    EXPECT_THAT(
+        [&sockObj]() { sockObj.netaddr(); },
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1001: ")));
+    EXPECT_THAT([&sockObj]() { sockObj.netaddrp(); },
+                ThrowsMessage<std::runtime_error>(
+                    // Different on MacOS with MSG1001.
+                    AnyOf(HasSubstr("] EXCEPTION MSG1057: "),
+                          HasSubstr("] EXCEPTION MSG1001: "))));
+    EXPECT_THAT(
+        [&sockObj]() { sockObj.get_port(); },
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1001: ")));
+    EXPECT_THAT(
+        [&sockObj]() { sockObj.get_family(); },
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1001: ")));
+    EXPECT_THAT(
+        [&sockObj]() { sockObj.get_socktype(); },
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1030: ")));
+    EXPECT_THAT(
+        [&sockObj]() { sockObj.get_sockerr(); },
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1011: ")));
+    EXPECT_THAT(
+        [&sockObj]() { sockObj.is_reuse_addr(); },
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1013: ")));
+    EXPECT_THAT(
+        [&sockObj]() { sockObj.is_bound(); },
+        ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1001: ")));
+}
+
 TEST(SocketBasicTestSuite, instantiate_with_bound_socket_fd) {
     // and bind it to a socket.
     CSocket bound_sockObj(PF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(bound_sockObj.init());
+    ASSERT_NO_THROW(bound_sockObj.load());
     // Default IPV6_V6ONLY setting is different on different platforms but
     // doesn't matter; will be set before binding.
     // EXPECT_FALSE(bound_sockObj.is_v6only());
@@ -191,7 +224,7 @@ TEST(SocketBasicTestSuite, instantiate_with_bound_socket_fd) {
 
     // Test Unit with a bound socket.
     CSocket_basic sockObj(bound_sock);
-    sockObj.init();
+    sockObj.load();
 
     EXPECT_EQ((SOCKET)sockObj, bound_sock);
     EXPECT_EQ(sockObj.get_family(), PF_INET6);
@@ -208,7 +241,7 @@ TEST(SocketBasicTestSuite, instantiate_socket_af_unix_sock_stream) {
     ASSERT_NE(sfd, INVALID_SOCKET);
 
     CSocket_basic sockObj(sfd);
-    sockObj.init();
+    sockObj.load();
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
     EXPECT_EQ(sockObj.get_family(), AF_UNIX);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_STREAM);
@@ -244,7 +277,7 @@ TEST(SocketBasicTestSuite, instantiate_socket_af_unix_sock_dgram) {
 #ifndef _MSC_VER
     ASSERT_NE(sfd, INVALID_SOCKET);
     CSocket_basic sockObj(sfd);
-    sockObj.init();
+    sockObj.load();
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
     EXPECT_EQ(sockObj.get_family(), AF_UNIX);
     EXPECT_EQ(sockObj.get_socktype(), SOCK_DGRAM);
@@ -268,7 +301,7 @@ TEST(SocketBasicTestSuite, instantiate_socket_af_unix_sock_raw) {
 #if defined(__GNUC__) && !defined(__clang__)
     ASSERT_NE(sfd, INVALID_SOCKET);
     CSocket_basic sockObj(sfd);
-    sockObj.init();
+    sockObj.load();
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
     EXPECT_EQ(sockObj.get_family(), AF_UNIX);
     // Silently changed
@@ -293,7 +326,7 @@ TEST(SocketBasicTestSuite, instantiate_socket_af_unix_sock_seqpacket) {
 #if defined(__GNUC__) && !defined(__clang__)
     ASSERT_NE(sfd, INVALID_SOCKET);
     CSocket_basic sockObj(sfd);
-    sockObj.init();
+    sockObj.load();
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
     EXPECT_EQ(sockObj.get_port(), 0);
     EXPECT_EQ(sockObj.get_sockerr(), 0);
@@ -310,7 +343,7 @@ TEST(SocketBasicTestSuite, set_invalid_socket_fd) {
 
     // Test Unit
     EXPECT_THAT(
-        [&sockObj]() { sockObj.init(); },
+        [&sockObj]() { sockObj.load(); },
         ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1014: ")));
 }
 
@@ -320,8 +353,8 @@ TEST(SocketBasicTestSuite, set_object_two_times) {
 
     // Test Unit
     CSocket_basic sockObj(sfd);
-    sockObj.init();
-    sockObj.init();
+    sockObj.load();
+    sockObj.load();
 
     EXPECT_EQ(static_cast<SOCKET>(sockObj), sfd);
     EXPECT_EQ(sockObj.get_family(), PF_INET6);
@@ -392,7 +425,7 @@ TEST(SocketTestSuite, verify_system_getsockname_function) {
 TEST(SocketTestSuite, get_unbound_ipv6_stream_socket_successful) {
     // Test Unit
     CSocket sockObj(PF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
 
     // An unbound socket returns the unknown ip address and port 0
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
@@ -413,8 +446,8 @@ TEST(SocketTestSuite, get_unbound_ipv6_stream_socket_successful) {
 TEST(SocketTestSuite, get_socket_two_times_init_successful) {
     // Test Unit
     CSocket sockObj(PF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
+    ASSERT_NO_THROW(sockObj.load());
 
     // An unbound socket returns the unknown ip address and port 0
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
@@ -435,7 +468,7 @@ TEST(SocketTestSuite, get_socket_two_times_init_successful) {
 TEST(SocketTestSuite, get_unbound_ipv6_dgram_socket_successful) {
     // Test Unit
     CSocket sockObj(PF_INET6, SOCK_DGRAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
 
     // An unbound socket returns the unknown ip address and port 0
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
@@ -456,7 +489,7 @@ TEST(SocketTestSuite, get_unbound_ipv6_dgram_socket_successful) {
 TEST(SocketTestSuite, get_unbound_ipv4_stream_socket_successful) {
     // Test Unit
     CSocket sockObj(PF_INET, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
 
     // An unbound socket returns the unknown ip address and port 0
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
@@ -481,7 +514,7 @@ TEST(SocketTestSuite, get_unbound_ipv4_stream_socket_successful) {
 TEST(SocketTestSuite, get_unbound_ipv4_dgram_socket_successful) {
     // Test Unit
     CSocket sockObj(PF_INET, SOCK_DGRAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
 
     // An unbound socket returns the unknown ip address and port 0
     EXPECT_NE((SOCKET)sockObj, INVALID_SOCKET);
@@ -507,7 +540,7 @@ TEST(SocketTestSuite, try_to_instantiate_invalid_sockets) {
     EXPECT_THAT(
         []() {
             CSocket sockObj(AF_UNSPEC, SOCK_STREAM);
-            sockObj.init();
+            sockObj.load();
         },
         ThrowsMessage<std::invalid_argument>(
             HasSubstr("] EXCEPTION MSG1015: ")));
@@ -515,7 +548,7 @@ TEST(SocketTestSuite, try_to_instantiate_invalid_sockets) {
     EXPECT_THAT(
         []() {
             CSocket sockObj(AF_UNIX, SOCK_STREAM);
-            sockObj.init();
+            sockObj.load();
         },
         ThrowsMessage<std::invalid_argument>(
             HasSubstr("] EXCEPTION MSG1015: ")));
@@ -523,7 +556,7 @@ TEST(SocketTestSuite, try_to_instantiate_invalid_sockets) {
     EXPECT_THAT(
         []() {
             CSocket sockObj(0, SOCK_STREAM);
-            sockObj.init();
+            sockObj.load();
         },
         ThrowsMessage<std::invalid_argument>(
             HasSubstr("] EXCEPTION MSG1015: ")));
@@ -531,7 +564,7 @@ TEST(SocketTestSuite, try_to_instantiate_invalid_sockets) {
     EXPECT_THAT(
         []() {
             CSocket sockObj(PF_INET6, SOCK_RAW);
-            sockObj.init();
+            sockObj.load();
         },
         ThrowsMessage<std::invalid_argument>(
             HasSubstr("] EXCEPTION MSG1016: ")));
@@ -539,7 +572,7 @@ TEST(SocketTestSuite, try_to_instantiate_invalid_sockets) {
     EXPECT_THAT(
         []() {
             CSocket sockObj(PF_INET, 0);
-            sockObj.init();
+            sockObj.load();
         },
         ThrowsMessage<std::invalid_argument>(
             HasSubstr("] EXCEPTION MSG1016: ")));
@@ -587,7 +620,7 @@ TEST(SocketTestSuite, instantiate_empty_socket) {
 TEST(SocketTestSuite, move_socket_successful) {
     // Provide a socket object
     CSocket sock1(PF_INET, SOCK_STREAM);
-    ASSERT_NO_THROW(sock1.init());
+    ASSERT_NO_THROW(sock1.load());
     SOCKET old_fd_sock1 = sock1;
 
     // Get local interface address when node is empty with flag AI_PASSIVE.
@@ -630,7 +663,7 @@ TEST(SocketTestSuite, move_socket_successful) {
 TEST(SocketTestSuite, assign_socket_successful) {
     // Provide first of two socket objects.
     CSocket sock1(PF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sock1.init());
+    ASSERT_NO_THROW(sock1.load());
     SOCKET old_fd_sock1 = sock1;
 
     // Get local interface address when node is empty with flag AI_PASSIVE.
@@ -669,7 +702,7 @@ TEST(SocketTestSuite, set_wrong_arguments) {
     EXPECT_THAT(
         []() {
             CSocket sockObj((sa_family_t)-1, SOCK_STREAM);
-            sockObj.init();
+            sockObj.load();
         },
         ThrowsMessage<std::invalid_argument>(
             HasSubstr("] EXCEPTION MSG1015: ")));
@@ -678,7 +711,7 @@ TEST(SocketTestSuite, set_wrong_arguments) {
     EXPECT_THAT(
         []() {
             CSocket sockObj(PF_INET6, -1);
-            sockObj.init();
+            sockObj.load();
         },
         ThrowsMessage<std::invalid_argument>(
             HasSubstr("] EXCEPTION MSG1016: ")));
@@ -696,7 +729,7 @@ TEST_F(SocketMockFTestSuite, get_socket_fails) {
 
     // Test Unit
     ASSERT_THAT(
-        [&sockObj]() { sockObj.init(); },
+        [&sockObj]() { sockObj.load(); },
         ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1017: ")));
 }
 
@@ -719,7 +752,7 @@ TEST_F(SocketMockFTestSuite, set_option_reuseaddr_fails) {
 
     // Test Unit
     EXPECT_THAT(
-        [&sockObj]() { sockObj.init(); },
+        [&sockObj]() { sockObj.load(); },
         ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1018: ")));
 }
 
@@ -747,7 +780,7 @@ TEST_F(SocketMockFTestSuite, set_win32_option_exl_addr_use_fails) {
 
     // Test Unit
     EXPECT_THAT(
-        [&sockObj]() { sockObj.init(); },
+        [&sockObj]() { sockObj.load(); },
         ThrowsMessage<std::runtime_error>(HasSubstr("] EXCEPTION MSG1019: ")));
 }
 #endif
@@ -755,7 +788,7 @@ TEST_F(SocketMockFTestSuite, set_win32_option_exl_addr_use_fails) {
 TEST(SocketTestSuite, get_addr_str_ipv6_successful) {
     // Get a socket and bind it to the local address.
     CSocket sockObj(PF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
     ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
 
     // Test Unit
@@ -766,7 +799,7 @@ TEST(SocketTestSuite, get_addr_str_ipv6_successful) {
 TEST(SocketTestSuite, get_addr_str_ipv4_successful) {
     // Get a socket and bind it to the local address.
     CSocket sockObj(PF_INET, SOCK_DGRAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
     ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
 
     // Test Unit
@@ -790,7 +823,7 @@ TEST(SocketTestSuite, get_addr_str_from_invalid_socket) {
 TEST(SocketTestSuite, get_addr_str_from_unbound_socket) {
     // Get a valid socket but do not bind it to an address.
     CSocket sockObj(PF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
     EXPECT_EQ(sockObj.netaddr(), "[::]");
     EXPECT_EQ(sockObj.netaddrp(), "[::]:0");
     EXPECT_EQ(sockObj.get_port(), 0);
@@ -799,7 +832,7 @@ TEST(SocketTestSuite, get_addr_str_from_unbound_socket) {
 TEST(SocketTestSuite, get_addr_str_syscall_fail) {
     // Get a socket and bind it to the local address.
     CSocket sockObj(PF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
     ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
 
     // Mock system function getsockname().
@@ -826,7 +859,7 @@ TEST(SocketTestSuite, get_addr_str_syscall_fail) {
 TEST(SocketTestSuite, get_addr_str_invalid_address_family) {
     // Get a socket and bind it to the local address.
     CSocket sockObj(PF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
     ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
 
     // Provide invalid address family.
@@ -879,7 +912,7 @@ TEST(SocketTestSuite, get_addr_str_invalid_address_family) {
 TEST(SocketBindTestSuite, bind_ipv6_successful) {
     // Create an unbound socket object
     CSocket sockObj(PF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
     // Default IPV6_V6ONLY setting is different on different platforms but
     // doesn't matter; will be set before binding.
 #ifdef _MSC_VER
@@ -920,7 +953,7 @@ TEST(SocketBindTestSuite, bind_ipv6_successful) {
 TEST(SocketBindTestSuite, bind_ipv4_successful) {
     // Create an unbound socket object
     CSocket sockObj(PF_INET, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
     // Default setting
     EXPECT_FALSE(sockObj.is_v6only());
     // Cannot be set on PF_INET
@@ -955,7 +988,7 @@ TEST(SocketBindTestSuite, bind_ipv4_successful) {
 
     // Create an unbound socket object
     CSocket sockObj(PF_INET, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
     // Default setting
     EXPECT_TRUE(sockObj.is_v6only());
     // Option cannot be modified
@@ -984,7 +1017,7 @@ TEST(SocketBindTestSuite, bind_ipv4_successful) {
 
 TEST_F(SocketMockFTestSuite, v6only_set_with_bind_fails) {
     CSocket sockObj(PF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
     SOCKET sfd = sockObj;
 
     SSockaddr ss6Obj; // Use a socket address
@@ -1019,7 +1052,7 @@ TEST(SocketBindTestSuite, bind_to_next_free_port_successful) {
     // With empty service the operating system returns next free port number.
     // Create an unbound socket object
     CSocket sockObj(PF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
 
     // Test Unit.
     ASSERT_NO_THROW(sockObj.bind("[::1]", ""));
@@ -1040,7 +1073,7 @@ TEST(SocketBindTestSuite, bind_to_next_free_port_successful) {
 TEST(SocketBindTestSuite, bind_only_service_passive_successful) {
     // Create an unbind socket object.
     CSocket sockObj(PF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
     sockObj.set_v6only(false);
 
     // Test Unit.
@@ -1066,7 +1099,7 @@ TEST(SocketBindTestSuite, bind_only_service_passive_successful) {
 TEST(SocketBindTestSuite, bind_only_service_not_passive_successful) {
     // Create an unbind socket object.
     CSocket sockObj(PF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
     sockObj.set_v6only(false);
 
     // Test Unit.
@@ -1102,7 +1135,7 @@ TEST(SocketBindTestSuite, bind_two_times_different_addresses_fail) {
     // shutdown/closed before bind it again.
     // Provide a socket object
     CSocket sockObj(PF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
 
     // Test Unit.
     ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
@@ -1115,7 +1148,7 @@ TEST(SocketBindTestSuite, bind_two_times_different_addresses_fail) {
 
 TEST_F(SocketMockFTestSuite, bind_to_address_fails) {
     CSocket sockObj(PF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
     SOCKET sfd = sockObj;
 
     SSockaddr ss6Obj; // Local socket address to bind to
@@ -1177,7 +1210,7 @@ TEST(SocketBindTestSuite, check_binding_passive_all_free_ports) {
     std::cout << "DEBUG\! start port = " << port << "\n";
     for (; port < 65535; port++) {
         CSocket sockObj;
-        sockObj.init(PF_INET6, SOCK_STREAM);
+        sockObj.load(PF_INET6, SOCK_STREAM);
         try {
             sockObj.bind("", std::to_string(port), AI_PASSIVE);
         } catch (const std::runtime_error& e) {
@@ -1203,7 +1236,7 @@ TEST(SocketBindTestSuite, set_unset_bind_win32_same_address_multiple_times) {
     // Test Unit
     for (int i{0}; i < 2; i++) {
         CSocket sockObj(PF_INET6, SOCK_STREAM);
-        ASSERT_NO_THROW(sockObj.init());
+        ASSERT_NO_THROW(sockObj.load());
         try {
             sockObj.bind("", std::to_string(port), AI_PASSIVE);
             // std::cout << "DEBUG\! Success port " << port << "\n";
@@ -1217,7 +1250,7 @@ TEST(SocketBindTestSuite, set_unset_bind_win32_same_address_multiple_times) {
 
     // std::cout << "DEBUG\! Success port " << port << "\n";
     CSocket sockObj(PF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
     ASSERT_NO_THROW(sockObj.bind("", std::to_string(port), AI_PASSIVE));
 }
 
@@ -1230,16 +1263,16 @@ TEST(SocketBindTestSuite, set_unset_bind_unix_same_address_multiple_times) {
     // Test Unit
     {
         CSocket sockObj(PF_INET6, SOCK_STREAM);
-        ASSERT_NO_THROW(sockObj.init());
+        ASSERT_NO_THROW(sockObj.load());
         ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
     }
     {
         CSocket sockObj(PF_INET6, SOCK_STREAM);
-        ASSERT_NO_THROW(sockObj.init());
+        ASSERT_NO_THROW(sockObj.load());
         ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
     }
     CSocket sockObj(PF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
     ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
 }
 #endif // _MSC_VER
@@ -1247,7 +1280,7 @@ TEST(SocketBindTestSuite, set_unset_bind_unix_same_address_multiple_times) {
 TEST(SocketBindTestSuite, bind_same_address_fails) {
     // Test Unit
     CSocket sockObj(PF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
     ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
 
     // Doing the same again will fail.
@@ -1262,7 +1295,7 @@ TEST(SocketBindTestSuite, listen_to_same_address_multiple_times) {
 
     // Test Unit
     CSocket sockObj(PF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
     ASSERT_NO_THROW(sockObj.bind("", "8080", AI_PASSIVE));
     ASSERT_NO_THROW(sockObj.listen());
 
@@ -1271,7 +1304,7 @@ TEST(SocketBindTestSuite, listen_to_same_address_multiple_times) {
 
 TEST_F(SocketMockFTestSuite, listen_fails) {
     CSocket sockObj(PF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
     SOCKET sfd = sockObj;
 
     EXPECT_CALL(m_sys_socketObj, listen(sfd, 1))
@@ -1290,7 +1323,7 @@ TEST_F(SocketMockFTestSuite, listen_fails) {
 TEST(SocketV6onlyTestSuite, v6only_modify_pf_inet6_stream_successful) {
     // Get socket
     CSocket sockObj(PF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
 
     // Set option IPV6_V6ONLY. Of course this can only be done with PF_INET6 on
     // an unbound socket.
@@ -1307,7 +1340,7 @@ TEST_F(SocketMockFTestSuite, v6only_modify_fails) {
 
     // Get socket
     CSocket sockObj(PF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
     SOCKET sfd = sockObj;
 
     SSockaddr ss6Obj; // for getsockname() IPv6 return sockaddr & port
@@ -1340,7 +1373,7 @@ TEST(SocketV6onlyTestSuite, v6only_af_inet6_dgram) {
 
     // Get socket
     CSocket sockObj(PF_INET6, SOCK_DGRAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
     // Default IPV6_V6ONLY setting is different on different platforms but
     // doesn't matter; will be set before binding.
 #ifdef _MSC_VER
@@ -1361,7 +1394,7 @@ TEST(SocketV6onlyTestSuite, v6only_af_inet_stream) {
 
     // Get socket
     CSocket sockObj(PF_INET, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
 
 #ifdef _MSC_VER
     // Default setting
@@ -1383,7 +1416,7 @@ TEST(SocketV6onlyTestSuite, v6only_af_inet_dgram) {
 
     // Get socket
     CSocket sockObj(PF_INET, SOCK_DGRAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
 
 #ifdef _MSC_VER
     // Default setting
@@ -1403,7 +1436,7 @@ TEST(SocketV6onlyTestSuite, v6only_af_inet_dgram) {
 TEST(SocketV6onlyTestSuite, v6only_on_bound_af_inet6_stream_socket) {
     // Create an unbound socket object
     CSocket sockObj(PF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
     // Default IPV6_V6ONLY setting is different on different platforms but
     // doesn't matter; will be set before binding.
 #ifdef _MSC_VER
@@ -1437,7 +1470,7 @@ TEST(SocketV6onlyTestSuite, v6only_on_bound_af_inet6_stream_socket) {
 TEST(SocketV6onlyTestSuite, v6only_on_bound_af_inet6_dgram_socket) {
     // Create an unbound socket object
     CSocket sockObj(PF_INET6, SOCK_DGRAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
     // Default IPV6_V6ONLY setting is different on different platforms.
 #ifdef _MSC_VER
     EXPECT_TRUE(sockObj.is_v6only());
@@ -1473,7 +1506,7 @@ TEST(SocketV6onlyTestSuite, v6only_on_bound_pf_inet_stream_socket) {
 
     // Create an unbound socket object
     CSocket sockObj(PF_INET, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
     // Default IPV6_V6ONLY setting is different on different platforms.
 #ifdef _MSC_VER
     EXPECT_TRUE(sockObj.is_v6only());
@@ -1517,7 +1550,7 @@ TEST(SocketV6onlyTestSuite, v6only_on_bound_pf_inet_stream_socket) {
 TEST(SocketV6onlyTestSuite, v6only_on_bound_af_inet_dgram_socket) {
     // Create an unbound socket object
     CSocket sockObj(PF_INET, SOCK_DGRAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
     // Default IPV6_V6ONLY setting is different on different platforms but
     // doesn't matter; will be set before binding.
 #ifdef _MSC_VER
@@ -1560,7 +1593,7 @@ TEST(SocketV6onlyTestSuite, v6only_on_bound_af_inet_dgram_socket) {
 TEST(SocketV6onlyTestSuite, v6only_default_on_passive_af_inet6_stream_socket) {
     // Create an unbound socket object
     CSocket sockObj(PF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
     // Default IPV6_V6ONLY setting is different on different platforms but
     // doesn't matter; will be set before binding.
 #ifdef _MSC_VER
@@ -1594,7 +1627,7 @@ TEST(SocketV6onlyTestSuite, v6only_default_on_passive_af_inet6_stream_socket) {
 TEST(SocketV6onlyTestSuite, v6only_unset_on_passive_af_inet6_stream_socket) {
     // Create an unbound socket object
     CSocket sockObj(PF_INET6, SOCK_STREAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
     // Default IPV6_V6ONLY setting is different on different platforms but
     // doesn't matter; will be set before binding.
 #ifdef _MSC_VER
@@ -1628,7 +1661,7 @@ TEST(SocketV6onlyTestSuite, v6only_unset_on_passive_af_inet6_stream_socket) {
 TEST(SocketV6onlyTestSuite, v6only_on_passive_af_inet_dgram_socket) {
     // Create an unbound socket object
     CSocket sockObj(PF_INET, SOCK_DGRAM);
-    ASSERT_NO_THROW(sockObj.init());
+    ASSERT_NO_THROW(sockObj.load());
 #ifdef _MSC_VER
     // This is set on win32 by default but should not matter with PF_INET.
     EXPECT_TRUE(sockObj.is_v6only());

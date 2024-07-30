@@ -6,9 +6,9 @@ var group__upnplibAPI_socket =
       [ "get_port", "db/d84/classupnplib_1_1CSocket__basic.html#a70afe9ed6de1c17bb59f6c0bcc5bba00", null ],
       [ "get_sockerr", "db/d84/classupnplib_1_1CSocket__basic.html#a96827a5b7033ee5a457c77005c5de467", null ],
       [ "get_socktype", "db/d84/classupnplib_1_1CSocket__basic.html#a41cf15ed4d81fb0f237d8a6b69f72d8a", null ],
-      [ "init", "db/d84/classupnplib_1_1CSocket__basic.html#a669306da2efd858996bd66fc3de5c621", null ],
       [ "is_bound", "db/d84/classupnplib_1_1CSocket__basic.html#a0bfd8447aeb0fce2841c5ea90234c37d", null ],
       [ "is_reuse_addr", "db/d84/classupnplib_1_1CSocket__basic.html#ac0efc89243d210568f8021f38d1783bd", null ],
+      [ "load", "db/d84/classupnplib_1_1CSocket__basic.html#aaf22a3ac7cca9158898a859af2cfdf37", null ],
       [ "netaddr", "db/d84/classupnplib_1_1CSocket__basic.html#a9e771b73cb9373e1b1f09ffca79dc9b3", null ],
       [ "netaddrp", "db/d84/classupnplib_1_1CSocket__basic.html#a24406f0340da2352557ad1ea301410c5", null ],
       [ "operator const SOCKET &", "db/d84/classupnplib_1_1CSocket__basic.html#aa6ec8d918b5cecafe75106caba182fe1", null ]

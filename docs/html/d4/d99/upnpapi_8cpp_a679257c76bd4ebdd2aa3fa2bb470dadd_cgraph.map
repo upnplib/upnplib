@@ -124,11 +124,11 @@
 <area shape="poly" id="edge76_Node000188_Node000203" title=" " alt="" coords="576,1098,684,1108,683,1113,575,1104"/>
 <area shape="rect" id="Node000204" href="$d4/d99/upnpapi_8cpp.html#aead9c1aad0998507f66cf7f0749013d3" title="Unregisters a control point application, unsubscribing all active subscriptions." alt="" coords="981,917,1147,943"/>
 <area shape="poly" id="edge77_Node000188_Node000204" title=" " alt="" coords="535,1083,555,1053,586,1014,627,975,675,945,711,931,750,921,828,910,904,909,971,913,971,919,904,914,828,915,751,926,713,936,677,950,630,979,590,1017,559,1056,539,1086"/>
-<area shape="rect" id="Node000254" href="$d4/d99/upnpapi_8cpp.html#abb1c47010971d19ecd2b46ee842871ec" title="Unregisters a root device registered with UpnpRegisterRootDevice, UpnpRegisterRootDevice2,..." alt="" coords="963,1087,1165,1112"/>
-<area shape="poly" id="edge79_Node000188_Node000254" title=" " alt="" coords="544,1107,599,1152,636,1175,677,1192,742,1209,795,1214,848,1208,914,1192,950,1177,983,1159,1037,1119,1040,1123,986,1163,952,1182,915,1197,849,1214,795,1219,741,1214,675,1197,634,1179,596,1156,541,1112"/>
+<area shape="rect" id="Node000252" href="$d4/d99/upnpapi_8cpp.html#abb1c47010971d19ecd2b46ee842871ec" title="Unregisters a root device registered with UpnpRegisterRootDevice, UpnpRegisterRootDevice2,..." alt="" coords="963,1087,1165,1112"/>
+<area shape="poly" id="edge79_Node000188_Node000252" title=" " alt="" coords="544,1107,599,1152,636,1175,677,1192,742,1209,795,1214,848,1208,914,1192,950,1177,983,1159,1037,1119,1040,1123,986,1163,952,1182,915,1197,849,1214,795,1219,741,1214,675,1197,634,1179,596,1156,541,1112"/>
 <area shape="poly" id="edge68_Node000193_Node000079" title=" " alt="" coords="1144,878,1230,878,1230,883,1144,883"/>
 <area shape="poly" id="edge70_Node000196_Node000025" title=" " alt="" coords="857,1380,916,1396,978,1422,1031,1451,1029,1455,976,1427,914,1401,856,1385"/>
 <area shape="poly" id="edge71_Node000196_Node000079" title=" " alt="" coords="851,1383,921,1393,1004,1394,1047,1389,1089,1379,1128,1362,1164,1339,1187,1308,1209,1260,1228,1201,1244,1135,1268,1003,1282,906,1287,907,1273,1004,1249,1136,1233,1202,1214,1262,1192,1311,1167,1343,1131,1367,1091,1384,1048,1394,1005,1399,921,1398,850,1388"/>
 <area shape="poly" id="edge78_Node000204_Node000079" title=" " alt="" coords="1122,915,1230,891,1231,896,1123,920"/>
-<area shape="poly" id="edge80_Node000254_Node000079" title=" " alt="" coords="1077,1084,1263,901,1266,905,1080,1088"/>
+<area shape="poly" id="edge80_Node000252_Node000079" title=" " alt="" coords="1077,1084,1263,901,1266,905,1080,1088"/>
 </map>

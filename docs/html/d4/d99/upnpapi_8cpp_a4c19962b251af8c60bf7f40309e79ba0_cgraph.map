@@ -16,14 +16,14 @@
 <area shape="poly" id="edge41_Node000001_Node000172" title=" " alt="" coords="98,1463,458,1268,461,1273,101,1468"/>
 <area shape="rect" id="Node000200" href="$d4/d99/upnpapi_8cpp.html#a75a3c9f9180bc908e17d49c3e2218e99" title="Terminates the Linux SDK for UPnP Devices." alt="" coords="449,1840,543,1865"/>
 <area shape="poly" id="edge53_Node000001_Node000200" title=" " alt="" coords="145,1481,262,1498,315,1511,351,1528,409,1651,486,1827,481,1829,404,1654,347,1532,313,1516,261,1503,144,1486"/>
-<area shape="rect" id="Node000294" href="$d5/dfa/upnpdebug_8cpp.html#acb989a0182d5595b14f2dc3de64225b9" title="Initialize the log files." alt="" coords="221,1640,321,1665"/>
-<area shape="poly" id="edge76_Node000001_Node000294" title=" " alt="" coords="85,1490,125,1555,156,1594,194,1626,209,1635,207,1640,190,1631,152,1597,120,1558,80,1492"/>
-<area shape="rect" id="Node000295" href="$d4/d99/upnpapi_8cpp.html#a7855376cc412564ea0b12b867e11e3a7" title="Initializes the global mutexes used by the UPnP SDK." alt="" coords="205,1689,337,1715"/>
-<area shape="poly" id="edge77_Node000001_Node000295" title=" " alt="" coords="82,1490,95,1527,118,1577,151,1630,171,1655,194,1676,200,1681,197,1685,190,1680,167,1658,146,1633,113,1580,90,1529,77,1492"/>
-<area shape="rect" id="Node000296" href="$d4/d99/upnpapi_8cpp.html#aabf66e54504de499079a21f1d01b91ca" title="Initializes the global threadm pools used by the UPnP SDK." alt="" coords="192,1440,349,1465"/>
-<area shape="poly" id="edge78_Node000001_Node000296" title=" " alt="" coords="144,1466,178,1462,179,1467,145,1472"/>
-<area shape="rect" id="Node000308" href="$d4/d99/upnpapi_8cpp.html#afa9a02a6a9dc20f16c191c563c61f53d" title="(Windows Only) Initializes the Windows Winsock library." alt="" coords="221,1739,320,1764"/>
-<area shape="poly" id="edge88_Node000001_Node000308" title=" " alt="" coords="81,1490,91,1535,112,1599,145,1667,167,1698,194,1725,210,1736,207,1740,190,1729,163,1701,141,1669,107,1601,86,1537,76,1492"/>
+<area shape="rect" id="Node000292" href="$d5/dfa/upnpdebug_8cpp.html#acb989a0182d5595b14f2dc3de64225b9" title="Initialize the log files." alt="" coords="221,1640,321,1665"/>
+<area shape="poly" id="edge76_Node000001_Node000292" title=" " alt="" coords="85,1490,125,1555,156,1594,194,1626,209,1635,207,1640,190,1631,152,1597,120,1558,80,1492"/>
+<area shape="rect" id="Node000293" href="$d4/d99/upnpapi_8cpp.html#a7855376cc412564ea0b12b867e11e3a7" title="Initializes the global mutexes used by the UPnP SDK." alt="" coords="205,1689,337,1715"/>
+<area shape="poly" id="edge77_Node000001_Node000293" title=" " alt="" coords="82,1490,95,1527,118,1577,151,1630,171,1655,194,1676,200,1681,197,1685,190,1680,167,1658,146,1633,113,1580,90,1529,77,1492"/>
+<area shape="rect" id="Node000294" href="$d4/d99/upnpapi_8cpp.html#aabf66e54504de499079a21f1d01b91ca" title="Initializes the global threadm pools used by the UPnP SDK." alt="" coords="192,1440,349,1465"/>
+<area shape="poly" id="edge78_Node000001_Node000294" title=" " alt="" coords="144,1466,178,1462,179,1467,145,1472"/>
+<area shape="rect" id="Node000306" href="$d4/d99/upnpapi_8cpp.html#afa9a02a6a9dc20f16c191c563c61f53d" title="(Windows Only) Initializes the Windows Winsock library." alt="" coords="221,1739,320,1764"/>
+<area shape="poly" id="edge88_Node000001_Node000306" title=" " alt="" coords="81,1490,91,1535,112,1599,145,1667,167,1698,194,1725,210,1736,207,1740,190,1729,163,1701,141,1669,107,1601,86,1537,76,1492"/>
 <area shape="rect" id="Node000003" href="$dc/d02/gena__callback2_8cpp.html#abb1570eae1e832145e2ae85cf1b5ad75" title="Sends an error message to the control point in the case of incorrect GENA requests." alt="" coords="688,309,800,335"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="326,345,674,324,675,329,327,351"/>
 <area shape="rect" id="Node000038" href="$d6/de3/gena__ctrlpt_8cpp.html#a2eb03f67113de1b037f592d6e49cdf3c" title="This function processes NOTIFY events that are sent by devices." alt="" coords="401,423,591,463"/>
@@ -113,10 +113,10 @@
 <area shape="poly" id="edge69_Node000200_Node000210" title=" " alt="" coords="504,1865,521,1906,550,1963,591,2023,616,2050,644,2073,653,2079,650,2083,641,2077,612,2054,587,2026,545,1965,516,1908,499,1867"/>
 <area shape="rect" id="Node000211" href="$d4/d99/upnpapi_8cpp.html#aead9c1aad0998507f66cf7f0749013d3" title="Unregisters a control point application, unsubscribing all active subscriptions." alt="" coords="661,1840,827,1865"/>
 <area shape="poly" id="edge70_Node000200_Node000211" title=" " alt="" coords="543,1850,647,1850,647,1855,543,1855"/>
-<area shape="rect" id="Node000269" href="$d4/d99/upnpapi_8cpp.html#abb1c47010971d19ecd2b46ee842871ec" title="Unregisters a root device registered with UpnpRegisterRootDevice, UpnpRegisterRootDevice2,..." alt="" coords="643,1791,845,1816"/>
-<area shape="poly" id="edge73_Node000200_Node000269" title=" " alt="" coords="543,1841,666,1816,667,1821,544,1846"/>
-<area shape="rect" id="Node000290" href="$d1/d28/Compa_2src_2genlib_2net_2http_2webserver_8cpp.html#aba5685f22e83826b14771e59d0edbc05" title="Release memory allocated for the global web server root directory and the global XML document." alt="" coords="667,2136,821,2161"/>
-<area shape="poly" id="edge75_Node000200_Node000290" title=" " alt="" coords="503,1865,516,1913,543,1984,562,2022,585,2059,613,2093,644,2123,656,2130,653,2135,641,2127,609,2097,581,2062,558,2024,539,1986,511,1915,498,1866"/>
+<area shape="rect" id="Node000267" href="$d4/d99/upnpapi_8cpp.html#abb1c47010971d19ecd2b46ee842871ec" title="Unregisters a root device registered with UpnpRegisterRootDevice, UpnpRegisterRootDevice2,..." alt="" coords="643,1791,845,1816"/>
+<area shape="poly" id="edge73_Node000200_Node000267" title=" " alt="" coords="543,1841,666,1816,667,1821,544,1846"/>
+<area shape="rect" id="Node000288" href="$d1/d28/Compa_2src_2genlib_2net_2http_2webserver_8cpp.html#aba5685f22e83826b14771e59d0edbc05" title="Release memory allocated for the global web server root directory and the global XML document." alt="" coords="667,2136,821,2161"/>
+<area shape="poly" id="edge75_Node000200_Node000288" title=" " alt="" coords="503,1865,516,1913,543,1984,562,2022,585,2059,613,2093,644,2123,656,2130,653,2135,641,2127,609,2097,581,2062,558,2024,539,1986,511,1915,498,1866"/>
 <area shape="poly" id="edge58_Node000203_Node000027" title=" " alt="" coords="789,1689,844,1670,950,1620,953,1625,846,1675,791,1694"/>
 <area shape="poly" id="edge60_Node000205_Node000027" title=" " alt="" coords="804,1742,844,1728,881,1705,914,1677,966,1625,970,1629,918,1681,884,1709,847,1732,806,1747"/>
 <area shape="poly" id="edge62_Node000207_Node000173" title=" " alt="" coords="824,1895,1118,1879,1118,1885,824,1900"/>
@@ -125,16 +125,16 @@
 <area shape="poly" id="edge66_Node000208_Node000174" title=" " alt="" coords="826,2183,844,2172,865,2146,874,2120,880,2091,891,2056,973,1877,978,1879,896,2058,885,2092,880,2122,870,2149,847,2176,829,2188"/>
 <area shape="poly" id="edge72_Node000211_Node000027" title=" " alt="" coords="823,1838,844,1826,869,1805,892,1781,930,1726,958,1672,976,1628,981,1630,963,1674,935,1729,896,1784,873,1809,847,1831,826,1842"/>
 <area shape="poly" id="edge71_Node000211_Node000174" title=" " alt="" coords="828,1850,927,1850,927,1855,828,1855"/>
-<area shape="poly" id="edge74_Node000269_Node000027" title=" " alt="" coords="821,1788,844,1777,886,1743,922,1702,951,1662,972,1627,977,1630,956,1664,927,1706,890,1747,847,1782,823,1793"/>
-<area shape="poly" id="edge86_Node000296_Node000200" title=" " alt="" coords="322,1463,351,1483,375,1516,384,1548,389,1581,400,1621,486,1826,481,1828,395,1623,384,1582,379,1549,370,1519,347,1487,319,1468"/>
-<area shape="rect" id="Node000297" href="$d8/d61/ThreadPool_8cpp.html#a03dbe83dda6a8fbe38a4a6c2f14edc7f" title="Initializes and starts ThreadPool." alt="" coords="438,1491,554,1516"/>
-<area shape="poly" id="edge79_Node000296_Node000297" title=" " alt="" coords="329,1463,426,1485,425,1490,328,1468"/>
-<area shape="rect" id="Node000301" href="$d8/d61/ThreadPool_8cpp.html#ac7dadbb7b20ca94bf746241c0962f8d1" title="Initializes thread pool attributes." alt="" coords="703,1591,785,1616"/>
-<area shape="poly" id="edge84_Node000296_Node000301" title=" " alt="" coords="319,1463,351,1483,368,1508,374,1533,381,1556,388,1566,399,1576,433,1594,471,1608,510,1616,549,1620,625,1619,689,1612,690,1617,626,1625,549,1625,509,1621,469,1613,431,1599,396,1580,384,1570,376,1558,369,1534,363,1510,347,1487,316,1468"/>
-<area shape="rect" id="Node000302" href="$d8/d61/ThreadPool_8cpp.html#adae046aa2a9671fc2a6a410c5f402fc0" title="Sets the idle time for the thread pool attributes." alt="" coords="427,1540,565,1565"/>
-<area shape="poly" id="edge85_Node000296_Node000302" title=" " alt="" coords="311,1463,351,1482,365,1494,375,1506,384,1516,399,1526,415,1534,413,1539,396,1531,381,1520,371,1509,362,1498,348,1487,309,1468"/>
-<area shape="poly" id="edge81_Node000297_Node000105" title=" " alt="" coords="498,1490,511,1440,538,1368,558,1330,581,1291,609,1256,641,1225,668,1211,696,1203,698,1208,670,1216,644,1229,613,1259,585,1294,562,1332,543,1371,516,1442,503,1491"/>
-<area shape="poly" id="edge80_Node000297_Node000106" title=" " alt="" coords="553,1490,617,1474,692,1449,770,1416,844,1373,885,1338,920,1298,971,1225,975,1228,925,1301,888,1342,847,1378,773,1421,694,1454,618,1479,555,1495"/>
-<area shape="poly" id="edge82_Node000297_Node000207" title=" " alt="" coords="555,1504,578,1512,597,1527,613,1549,625,1572,631,1594,634,1616,630,1660,621,1704,611,1748,608,1791,611,1812,617,1833,628,1855,645,1876,654,1884,651,1888,641,1880,624,1858,612,1835,605,1813,603,1791,606,1747,616,1703,625,1660,629,1616,626,1595,620,1574,609,1552,593,1531,575,1517,553,1509"/>
-<area shape="poly" id="edge83_Node000297_Node000301" title=" " alt="" coords="555,1511,596,1526,611,1537,621,1548,630,1559,644,1569,691,1588,689,1593,641,1574,626,1563,617,1552,608,1541,593,1531,553,1516"/>
+<area shape="poly" id="edge74_Node000267_Node000027" title=" " alt="" coords="821,1788,844,1777,886,1743,922,1702,951,1662,972,1627,977,1630,956,1664,927,1706,890,1747,847,1782,823,1793"/>
+<area shape="poly" id="edge86_Node000294_Node000200" title=" " alt="" coords="322,1463,351,1483,375,1516,384,1548,389,1581,400,1621,486,1826,481,1828,395,1623,384,1582,379,1549,370,1519,347,1487,319,1468"/>
+<area shape="rect" id="Node000295" href="$d8/d61/ThreadPool_8cpp.html#a03dbe83dda6a8fbe38a4a6c2f14edc7f" title="Initializes and starts ThreadPool." alt="" coords="438,1491,554,1516"/>
+<area shape="poly" id="edge79_Node000294_Node000295" title=" " alt="" coords="329,1463,426,1485,425,1490,328,1468"/>
+<area shape="rect" id="Node000299" href="$d8/d61/ThreadPool_8cpp.html#ac7dadbb7b20ca94bf746241c0962f8d1" title="Initializes thread pool attributes." alt="" coords="703,1591,785,1616"/>
+<area shape="poly" id="edge84_Node000294_Node000299" title=" " alt="" coords="319,1463,351,1483,368,1508,374,1533,381,1556,388,1566,399,1576,433,1594,471,1608,510,1616,549,1620,625,1619,689,1612,690,1617,626,1625,549,1625,509,1621,469,1613,431,1599,396,1580,384,1570,376,1558,369,1534,363,1510,347,1487,316,1468"/>
+<area shape="rect" id="Node000300" href="$d8/d61/ThreadPool_8cpp.html#adae046aa2a9671fc2a6a410c5f402fc0" title="Sets the idle time for the thread pool attributes." alt="" coords="427,1540,565,1565"/>
+<area shape="poly" id="edge85_Node000294_Node000300" title=" " alt="" coords="311,1463,351,1482,365,1494,375,1506,384,1516,399,1526,415,1534,413,1539,396,1531,381,1520,371,1509,362,1498,348,1487,309,1468"/>
+<area shape="poly" id="edge81_Node000295_Node000105" title=" " alt="" coords="498,1490,511,1440,538,1368,558,1330,581,1291,609,1256,641,1225,668,1211,696,1203,698,1208,670,1216,644,1229,613,1259,585,1294,562,1332,543,1371,516,1442,503,1491"/>
+<area shape="poly" id="edge80_Node000295_Node000106" title=" " alt="" coords="553,1490,617,1474,692,1449,770,1416,844,1373,885,1338,920,1298,971,1225,975,1228,925,1301,888,1342,847,1378,773,1421,694,1454,618,1479,555,1495"/>
+<area shape="poly" id="edge82_Node000295_Node000207" title=" " alt="" coords="555,1504,578,1512,597,1527,613,1549,625,1572,631,1594,634,1616,630,1660,621,1704,611,1748,608,1791,611,1812,617,1833,628,1855,645,1876,654,1884,651,1888,641,1880,624,1858,612,1835,605,1813,603,1791,606,1747,616,1703,625,1660,629,1616,626,1595,620,1574,609,1552,593,1531,575,1517,553,1509"/>
+<area shape="poly" id="edge83_Node000295_Node000299" title=" " alt="" coords="555,1511,596,1526,611,1537,621,1548,630,1559,644,1569,691,1588,689,1593,641,1574,626,1563,617,1552,608,1541,593,1531,553,1516"/>
 </map>
