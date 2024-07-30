@@ -1,7 +1,7 @@
 /**************************************************************************
  *
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-08
+ * Redistribution only with this Copyright remark. Last modified: 2024-07-31
  * Copyright (c) 1990- 1993, 1996 Open Software Foundation, Inc.
  * Copyright (c) 1989 by Hewlett-Packard Company, Palo Alto, Ca. &
  * Digital Equipment Corporation, Maynard, Mass.
@@ -30,13 +30,14 @@
  */
 
 #include <uuid.hpp>
-#include <UpnpInet.hpp>
-#include <upnplib/port.hpp>
+#include <upnplib/port_sock.hpp>
 
+/// \cond
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+/// \endcond
 
 namespace {
 

@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-10
+ * Redistribution only with this Copyright remark. Last modified: 2024-07-30
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -43,7 +43,8 @@
  * \brief Manage network sockets and connections.
  */
 
-#include <UpnpInet.hpp> /* for SOCKET, netinet/in */
+#include <upnplib/port_sock.hpp> /* for SOCKET, netinet/in */
+#include <umock/unistd.hpp>
 
 #ifdef UPNP_ENABLE_OPEN_SSL
 #include <openssl/ssl.h>
@@ -86,7 +87,7 @@ inline int sock_close(
     SOCKET sock) {
     if (sock == INVALID_SOCKET)
         return -1;
-    return UpnpCloseSocket(sock);
+    return umock::unistd_h.CLOSE_SOCKET_P(sock);
 }
 
 /*!

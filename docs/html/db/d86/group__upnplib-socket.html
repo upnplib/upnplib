@@ -125,7 +125,7 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga99c7777de5a847f201f6d2f66540a535" id="r_ga99c7777de5a847f201f6d2f66540a535"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d86/group__upnplib-socket.html#ga99c7777de5a847f201f6d2f66540a535">upnplib::anonymous_namespace{socket.cpp}::getsockname</a> (<a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a> a_sockfd, sockaddr *a_addr, socklen_t *a_addrlen)</td></tr>
+<tr class="memitem:ga99c7777de5a847f201f6d2f66540a535" id="r_ga99c7777de5a847f201f6d2f66540a535"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d86/group__upnplib-socket.html#ga99c7777de5a847f201f6d2f66540a535">upnplib::anonymous_namespace{socket.cpp}::getsockname</a> (SOCKET a_sockfd, sockaddr *a_addr, socklen_t *a_addrlen)</td></tr>
 <tr class="memdesc:ga99c7777de5a847f201f6d2f66540a535"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wrapper for the ::getsockname() system function.  <br /></td></tr>
 <tr class="separator:ga99c7777de5a847f201f6d2f66540a535"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -145,10 +145,8 @@ Specification for CSocket</h1>
 <h2><a class="anchor" id="autotoc_md13"></a>
 empty socket object</h2>
 <p>An empty socket object can be instantiated with the default constructor, e.g. <code>CSocket sockObj;</code>. It is a valid object and should be destructed. When moving a socket object, the left over source object is also empty. An empty socket object has an <code>INVALID_SOCKET</code> defined and no valid content. It throws an exception if using any of its Setter and Getter. Moving and assigning it is possible. You can test for an empty socket by looking for an <code>INVALID_SOCKET</code>, e.g. </p><div class="fragment"><div class="line">CSocket sockObj; <span class="comment">// or CSocket_basic sockObj;</span></div>
-<div class="line"><span class="keywordflow">if</span> (<span class="keyword">static_cast&lt;</span><a class="code hl_typedef" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a><span class="keyword">&gt;</span>(sockObj) != <a class="code hl_define" href="../../da/dc0/UpnpInet_8hpp.html#a26769957ec1a2beaf223f33b66ee64ab">INVALID_SOCKET</a>) {</div>
+<div class="line"><span class="keywordflow">if</span> (<span class="keyword">static_cast&lt;</span>SOCKET<span class="keyword">&gt;</span>(sockObj) != INVALID_SOCKET) {</div>
 <div class="line">    in_port_t port = sockObj.get_port(); };</div>
-<div class="ttc" id="aUpnpInet_8hpp_html_a26769957ec1a2beaf223f33b66ee64ab"><div class="ttname"><a href="../../da/dc0/UpnpInet_8hpp.html#a26769957ec1a2beaf223f33b66ee64ab">INVALID_SOCKET</a></div><div class="ttdeci">#define INVALID_SOCKET</div><div class="ttdef"><b>Definition</b> <a href="../../da/dc0/UpnpInet_8hpp_source.html#l00052">UpnpInet.hpp:52</a></div></div>
-<div class="ttc" id="aUpnpInet_8hpp_html_a8dc8083897335125630f1af5dafd5831"><div class="ttname"><a href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a></div><div class="ttdeci">int SOCKET</div><div class="ttdef"><b>Definition</b> <a href="../../da/dc0/UpnpInet_8hpp_source.html#l00049">UpnpInet.hpp:49</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md14"></a>
 protocol family</h2>
 <p>Only protocol family <code>PF_INET6</code> and <code>PF_INET</code> is supported. Any other address family throws an exception.</p>
@@ -177,7 +175,7 @@ References</h2>
         <tr>
           <td class="memname">int upnplib::anonymous_namespace{socket.cpp}::getsockname </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a>&#160;</td>
+          <td class="paramtype">SOCKET&#160;</td>
           <td class="paramname"><em>a_sockfd</em>, </td>
         </tr>
         <tr>

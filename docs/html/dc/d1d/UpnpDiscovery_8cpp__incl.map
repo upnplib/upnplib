@@ -1,19 +1,9 @@
 <map id="Compa/src/api/UpnpDiscovery.cpp" name="Compa/src/api/UpnpDiscovery.cpp">
-<area shape="rect" id="Node000001" title="Source file for UpnpDiscovery methods." alt="" coords="178,5,421,31"/>
-<area shape="rect" id="Node000002" href="$d0/d03/UpnpDiscovery_8hpp.html" title="Header file for UpnpDiscovery methods." alt="" coords="93,79,239,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="279,33,201,74,199,70,277,28"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="264,79,335,104"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="302,31,302,65,297,65,297,31"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="359,79,429,104"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="316,29,369,68,366,72,313,33"/>
-<area shape="rect" id="Node000003" href="$d3/dd1/UpnpString_8hpp.html" title="UpnpString object declaration." alt="" coords="35,152,158,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="156,106,119,144,115,140,153,102"/>
-<area shape="rect" id="Node000005" href="$da/dc0/UpnpInet_8hpp.html" title="Provides a platform independent way to include TCP/IP types and functions." alt="" coords="194,152,303,177"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="181,102,226,141,223,145,178,106"/>
-<area shape="rect" id="Node000004" href="$d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="5,225,161,251"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="97,178,91,212,85,211,92,177"/>
-<area shape="rect" id="Node000006" href="$da/df8/UpnpUniStd_8hpp.html" title="Do not #include &lt;unistd.h&gt; on WIN32." alt="" coords="185,225,312,251"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="251,178,251,212,246,212,246,178"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="337,225,475,251"/>
-<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="275,175,369,217,367,222,273,180"/>
+<area shape="rect" id="Node000001" title="Source file for UpnpDiscovery methods." alt="" coords="5,5,248,31"/>
+<area shape="rect" id="Node000002" href="$d0/d03/UpnpDiscovery_8hpp.html" title="Header file for UpnpDiscovery methods." alt="" coords="53,79,200,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="129,31,129,65,124,65,124,31"/>
+<area shape="rect" id="Node000003" href="$d3/dd1/UpnpString_8hpp.html" title="UpnpString object declaration." alt="" coords="65,152,188,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="129,104,129,138,124,138,124,104"/>
+<area shape="rect" id="Node000004" href="$d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="49,225,205,251"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="129,178,129,212,124,212,124,178"/>
 </map>

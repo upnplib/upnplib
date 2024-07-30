@@ -126,7 +126,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a0c7d26fd8adfd7e704e8502a65efae5b" id="r_a0c7d26fd8adfd7e704e8502a65efae5b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a0c7d26fd8adfd7e704e8502a65efae5b">host_header_is_numeric</a> (char *a_host_port, size_t a_host_port_len)</td></tr>
 <tr class="memdesc:a0c7d26fd8adfd7e704e8502a65efae5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a network address is numeric.  <br /></td></tr>
 <tr class="separator:a0c7d26fd8adfd7e704e8502a65efae5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f40d51e41632f61e7147d7a42dea58e" id="r_a6f40d51e41632f61e7147d7a42dea58e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a6f40d51e41632f61e7147d7a42dea58e">getNumericHostRedirection</a> (<a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a> a_socket, char *a_host_port, size_t a_hp_size)</td></tr>
+<tr class="memitem:a6f40d51e41632f61e7147d7a42dea58e" id="r_a6f40d51e41632f61e7147d7a42dea58e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a6f40d51e41632f61e7147d7a42dea58e">getNumericHostRedirection</a> (SOCKET a_socket, char *a_host_port, size_t a_hp_size)</td></tr>
 <tr class="memdesc:a6f40d51e41632f61e7147d7a42dea58e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the ip address with port as text that is bound to a socket.  <br /></td></tr>
 <tr class="separator:a6f40d51e41632f61e7147d7a42dea58e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54d3ff9589278aff8765d7a64df23587" id="r_a54d3ff9589278aff8765d7a64df23587"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a54d3ff9589278aff8765d7a64df23587">dispatch_request</a> (<a class="el" href="../../d6/df0/sock_8hpp.html#d9/d4f/structSOCKINFO">SOCKINFO</a> *info, <a class="el" href="../../db/da7/httpparser_8hpp.html#d7/ddd/structhttp__parser__t">http_parser_t</a> *hparser)</td></tr>
@@ -138,19 +138,19 @@ Functions</h2></td></tr>
 <tr class="memitem:a9b4b32cfbe825a3f7cc9906b33d50872" id="r_a9b4b32cfbe825a3f7cc9906b33d50872"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a9b4b32cfbe825a3f7cc9906b33d50872">handle_request</a> (void *args)</td></tr>
 <tr class="memdesc:a9b4b32cfbe825a3f7cc9906b33d50872"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive the request and dispatch it for handling.  <br /></td></tr>
 <tr class="separator:a9b4b32cfbe825a3f7cc9906b33d50872"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a107199de415d50f725a5c6a327c1be" id="r_a4a107199de415d50f725a5c6a327c1be"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d8/df6/UpnpGlobal_8hpp.html#aeecd12a6454cebddf6288c822d09422d">UPNP_INLINE</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a4a107199de415d50f725a5c6a327c1be">schedule_request_job</a> (<a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a> connfd, sockaddr *clientAddr)</td></tr>
+<tr class="memitem:a4a107199de415d50f725a5c6a327c1be" id="r_a4a107199de415d50f725a5c6a327c1be"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d8/df6/UpnpGlobal_8hpp.html#aeecd12a6454cebddf6288c822d09422d">UPNP_INLINE</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a4a107199de415d50f725a5c6a327c1be">schedule_request_job</a> (SOCKET connfd, sockaddr *clientAddr)</td></tr>
 <tr class="memdesc:a4a107199de415d50f725a5c6a327c1be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initilize the thread pool to handle a request, sets priority for the job and adds the job to the thread pool.  <br /></td></tr>
 <tr class="separator:a4a107199de415d50f725a5c6a327c1be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a937a0eae18a69c7e034aa982345d9a50" id="r_a937a0eae18a69c7e034aa982345d9a50"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a937a0eae18a69c7e034aa982345d9a50">fdset_if_valid</a> (<a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a> a_sock, fd_set *a_set)</td></tr>
+<tr class="memitem:a937a0eae18a69c7e034aa982345d9a50" id="r_a937a0eae18a69c7e034aa982345d9a50"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a937a0eae18a69c7e034aa982345d9a50">fdset_if_valid</a> (SOCKET a_sock, fd_set *a_set)</td></tr>
 <tr class="memdesc:a937a0eae18a69c7e034aa982345d9a50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a socket file descriptor to an <code>'fd_set'</code> structure as needed for <code>::select()</code>.  <br /></td></tr>
 <tr class="separator:a937a0eae18a69c7e034aa982345d9a50"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34abbc6e410d0cfd24057c79c9f1b9c3" id="r_a34abbc6e410d0cfd24057c79c9f1b9c3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a34abbc6e410d0cfd24057c79c9f1b9c3">web_server_accept</a> (<a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a> lsock, fd_set &amp;set)</td></tr>
+<tr class="memitem:a34abbc6e410d0cfd24057c79c9f1b9c3" id="r_a34abbc6e410d0cfd24057c79c9f1b9c3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a34abbc6e410d0cfd24057c79c9f1b9c3">web_server_accept</a> (SOCKET lsock, fd_set &amp;set)</td></tr>
 <tr class="memdesc:a34abbc6e410d0cfd24057c79c9f1b9c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accept requested connection from a remote control point and run it in a new thread.  <br /></td></tr>
 <tr class="separator:a34abbc6e410d0cfd24057c79c9f1b9c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a02379f09474a96b3590cadd8ca82ecf1" id="r_a02379f09474a96b3590cadd8ca82ecf1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a02379f09474a96b3590cadd8ca82ecf1">ssdp_read</a> (<a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a> *rsock, fd_set *set)</td></tr>
+<tr class="memitem:a02379f09474a96b3590cadd8ca82ecf1" id="r_a02379f09474a96b3590cadd8ca82ecf1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a02379f09474a96b3590cadd8ca82ecf1">ssdp_read</a> (SOCKET *rsock, fd_set *set)</td></tr>
 <tr class="memdesc:a02379f09474a96b3590cadd8ca82ecf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read data from the SSDP socket.  <br /></td></tr>
 <tr class="separator:a02379f09474a96b3590cadd8ca82ecf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a774280e63947d88746e7f6f8f583d759" id="r_a774280e63947d88746e7f6f8f583d759"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a774280e63947d88746e7f6f8f583d759">receive_from_stopSock</a> (<a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a> ssock, fd_set *set)</td></tr>
+<tr class="memitem:a774280e63947d88746e7f6f8f583d759" id="r_a774280e63947d88746e7f6f8f583d759"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a774280e63947d88746e7f6f8f583d759">receive_from_stopSock</a> (SOCKET ssock, fd_set *set)</td></tr>
 <tr class="memdesc:a774280e63947d88746e7f6f8f583d759"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if we have received a packet that shall stop the miniserver.  <br /></td></tr>
 <tr class="separator:a774280e63947d88746e7f6f8f583d759"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29857662f54c55aa7e6023b37b08af76" id="r_a29857662f54c55aa7e6023b37b08af76"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a29857662f54c55aa7e6023b37b08af76">RunMiniServer</a> (<a class="el" href="../../d3/d8b/miniserver_8hpp.html#d2/d37/structMiniServerSockArray">MiniServerSockArray</a> *miniSock)</td></tr>
@@ -159,7 +159,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a88c84bd3f9b53e2ef2ada57dd21a73b1" id="r_a88c84bd3f9b53e2ef2ada57dd21a73b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a88c84bd3f9b53e2ef2ada57dd21a73b1">RunMiniServer_f</a> (<a class="el" href="../../d3/d8b/miniserver_8hpp.html#d2/d37/structMiniServerSockArray">MiniServerSockArray</a> *miniSock)</td></tr>
 <tr class="memdesc:a88c84bd3f9b53e2ef2ada57dd21a73b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a network address is numeric.  <br /></td></tr>
 <tr class="separator:a88c84bd3f9b53e2ef2ada57dd21a73b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec7d02e7e42098f68ed2d85b931106df" id="r_aec7d02e7e42098f68ed2d85b931106df"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#aec7d02e7e42098f68ed2d85b931106df">get_port</a> (<a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a> sockfd, uint16_t *port)</td></tr>
+<tr class="memitem:aec7d02e7e42098f68ed2d85b931106df" id="r_aec7d02e7e42098f68ed2d85b931106df"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#aec7d02e7e42098f68ed2d85b931106df">get_port</a> (SOCKET sockfd, uint16_t *port)</td></tr>
 <tr class="memdesc:aec7d02e7e42098f68ed2d85b931106df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns port to which socket, sockfd, is bound.  <br /></td></tr>
 <tr class="separator:aec7d02e7e42098f68ed2d85b931106df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7edcadd0e5ba55588d4794730343772e" id="r_a7edcadd0e5ba55588d4794730343772e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a7edcadd0e5ba55588d4794730343772e">get_miniserver_sockets</a> (<a class="el" href="../../d3/d8b/miniserver_8hpp.html#d2/d37/structMiniServerSockArray">MiniServerSockArray</a> *out, in_port_t listen_port4, in_port_t listen_port6, in_port_t listen_port6UlaGua)</td></tr>
@@ -210,7 +210,7 @@ Only available with webserver compiled in.  <br /></td></tr>
 </div><table class="fieldtable">
 <tr><th colspan="3">Class Members</th></tr>
 <tr><td class="fieldtype">
-<a id="a1f7d64c469da025cbad2503f1d808de9" name="a1f7d64c469da025cbad2503f1d808de9"></a><a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a></td>
+<a id="a1f7d64c469da025cbad2503f1d808de9" name="a1f7d64c469da025cbad2503f1d808de9"></a>SOCKET</td>
 <td class="fieldname">
 connfd</td>
 <td class="fielddoc">
@@ -383,7 +383,7 @@ Socket address of the remote control point. </td></tr>
         <tr>
           <td class="memname">void anonymous_namespace{miniserver.cpp}::fdset_if_valid </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a>&#160;</td>
+          <td class="paramtype">SOCKET&#160;</td>
           <td class="paramname"><em>a_sock</em>, </td>
         </tr>
         <tr>
@@ -588,19 +588,19 @@ You can check if <b>a_sock</b> was added to <b>a_set</b>. There are messages to 
 <div id="dynsection-6-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03_a7edcadd0e5ba55588d4794730343772e_cgraph.png" border="0" usemap="#ad9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03_a7edcadd0e5ba55588d4794730343772e_cgraph" alt=""/></div>
 <map name="ad9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03_a7edcadd0e5ba55588d4794730343772e_cgraph" id="ad9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03_a7edcadd0e5ba55588d4794730343772e_cgraph">
-<area shape="rect" title="Create STREAM sockets, binds to local network interfaces and listens for incoming connections." alt="" coords="5,498,185,553"/>
+<area shape="rect" title="Create STREAM sockets, binds to local network interfaces and listens for incoming connections." alt="" coords="5,477,185,531"/>
 <area shape="rect" href="../../d8/d73/classupnplib_1_1CSocket.html#a7548ff82d122192ae5ee7855b7dec846" title="Bind socket to a local interface address." alt="" coords="235,235,402,261"/>
-<area shape="poly" title=" " alt="" coords="117,496,296,271,300,274,121,499"/>
-<area shape="rect" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a70afe9ed6de1c17bb59f6c0bcc5bba00" title="Get the port number." alt="" coords="233,588,404,628"/>
-<area shape="poly" title=" " alt="" coords="171,550,252,581,250,586,169,555"/>
-<area shape="rect" href="../../d8/d73/classupnplib_1_1CSocket.html#af4e7af61b6999fdfb49a97d9ceecf9db" title="Initialize the object with the hints given by the constructor." alt="" coords="460,538,619,563"/>
-<area shape="poly" title=" " alt="" coords="186,528,446,543,446,548,185,533"/>
-<area shape="rect" href="../../d8/d73/classupnplib_1_1CSocket.html#aab92e4ef9b21e3e1381eb80ce9abfffe" title="Set socket to listen." alt="" coords="452,489,627,514"/>
-<area shape="poly" title=" " alt="" coords="185,518,438,504,439,509,186,523"/>
-<area shape="rect" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catch error for later use." alt="" coords="676,464,824,504"/>
-<area shape="poly" title=" " alt="" coords="330,259,376,326,412,366,453,399,530,423,663,459,662,464,528,428,451,404,408,370,372,330,325,262"/>
-<area shape="rect" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4" title="Get human readable error description of the catched error." alt="" coords="676,383,824,423"/>
-<area shape="poly" title=" " alt="" coords="402,237,455,236,513,240,572,251,628,271,660,291,689,317,731,369,727,373,685,321,657,295,625,276,570,256,512,245,454,241,402,242"/>
+<area shape="poly" title=" " alt="" coords="118,475,295,270,299,273,122,478"/>
+<area shape="rect" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a70afe9ed6de1c17bb59f6c0bcc5bba00" title="Get the port number." alt="" coords="233,577,404,617"/>
+<area shape="poly" title=" " alt="" coords="163,529,259,570,257,575,161,534"/>
+<area shape="rect" href="../../d8/d73/classupnplib_1_1CSocket.html#aab92e4ef9b21e3e1381eb80ce9abfffe" title="Set socket to listen." alt="" coords="452,538,627,563"/>
+<area shape="poly" title=" " alt="" coords="186,511,439,538,438,543,185,516"/>
+<area shape="rect" href="../../d8/d73/classupnplib_1_1CSocket.html#a7c9ded4e80e10a1d1072eb09fc14c41d" title="Initialize the object with the hints given by the constructor." alt="" coords="456,465,623,490"/>
+<area shape="poly" title=" " alt="" coords="185,496,442,480,442,486,186,501"/>
+<area shape="rect" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catch error for later use." alt="" coords="676,445,824,485"/>
+<area shape="poly" title=" " alt="" coords="329,259,347,289,375,327,411,366,453,399,490,414,543,428,663,450,662,456,542,433,488,419,451,404,407,370,371,330,343,292,325,262"/>
+<area shape="rect" href="../../d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4" title="Get human readable error description of the catched error." alt="" coords="676,371,824,411"/>
+<area shape="poly" title=" " alt="" coords="402,238,455,237,512,241,571,252,628,271,658,289,686,311,729,358,725,362,682,315,655,293,626,276,570,257,512,246,454,242,403,243"/>
 <area shape="rect" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a6878fbfcf7704d59f18dea2a350773bd" title="Get socket address family." alt="" coords="454,285,625,325"/>
 <area shape="poly" title=" " alt="" coords="369,258,450,279,448,285,368,263"/>
 <area shape="rect" href="../../db/d84/classupnplib_1_1CSocket__basic.html#a41cf15ed4d81fb0f237d8a6b69f72d8a" title="Get the socket type SOCK_STREAM or SOCK_DGRAM." alt="" coords="454,349,625,389"/>
@@ -613,8 +613,8 @@ You can check if <b>a_sock</b> was added to <b>a_set</b>. There are messages to 
 <area shape="poly" title=" " alt="" coords="323,234,340,199,368,151,405,100,450,55,458,50,461,54,454,59,409,103,372,154,345,201,328,236"/>
 <area shape="rect" href="../../d8/d44/classupnplib_1_1Netaddr.html#a37ca073aaa586afc48b9f94162468227" title="Get netaddress string." alt="" coords="462,70,617,95"/>
 <area shape="poly" title=" " alt="" coords="327,233,376,176,411,142,451,112,478,98,481,103,453,117,415,146,380,180,332,237"/>
-<area shape="poly" title=" " alt="" coords="590,387,628,406,709,454,706,459,625,410,587,392"/>
-<area shape="poly" title=" " alt="" coords="625,380,663,386,662,391,624,385"/>
+<area shape="poly" title=" " alt="" coords="587,387,628,406,695,437,693,442,626,410,585,392"/>
+<area shape="poly" title=" " alt="" coords="625,375,663,379,662,384,624,381"/>
 <area shape="rect" href="../../d0/dd8/group__upnplib-addrmodul.html#ga8f3bd5579e056ae4b668789de4ef12b3" title="Check for a netaddress and return its address family." alt="" coords="677,207,823,233"/>
 <area shape="poly" title=" " alt="" coords="611,198,663,205,663,211,611,203"/>
 <area shape="rect" href="../../d0/dd8/group__upnplib-addrmodul.html#gae7d54669b7911d1af4deefefa508b5d2" title="Check if a given string represents a port number." alt="" coords="675,158,825,183"/>
@@ -627,12 +627,12 @@ You can check if <b>a_sock</b> was added to <b>a_set</b>. There are messages to 
 <area shape="poly" title=" " alt="" coords="625,23,663,23,663,28,625,28"/>
 <area shape="poly" title=" " alt="" coords="799,43,826,55,911,93,908,97,824,60,797,48"/>
 <area shape="rect" href="../../d1/dc2/structupnplib_1_1SSockaddr.html#aa966e76a6a766c6cef08e8c638934d6d" title="Get the numeric port." alt="" coords="467,588,612,628"/>
-<area shape="poly" title=" " alt="" coords="404,605,453,605,453,611,404,611"/>
-<area shape="poly" title=" " alt="" coords="588,535,626,524,680,506,681,511,627,529,589,540"/>
-<area shape="poly" title=" " alt="" coords="605,536,625,525,641,508,650,490,658,471,673,450,699,428,702,433,677,454,662,474,655,492,646,511,628,529,607,540"/>
-<area shape="poly" title=" " alt="" coords="627,491,662,489,662,494,627,497"/>
-<area shape="poly" title=" " alt="" coords="566,486,693,426,695,431,569,491"/>
-<area shape="poly" title=" " alt="" coords="505,490,497,480,501,470,516,464,539,462,569,466,580,475,577,479,567,471,539,467,517,469,505,474,503,480,509,487"/>
+<area shape="poly" title=" " alt="" coords="404,599,453,601,452,606,404,604"/>
+<area shape="poly" title=" " alt="" coords="571,535,686,488,688,493,573,540"/>
+<area shape="poly" title=" " alt="" coords="570,536,598,520,625,501,640,483,648,467,657,450,673,431,693,416,697,420,677,435,662,453,653,469,644,486,628,505,601,525,572,540"/>
+<area shape="poly" title=" " alt="" coords="505,540,497,530,501,520,516,514,539,511,569,515,580,524,577,528,567,520,539,517,517,519,505,523,503,529,509,536"/>
+<area shape="poly" title=" " alt="" coords="623,470,662,468,663,473,623,475"/>
+<area shape="poly" title=" " alt="" coords="570,462,687,414,689,418,572,467"/>
 </map>
 </div>
 <div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -733,7 +733,7 @@ You can check if <b>a_sock</b> was added to <b>a_set</b>. There are messages to 
         <tr>
           <td class="memname">int anonymous_namespace{miniserver.cpp}::get_port </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a>&#160;</td>
+          <td class="paramtype">SOCKET&#160;</td>
           <td class="paramname"><em>sockfd</em>, </td>
         </tr>
         <tr>
@@ -791,7 +791,7 @@ You can check if <b>a_sock</b> was added to <b>a_set</b>. There are messages to 
         <tr>
           <td class="memname">int anonymous_namespace{miniserver.cpp}::getNumericHostRedirection </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a>&#160;</td>
+          <td class="paramtype">SOCKET&#160;</td>
           <td class="paramname"><em>a_socket</em>, </td>
         </tr>
         <tr>
@@ -1157,7 +1157,7 @@ You can check if <b>a_sock</b> was added to <b>a_set</b>. There are messages to 
         <tr>
           <td class="memname">int anonymous_namespace{miniserver.cpp}::receive_from_stopSock </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a>&#160;</td>
+          <td class="paramtype">SOCKET&#160;</td>
           <td class="paramname"><em>ssock</em>, </td>
         </tr>
         <tr>
@@ -1421,7 +1421,7 @@ You can check if <b>a_sock</b> was added to <b>a_set</b>. There are messages to 
         <tr>
           <td class="memname"><a class="el" href="../../d8/df6/UpnpGlobal_8hpp.html#aeecd12a6454cebddf6288c822d09422d">UPNP_INLINE</a> void anonymous_namespace{miniserver.cpp}::schedule_request_job </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a>&#160;</td>
+          <td class="paramtype">SOCKET&#160;</td>
           <td class="paramname"><em>connfd</em>, </td>
         </tr>
         <tr>
@@ -1599,7 +1599,7 @@ You can check if <b>a_sock</b> was added to <b>a_set</b>. There are messages to 
         <tr>
           <td class="memname">void anonymous_namespace{miniserver.cpp}::ssdp_read </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a> *&#160;</td>
+          <td class="paramtype">SOCKET *&#160;</td>
           <td class="paramname"><em>rsock</em>, </td>
         </tr>
         <tr>
@@ -1781,7 +1781,7 @@ You can check if <b>a_sock</b> was added to <b>a_set</b>. There are messages to 
         <tr>
           <td class="memname">int anonymous_namespace{miniserver.cpp}::web_server_accept </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a>&#160;</td>
+          <td class="paramtype">SOCKET&#160;</td>
           <td class="paramname"><em>lsock</em>, </td>
         </tr>
         <tr>

@@ -3,7 +3,7 @@
 #ifndef COMPA_UPNPSTATEVARREQUEST_HPP
 #define COMPA_UPNPSTATEVARREQUEST_HPP
 // Copyright (C) 2024+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-02-28
+// Redistribution only with this Copyright remark. Last modified: 2024-07-30
 /*!
  * \file
  * \brief Header file for UpnpStateVarRequest methods.
@@ -11,7 +11,6 @@
  */
 
 #include <UpnpString.hpp>
-#include <UpnpInet.hpp>
 #include <ixml.hpp>
 
 /*!

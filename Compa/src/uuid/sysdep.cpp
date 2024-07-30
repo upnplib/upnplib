@@ -4,7 +4,7 @@
  * Digital Equipment Corporation, Maynard, Mass.
  * Copyright (c) 1998 Microsoft.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-08
+ * Redistribution only with this Copyright remark. Last modified: 2024-07-31
  * To anyone who acknowledges that this file is provided "AS IS"
  * without any express or implied warranty: permission to use, copy,
  * modify, and distribute this file for any purpose is hereby
@@ -31,7 +31,7 @@
 #endif
 
 #include <sysdep.hpp>
-#include <UpnpInet.hpp>
+#include <upnplib/port_sock.hpp>
 
 /// \cond
 #include <cstdio>

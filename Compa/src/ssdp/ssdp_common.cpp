@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-06-16
+ * Redistribution only with this Copyright remark. Last modified: 2024-07-30
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -326,7 +326,7 @@ inline int create_ssdp_sock_v4(
 
 error_handler:
     if (ret != UPNP_E_SUCCESS) {
-        UpnpCloseSocket(*ssdpSock);
+        umock::unistd_h.CLOSE_SOCKET_P(*ssdpSock);
     }
 
     return ret;
@@ -460,7 +460,7 @@ inline int create_ssdp_sock_v6(
 
 error_handler:
     if (ret != UPNP_E_SUCCESS) {
-        UpnpCloseSocket(*ssdpSock);
+        umock::unistd_h.CLOSE_SOCKET_P(*ssdpSock);
     }
 
     return ret;
@@ -577,7 +577,7 @@ inline int create_ssdp_sock_v6_ula_gua(
 
 error_handler:
     if (ret != UPNP_E_SUCCESS) {
-        UpnpCloseSocket(*ssdpSock);
+        umock::unistd_h.CLOSE_SOCKET_P(*ssdpSock);
     }
 
     return ret;
@@ -805,7 +805,7 @@ int get_ssdp_sockets(MiniServerSockArray* out) {
     if (strlen(gIF_IPV6) > (size_t)0) {
         retVal = create_ssdp_sock_reqv6(&out->ssdpReqSock6);
         if (retVal != UPNP_E_SUCCESS) {
-            UpnpCloseSocket(out->ssdpReqSock4);
+            umock::unistd_h.CLOSE_SOCKET_P(out->ssdpReqSock4);
             return retVal;
         }
         /* For use by ssdp control point. */
@@ -819,8 +819,8 @@ int get_ssdp_sockets(MiniServerSockArray* out) {
         retVal = create_ssdp_sock_v4(&out->ssdpSock4);
         if (retVal != UPNP_E_SUCCESS) {
 #ifdef COMPA_HAVE_CTRLPT_SSDP
-            UpnpCloseSocket(out->ssdpReqSock4);
-            UpnpCloseSocket(out->ssdpReqSock6);
+            umock::unistd_h.CLOSE_SOCKET_P(out->ssdpReqSock4);
+            umock::unistd_h.CLOSE_SOCKET_P(out->ssdpReqSock6);
 #endif
             return retVal;
         }
@@ -831,10 +831,10 @@ int get_ssdp_sockets(MiniServerSockArray* out) {
     if (strlen(gIF_IPV6) > (size_t)0) {
         retVal = create_ssdp_sock_v6(&out->ssdpSock6);
         if (retVal != UPNP_E_SUCCESS) {
-            UpnpCloseSocket(out->ssdpSock4);
+            umock::unistd_h.CLOSE_SOCKET_P(out->ssdpSock4);
 #ifdef COMPA_HAVE_CTRLPT_SSDP
-            UpnpCloseSocket(out->ssdpReqSock4);
-            UpnpCloseSocket(out->ssdpReqSock6);
+            umock::unistd_h.CLOSE_SOCKET_P(out->ssdpReqSock4);
+            umock::unistd_h.CLOSE_SOCKET_P(out->ssdpReqSock6);
 #endif
             return retVal;
         }
@@ -843,11 +843,11 @@ int get_ssdp_sockets(MiniServerSockArray* out) {
     if (strlen(gIF_IPV6_ULA_GUA) > (size_t)0) {
         retVal = create_ssdp_sock_v6_ula_gua(&out->ssdpSock6UlaGua);
         if (retVal != UPNP_E_SUCCESS) {
-            UpnpCloseSocket(out->ssdpSock4);
-            UpnpCloseSocket(out->ssdpSock6);
+            umock::unistd_h.CLOSE_SOCKET_P(out->ssdpSock4);
+            umock::unistd_h.CLOSE_SOCKET_P(out->ssdpSock6);
 #ifdef COMPA_HAVE_CTRLPT_SSDP
-            UpnpCloseSocket(out->ssdpReqSock4);
-            UpnpCloseSocket(out->ssdpReqSock6);
+            umock::unistd_h.CLOSE_SOCKET_P(out->ssdpReqSock4);
+            umock::unistd_h.CLOSE_SOCKET_P(out->ssdpReqSock6);
 #endif
             return retVal;
         }

@@ -106,7 +106,7 @@ $(document).ready(function(){initNavTree('d6/d4b/sysdep_8cpp_source.html','../..
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * Digital Equipment Corporation, Maynard, Mass.</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> * Copyright (c) 1998 Microsoft.</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, &lt;Ingo@Hoeft-online.de&gt;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> * Redistribution only with this Copyright remark. Last modified: 2024-03-08</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> * Redistribution only with this Copyright remark. Last modified: 2024-07-30</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment"> * To anyone who acknowledges that this file is provided &quot;AS IS&quot;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> * without any express or implied warranty: permission to use, copy,</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment"> * modify, and distribute this file for any purpose is hereby</span></div>
@@ -127,10 +127,10 @@ $(document).ready(function(){initNavTree('d6/d4b/sysdep_8cpp_source.html','../..
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &lt;<a class="code" href="../../d5/de9/sysdep_8hpp.html">sysdep.hpp</a>&gt;</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#include &lt;<a class="code" href="../../da/dc0/UpnpInet_8hpp.html">UpnpInet.hpp</a>&gt;</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#include &lt;cstdio&gt;</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#include &lt;cstring&gt;</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#include &lt;cstdio&gt;</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#include &lt;cstring&gt;</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#include &lt;unistd.h&gt;</span></div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
 <div class="foldopen" id="foldopen00041" data-start="{" data-end="}">
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="../../d5/de9/sysdep_8hpp.html#a37b1e24ac7da974e63c5b4c54057870e">   41</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="../../d6/d4b/sysdep_8cpp.html#a37b1e24ac7da974e63c5b4c54057870e">get_ieee_node_identifier</a>(<a class="code hl_struct" href="../../d5/de9/sysdep_8hpp.html#da/ded/structuuid__node__t">uuid_node_t</a>* node) {</div>
@@ -217,8 +217,7 @@ $(document).ready(function(){initNavTree('d6/d4b/sysdep_8cpp_source.html','../..
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="preprocessor">#endif </span><span class="comment">/* _WIN32 */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="aThreadPool_8hpp_html_aaf2d0a99430a6d5253b8c395c30ca7e3"><div class="ttname"><a href="../../d5/d91/ThreadPool_8hpp.html#aaf2d0a99430a6d5253b8c395c30ca7e3">gettimeofday</a></div><div class="ttdeci">int gettimeofday(struct timeval *tv, struct timezone *tz)</div><div class="ttdoc">Get time of day.</div></div>
-<div class="ttc" id="aThreadPool_8hpp_html_de/dc1/structtimezone"><div class="ttname"><a href="../../d5/d91/ThreadPool_8hpp.html#de/dc1/structtimezone">timezone</a></div><div class="ttdoc">Timezone.</div><div class="ttdef"><b>Definition</b> <a href="../../d5/d91/ThreadPool_8hpp_source.html#l00056">ThreadPool.hpp:56</a></div></div>
-<div class="ttc" id="aUpnpInet_8hpp_html"><div class="ttname"><a href="../../da/dc0/UpnpInet_8hpp.html">UpnpInet.hpp</a></div><div class="ttdoc">Provides a platform independent way to include TCP/IP types and functions.</div></div>
+<div class="ttc" id="aThreadPool_8hpp_html_de/dc1/structtimezone"><div class="ttname"><a href="../../d5/d91/ThreadPool_8hpp.html#de/dc1/structtimezone">timezone</a></div><div class="ttdoc">Timezone.</div><div class="ttdef"><b>Definition</b> <a href="../../d5/d91/ThreadPool_8hpp_source.html#l00055">ThreadPool.hpp:55</a></div></div>
 <div class="ttc" id="amd5_8hpp_html_a0fcf933558f4d5bee663f2b82d6407c6"><div class="ttname"><a href="../../d4/d0f/md5_8hpp.html#a0fcf933558f4d5bee663f2b82d6407c6">MD5Update</a></div><div class="ttdeci">void MD5Update(MD5_CTX *, const void *, size_t)</div><div class="ttdoc">MD5 Update.</div><div class="ttdef"><b>Definition</b> <a href="../../d5/d96/md5_8cpp_source.html#l00082">md5.cpp:82</a></div></div>
 <div class="ttc" id="amd5_8hpp_html_a43e334cd23b7e92d1ee2f8b26071b1f0"><div class="ttname"><a href="../../d4/d0f/md5_8hpp.html#a43e334cd23b7e92d1ee2f8b26071b1f0">MD5Init</a></div><div class="ttdeci">void MD5Init(MD5_CTX *)</div><div class="ttdoc">MD5 Initialisation.</div><div class="ttdef"><b>Definition</b> <a href="../../d5/d96/md5_8cpp_source.html#l00070">md5.cpp:70</a></div></div>
 <div class="ttc" id="amd5_8hpp_html_aa8ada27433794b31a33902b8428b3b2f"><div class="ttname"><a href="../../d4/d0f/md5_8hpp.html#aa8ada27433794b31a33902b8428b3b2f">MD5Final</a></div><div class="ttdeci">void MD5Final(unsigned char digest[MD5_DIGEST_LENGTH], MD5_CTX *ctx)</div><div class="ttdoc">MD5 Final.</div><div class="ttdef"><b>Definition</b> <a href="../../d5/d96/md5_8cpp_source.html#l00119">md5.cpp:119</a></div></div>

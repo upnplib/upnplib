@@ -1,7 +1,7 @@
 #ifndef COMPA_UPNPDISCOVERY_HPP
 #define COMPA_UPNPDISCOVERY_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-28
+// Redistribution only with this Copyright remark. Last modified: 2024-07-30
 /*!
  * \file
  * \brief Header file for UpnpDiscovery methods.
@@ -9,7 +9,6 @@
  */
 
 #include <UpnpString.hpp>
-#include <UpnpInet.hpp>
 
 /*!
  * UpnpDiscovery

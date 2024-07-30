@@ -1,6 +1,5 @@
 var group__compa_Addressing =
 [
-    [ "UpnpInet.hpp", "da/dc0/UpnpInet_8hpp.html", null ],
     [ "upnpapi.cpp", "d4/d99/upnpapi_8cpp.html", null ],
     [ "miniserver.cpp", "d5/db2/miniserver_8cpp.html", null ],
     [ "sock.cpp", "d5/d78/sock_8cpp.html", null ],

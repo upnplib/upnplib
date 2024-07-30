@@ -34,21 +34,21 @@
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="613,1646,630,1659,641,1673,648,1687,653,1714,659,1740,666,1752,678,1764,700,1777,697,1781,674,1768,662,1755,654,1742,648,1715,643,1689,637,1676,626,1663,610,1650"/>
 <area shape="rect" id="Node000019" href="$db/d84/classupnplib_1_1CSocket__basic.html#a70afe9ed6de1c17bb59f6c0bcc5bba00" title="Get the port number." alt="" coords="710,1590,881,1630"/>
 <area shape="poly" id="edge8_Node000005_Node000019" title=" " alt="" coords="618,1614,696,1611,696,1617,618,1620"/>
-<area shape="rect" id="Node000021" href="$d8/d73/classupnplib_1_1CSocket.html#af4e7af61b6999fdfb49a97d9ceecf9db" title="Initialize the object with the hints given by the constructor." alt="" coords="716,1655,875,1680"/>
-<area shape="poly" id="edge9_Node000005_Node000021" title=" " alt="" coords="619,1634,709,1650,708,1655,618,1639"/>
-<area shape="rect" id="Node000022" href="$d8/d73/classupnplib_1_1CSocket.html#aab92e4ef9b21e3e1381eb80ce9abfffe" title="Set socket to listen." alt="" coords="708,1728,883,1753"/>
-<area shape="poly" id="edge12_Node000005_Node000022" title=" " alt="" coords="603,1646,629,1658,677,1690,745,1721,743,1725,675,1695,627,1663,601,1651"/>
-<area shape="rect" id="Node000007" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catch error for later use." alt="" coords="990,1650,1138,1690"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="878,1779,913,1764,929,1750,937,1735,945,1719,961,1703,976,1693,979,1698,964,1707,950,1722,941,1737,933,1753,916,1768,880,1784"/>
-<area shape="rect" id="Node000008" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4" title="Get human readable error description of the catched error." alt="" coords="990,1717,1138,1757"/>
-<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="860,1775,976,1751,977,1757,861,1780"/>
-<area shape="poly" id="edge10_Node000021_Node000007" title=" " alt="" coords="875,1665,976,1667,976,1672,875,1671"/>
-<area shape="poly" id="edge11_Node000021_Node000008" title=" " alt="" coords="861,1678,915,1690,987,1710,985,1715,914,1695,860,1683"/>
-<area shape="poly" id="edge13_Node000022_Node000007" title=" " alt="" coords="844,1725,976,1690,977,1696,846,1730"/>
-<area shape="poly" id="edge14_Node000022_Node000008" title=" " alt="" coords="883,1737,976,1735,976,1741,883,1742"/>
-<area shape="poly" id="edge15_Node000022_Node000022" title=" " alt="" coords="752,1730,743,1720,748,1710,766,1704,795,1701,834,1705,844,1710,848,1716,843,1719,840,1714,832,1711,795,1707,767,1709,751,1714,748,1719,756,1726"/>
-<area shape="poly" id="edge17_Node000023_Node000007" title=" " alt="" coords="886,1563,916,1576,974,1607,1025,1640,1022,1645,971,1612,914,1580,884,1568"/>
-<area shape="poly" id="edge18_Node000023_Node000008" title=" " alt="" coords="887,1556,916,1576,930,1592,937,1608,941,1640,946,1670,952,1685,965,1700,979,1711,976,1715,961,1704,948,1688,941,1672,936,1640,932,1610,925,1595,913,1580,884,1561"/>
+<area shape="rect" id="Node000021" href="$d8/d73/classupnplib_1_1CSocket.html#aab92e4ef9b21e3e1381eb80ce9abfffe" title="Set socket to listen." alt="" coords="708,1679,883,1704"/>
+<area shape="poly" id="edge9_Node000005_Node000021" title=" " alt="" coords="619,1642,734,1673,732,1678,618,1647"/>
+<area shape="rect" id="Node000022" href="$d8/d73/classupnplib_1_1CSocket.html#a7c9ded4e80e10a1d1072eb09fc14c41d" title="Initialize the object with the hints given by the constructor." alt="" coords="712,1728,879,1753"/>
+<area shape="poly" id="edge13_Node000005_Node000022" title=" " alt="" coords="609,1646,630,1659,645,1674,654,1688,662,1702,677,1714,699,1725,697,1729,675,1719,658,1705,649,1691,641,1677,626,1663,606,1650"/>
+<area shape="rect" id="Node000007" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catch error for later use." alt="" coords="990,1665,1138,1705"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="878,1777,913,1764,928,1753,937,1740,946,1727,961,1715,976,1706,979,1711,964,1719,950,1731,941,1743,932,1756,916,1768,880,1782"/>
+<area shape="rect" id="Node000008" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4" title="Get human readable error description of the catched error." alt="" coords="990,1729,1138,1769"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="878,1775,976,1759,977,1765,879,1780"/>
+<area shape="poly" id="edge10_Node000021_Node000007" title=" " alt="" coords="883,1687,976,1684,976,1690,883,1692"/>
+<area shape="poly" id="edge11_Node000021_Node000008" title=" " alt="" coords="857,1702,915,1714,977,1727,976,1733,914,1719,856,1707"/>
+<area shape="poly" id="edge12_Node000021_Node000021" title=" " alt="" coords="752,1681,743,1670,748,1660,766,1654,795,1652,834,1656,844,1661,848,1667,843,1670,840,1665,832,1661,795,1657,767,1659,751,1664,748,1670,756,1677"/>
+<area shape="poly" id="edge14_Node000022_Node000007" title=" " alt="" coords="859,1725,914,1714,976,1701,977,1706,915,1719,860,1731"/>
+<area shape="poly" id="edge15_Node000022_Node000008" title=" " alt="" coords="879,1741,976,1743,976,1749,879,1746"/>
+<area shape="poly" id="edge17_Node000023_Node000007" title=" " alt="" coords="887,1563,916,1576,978,1614,1031,1654,1028,1658,975,1619,913,1580,884,1567"/>
+<area shape="poly" id="edge18_Node000023_Node000008" title=" " alt="" coords="887,1556,916,1576,930,1594,938,1612,941,1647,945,1682,951,1698,965,1715,979,1726,976,1730,961,1719,947,1701,939,1683,936,1648,933,1613,926,1597,913,1580,884,1560"/>
 <area shape="rect" id="Node000024" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#aec7d02e7e42098f68ed2d85b931106df" title="Returns port to which socket, sockfd, is bound." alt="" coords="963,1518,1165,1558"/>
 <area shape="poly" id="edge19_Node000023_Node000024" title=" " alt="" coords="886,1535,949,1535,949,1541,886,1541"/>
 <area shape="poly" id="edge20_Node000023_Node000025" title=" " alt="" coords="885,1514,1003,1485,1004,1490,886,1519"/>

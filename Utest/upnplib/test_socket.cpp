@@ -1,5 +1,5 @@
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-07-30
+// Redistribution only with this Copyright remark. Last modified: 2024-07-31
 
 #include <upnplib/global.hpp>
 #include <upnplib/socket.hpp>
@@ -256,10 +256,9 @@ TEST(SocketBasicTestSuite, instantiate_socket_af_unix_sock_stream) {
     EXPECT_EQ(sockObj.netaddr(), "");
     EXPECT_THAT(
         captureObj.str(),
-        AnyOf(
-            "",
-            ContainsStdRegex(
-                "^TRACE\\[.*\\] 0x.* Executing CSocket_basic::netaddr\\(\\)")));
+        AnyOf("",
+              ContainsStdRegex(
+                  "^TRACE\\[.*\\].* Executing CSocket_basic::netaddr\\(\\)")));
     g_dbug = true;
     captureObj.start();
     EXPECT_EQ(sockObj.netaddr(), "");
@@ -885,10 +884,9 @@ TEST(SocketTestSuite, get_addr_str_invalid_address_family) {
     EXPECT_EQ(sockObj.netaddr(), "");
     EXPECT_THAT(
         captureObj.str(),
-        AnyOf(
-            "",
-            ContainsStdRegex(
-                "^TRACE\\[.*\\] 0x.* Executing CSocket_basic::netaddr\\(\\)")));
+        AnyOf("",
+              ContainsStdRegex(
+                  "^TRACE\\[.*\\].* Executing CSocket_basic::netaddr\\(\\)")));
     g_dbug = true;
     captureObj.start();
     EXPECT_EQ(sockObj.netaddr(), "");
@@ -899,7 +897,7 @@ TEST(SocketTestSuite, get_addr_str_invalid_address_family) {
     captureObj.start();
     EXPECT_EQ(sockObj.netaddrp(), "");
     EXPECT_THAT(captureObj.str(),
-                AnyOf("", ContainsStdRegex("^TRACE\\[.*\\] 0x.* Executing "
+                AnyOf("", ContainsStdRegex("^TRACE\\[.*\\].* Executing "
                                            "CSocket_basic::netaddrp\\(\\)")));
     g_dbug = true;
     captureObj.start();

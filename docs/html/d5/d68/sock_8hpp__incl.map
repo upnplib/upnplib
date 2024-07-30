@@ -1,11 +1,9 @@
 <map id="Compa/src/inc/sock.hpp" name="Compa/src/inc/sock.hpp">
-<area shape="rect" id="Node000001" title="Manage network sockets and connections." alt="" coords="125,5,301,31"/>
-<area shape="rect" id="Node000002" href="$da/dc0/UpnpInet_8hpp.html" title="Provides a platform independent way to include TCP/IP types and functions." alt="" coords="93,79,202,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="204,33,169,70,165,67,200,29"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="226,79,333,104"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="226,29,261,67,257,70,222,33"/>
-<area shape="rect" id="Node000003" href="$da/df8/UpnpUniStd_8hpp.html" title="Do not #include &lt;unistd.h&gt; on WIN32." alt="" coords="5,152,132,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="136,106,93,145,90,141,133,102"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="157,152,295,177"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="162,102,205,141,201,145,158,106"/>
+<area shape="rect" id="Node000001" title="Manage network sockets and connections." alt="" coords="176,5,352,31"/>
+<area shape="rect" id="Node000002" href="$d8/d43/port__sock_8hpp.html" title="Specifications to be portable with sockets between different platforms." alt="" coords="5,79,171,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="237,33,131,76,129,71,235,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="195,79,333,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="267,31,267,65,261,65,261,31"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="357,79,464,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="289,28,376,70,373,75,286,33"/>
 </map>

@@ -6,7 +6,7 @@
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-06-16
+ * Redistribution only with this Copyright remark. Last modified: 2024-07-30
  *
  * - Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
@@ -660,9 +660,9 @@ int SearchByTarget(int Hnd, int Mx, char* St, void* Cookie) {
         strerror_r(errno, errorBuffer, ERROR_BUFFER_LEN);
         UpnpPrintf(UPNP_INFO, SSDP, __FILE__, __LINE__,
                    "SSDP_LIB: Error in select(): %s\n", errorBuffer);
-        UpnpCloseSocket(gSsdpReqSocket4);
+        umock::unistd_h.CLOSE_SOCKET_P(gSsdpReqSocket4);
 #ifdef UPNP_ENABLE_IPV6
-        UpnpCloseSocket(gSsdpReqSocket6);
+        umock::unistd_h.CLOSE_SOCKET_P(gSsdpReqSocket6);
 #endif
         return UPNP_E_INTERNAL_ERROR;
     }

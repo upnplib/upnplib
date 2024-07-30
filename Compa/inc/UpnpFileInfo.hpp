@@ -1,7 +1,7 @@
 #ifndef COMPA_UPNPFILEINFO_HPP
 #define COMPA_UPNPFILEINFO_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-02-03
+// Redistribution only with this Copyright remark. Last modified: 2024-07-31
 // Also Copyright by other contributor as noted below.
 // Last compare with pupnp original source file on 2023-04-25, ver 1.14.15
 /*!
@@ -10,20 +10,16 @@
  * \authors Marcelo Roberto Jimenez, Ingo Höft
  */
 
-#ifdef _WIN32
-#include <UpnpInet.hpp>
-/// \cond
-#include <sys/types.h> // needed for off_t
-/// \endcond
-#else
-/// \cond
-#include <sys/socket.h>
-/// \endcond
-#endif // _WIN32
-
 #include <UpnpString.hpp>
 #include <ixml.hpp>
 #include <list.hpp>
+#include <upnplib/port_sock.hpp>
+
+/// \cond
+#ifdef _WIN32
+#include <sys/types.h> // needed for off_t
+#endif                 // _WIN32
+/// \endcond
 
 /*!
  * UpnpFileInfo

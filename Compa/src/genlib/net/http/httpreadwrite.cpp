@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-07-28
+ * Redistribution only with this Copyright remark. Last modified: 2024-07-30
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -616,7 +616,7 @@ SOCKET http_Connect(uri_type* destination_url, uri_type* url) {
             UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
                        "Error in shutdown: %s\n", std::strerror(errno));
         }
-        UpnpCloseSocket(connfd);
+        umock::unistd_h.CLOSE_SOCKET_P(connfd);
         return (SOCKET)(UPNP_E_SOCKET_CONNECT);
     }
 

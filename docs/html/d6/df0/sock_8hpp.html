@@ -106,7 +106,8 @@ $(document).ready(function(){initNavTree('d6/df0/sock_8hpp.html','../../'); init
 
 <p>Manage network sockets and connections.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;<a class="el" href="../../da/dc0/UpnpInet_8hpp_source.html">UpnpInet.hpp</a>&gt;</code><br />
+<div class="textblock"><code>#include &lt;<a class="el" href="../../d8/d43/port__sock_8hpp_source.html">upnplib/port_sock.hpp</a>&gt;</code><br />
+<code>#include &lt;umock/unistd.hpp&gt;</code><br />
 <code>#include &lt;openssl/ssl.h&gt;</code><br />
 </div><div class="textblock"><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Include dependency graph for sock.hpp:</div>
@@ -115,15 +116,13 @@ $(document).ready(function(){initNavTree('d6/df0/sock_8hpp.html','../../'); init
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d5/d68/sock_8hpp__incl.png" border="0" usemap="#aCompa_2src_2inc_2sock_8hpp" alt=""/></div>
 <map name="aCompa_2src_2inc_2sock_8hpp" id="aCompa_2src_2inc_2sock_8hpp">
-<area shape="rect" title="Manage network sockets and connections." alt="" coords="125,5,301,31"/>
-<area shape="rect" href="../../da/dc0/UpnpInet_8hpp.html" title="Provides a platform independent way to include TCP/IP types and functions." alt="" coords="93,79,202,104"/>
-<area shape="poly" title=" " alt="" coords="204,33,169,70,165,67,200,29"/>
-<area shape="rect" title=" " alt="" coords="226,79,333,104"/>
-<area shape="poly" title=" " alt="" coords="226,29,261,67,257,70,222,33"/>
-<area shape="rect" href="../../da/df8/UpnpUniStd_8hpp.html" title="Do not #include &lt;unistd.h&gt; on WIN32." alt="" coords="5,152,132,177"/>
-<area shape="poly" title=" " alt="" coords="136,106,93,145,90,141,133,102"/>
-<area shape="rect" title=" " alt="" coords="157,152,295,177"/>
-<area shape="poly" title=" " alt="" coords="162,102,205,141,201,145,158,106"/>
+<area shape="rect" title="Manage network sockets and connections." alt="" coords="176,5,352,31"/>
+<area shape="rect" href="../../d8/d43/port__sock_8hpp.html" title="Specifications to be portable with sockets between different platforms." alt="" coords="5,79,171,104"/>
+<area shape="poly" title=" " alt="" coords="237,33,131,76,129,71,235,28"/>
+<area shape="rect" title=" " alt="" coords="195,79,333,104"/>
+<area shape="poly" title=" " alt="" coords="267,31,267,65,261,65,261,31"/>
+<area shape="rect" title=" " alt="" coords="357,79,464,104"/>
+<area shape="poly" title=" " alt="" coords="289,28,376,70,373,75,286,33"/>
 </map>
 </div>
 </div><div class="textblock"><div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -200,13 +199,13 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a703577f3b40fc1c9e865b798beab18e5" id="r_a703577f3b40fc1c9e865b798beab18e5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/df0/sock_8hpp.html#a703577f3b40fc1c9e865b798beab18e5">sock_close</a> (<a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a> sock)</td></tr>
+<tr class="memitem:a703577f3b40fc1c9e865b798beab18e5" id="r_a703577f3b40fc1c9e865b798beab18e5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/df0/sock_8hpp.html#a703577f3b40fc1c9e865b798beab18e5">sock_close</a> (SOCKET sock)</td></tr>
 <tr class="memdesc:a703577f3b40fc1c9e865b798beab18e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Closes the socket if it is different from -1.  <br /></td></tr>
 <tr class="separator:a703577f3b40fc1c9e865b798beab18e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af13a5f56b9850283b5813dff5592149a" id="r_af13a5f56b9850283b5813dff5592149a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/df0/sock_8hpp.html#af13a5f56b9850283b5813dff5592149a">sock_init</a> (<a class="el" href="../../d6/df0/sock_8hpp.html#d9/d4f/structSOCKINFO">SOCKINFO</a> *info, <a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a> sockfd)</td></tr>
+<tr class="memitem:af13a5f56b9850283b5813dff5592149a" id="r_af13a5f56b9850283b5813dff5592149a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/df0/sock_8hpp.html#af13a5f56b9850283b5813dff5592149a">sock_init</a> (<a class="el" href="../../d6/df0/sock_8hpp.html#d9/d4f/structSOCKINFO">SOCKINFO</a> *info, SOCKET sockfd)</td></tr>
 <tr class="memdesc:af13a5f56b9850283b5813dff5592149a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign the passed in socket descriptor to socket descriptor in the <a class="el" href="../../d6/df0/sock_8hpp.html#d9/d4f/structSOCKINFO" title="Additional socket information for connections and ssl.">SOCKINFO</a> structure.  <br /></td></tr>
 <tr class="separator:af13a5f56b9850283b5813dff5592149a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3fcb1b44d376655f9228118679353beb" id="r_a3fcb1b44d376655f9228118679353beb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/df0/sock_8hpp.html#a3fcb1b44d376655f9228118679353beb">sock_init_with_ip</a> (<a class="el" href="../../d6/df0/sock_8hpp.html#d9/d4f/structSOCKINFO">SOCKINFO</a> *info, <a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a> sockfd, struct sockaddr *foreign_sockaddr)</td></tr>
+<tr class="memitem:a3fcb1b44d376655f9228118679353beb" id="r_a3fcb1b44d376655f9228118679353beb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/df0/sock_8hpp.html#a3fcb1b44d376655f9228118679353beb">sock_init_with_ip</a> (<a class="el" href="../../d6/df0/sock_8hpp.html#d9/d4f/structSOCKINFO">SOCKINFO</a> *info, SOCKET sockfd, struct sockaddr *foreign_sockaddr)</td></tr>
 <tr class="memdesc:a3fcb1b44d376655f9228118679353beb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls the sock_init function and assigns the passed in IP address and port to the IP address and port in the <a class="el" href="../../d6/df0/sock_8hpp.html#d9/d4f/structSOCKINFO" title="Additional socket information for connections and ssl.">SOCKINFO</a> structure.  <br /></td></tr>
 <tr class="separator:a3fcb1b44d376655f9228118679353beb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1fef2439727a2dea9bdfec28d62e8a18" id="r_a1fef2439727a2dea9bdfec28d62e8a18"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/df0/sock_8hpp.html#a1fef2439727a2dea9bdfec28d62e8a18">sock_ssl_connect</a> (<a class="el" href="../../d6/df0/sock_8hpp.html#d9/d4f/structSOCKINFO">SOCKINFO</a> *info)</td></tr>
@@ -221,10 +220,10 @@ Functions</h2></td></tr>
 <tr class="memitem:ad1241b973fa76980eef882848fb535c3" id="r_ad1241b973fa76980eef882848fb535c3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/df0/sock_8hpp.html#ad1241b973fa76980eef882848fb535c3">sock_write</a> (<a class="el" href="../../d6/df0/sock_8hpp.html#d9/d4f/structSOCKINFO">SOCKINFO</a> *info, const char *buffer, size_t bufsize, int *timeoutSecs)</td></tr>
 <tr class="memdesc:ad1241b973fa76980eef882848fb535c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes data on the socket in sockinfo.  <br /></td></tr>
 <tr class="separator:ad1241b973fa76980eef882848fb535c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a16e24253d0b6395a88451d7e64b92cd5" id="r_a16e24253d0b6395a88451d7e64b92cd5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/df0/sock_8hpp.html#a16e24253d0b6395a88451d7e64b92cd5">sock_make_blocking</a> (<a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a> sock)</td></tr>
+<tr class="memitem:a16e24253d0b6395a88451d7e64b92cd5" id="r_a16e24253d0b6395a88451d7e64b92cd5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/df0/sock_8hpp.html#a16e24253d0b6395a88451d7e64b92cd5">sock_make_blocking</a> (SOCKET sock)</td></tr>
 <tr class="memdesc:a16e24253d0b6395a88451d7e64b92cd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make socket blocking.  <br /></td></tr>
 <tr class="separator:a16e24253d0b6395a88451d7e64b92cd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7618164e31690bb4a53f99022aec01df" id="r_a7618164e31690bb4a53f99022aec01df"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/df0/sock_8hpp.html#a7618164e31690bb4a53f99022aec01df">sock_make_no_blocking</a> (<a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a> sock)</td></tr>
+<tr class="memitem:a7618164e31690bb4a53f99022aec01df" id="r_a7618164e31690bb4a53f99022aec01df"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/df0/sock_8hpp.html#a7618164e31690bb4a53f99022aec01df">sock_make_no_blocking</a> (SOCKET sock)</td></tr>
 <tr class="memdesc:a7618164e31690bb4a53f99022aec01df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make socket non-blocking.  <br /></td></tr>
 <tr class="separator:a7618164e31690bb4a53f99022aec01df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -247,7 +246,7 @@ Functions</h2></td></tr>
 <div class="textblock"><p>Additional socket information for connections and ssl. </p>
 <dl class="todo"><dt><b><a class="el" href="../../dd/da0/todo.html#_todo000024">Todo:</a></b></dt><dd>Cleanup constants: In &lt;sys/socket.h&gt; are defined SHUT_RD, SHUT_WR, SHUT_RDWR with 0, 1, 2, according to man 2 shutdown. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d6/df0/sock_8hpp_source.html#l00064">64</a> of file <a class="el" href="../../d6/df0/sock_8hpp_source.html">sock.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d6/df0/sock_8hpp_source.html#l00065">65</a> of file <a class="el" href="../../d6/df0/sock_8hpp_source.html">sock.hpp</a>.</p>
 </div><table class="fieldtable">
 <tr><th colspan="3">Class Members</th></tr>
 <tr><td class="fieldtype">
@@ -257,7 +256,7 @@ foreign_sockaddr</td>
 <td class="fielddoc">
 Socket address of the remote node only filled in incoming requests. </td></tr>
 <tr><td class="fieldtype">
-<a id="a03f443b3e255e557c1aae433c1a68821" name="a03f443b3e255e557c1aae433c1a68821"></a><a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a></td>
+<a id="a03f443b3e255e557c1aae433c1a68821" name="a03f443b3e255e557c1aae433c1a68821"></a>SOCKET</td>
 <td class="fieldname">
 socket</td>
 <td class="fielddoc">
@@ -291,7 +290,7 @@ Alternative unused member if OpenSSL isn't compiled in. </td></tr>
         <tr>
           <td class="memname">int sock_close </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a>&#160;</td>
+          <td class="paramtype">SOCKET&#160;</td>
           <td class="paramname"><em>sock</em></td><td>)</td>
           <td></td>
         </tr>
@@ -312,7 +311,7 @@ Alternative unused member if OpenSSL isn't compiled in. </td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d6/df0/sock_8hpp_source.html#l00084">84</a> of file <a class="el" href="../../d6/df0/sock_8hpp_source.html">sock.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d6/df0/sock_8hpp_source.html#l00085">85</a> of file <a class="el" href="../../d6/df0/sock_8hpp_source.html">sock.hpp</a>.</p>
 <div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-2-summary" class="dynsummary" style="display:block;">
@@ -632,7 +631,7 @@ Alternative unused member if OpenSSL isn't compiled in. </td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a>&#160;</td>
+          <td class="paramtype">SOCKET&#160;</td>
           <td class="paramname"><em>sockfd</em>&#160;</td>
         </tr>
         <tr>
@@ -794,7 +793,7 @@ Alternative unused member if OpenSSL isn't compiled in. </td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a>&#160;</td>
+          <td class="paramtype">SOCKET&#160;</td>
           <td class="paramname"><em>sockfd</em>, </td>
         </tr>
         <tr>
@@ -870,7 +869,7 @@ Alternative unused member if OpenSSL isn't compiled in. </td></tr>
         <tr>
           <td class="memname">int sock_make_blocking </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a>&#160;</td>
+          <td class="paramtype">SOCKET&#160;</td>
           <td class="paramname"><em>sock</em></td><td>)</td>
           <td></td>
         </tr>
@@ -893,7 +892,7 @@ Alternative unused member if OpenSSL isn't compiled in. </td></tr>
         <tr>
           <td class="memname">int sock_make_no_blocking </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="../../da/dc0/UpnpInet_8hpp.html#a8dc8083897335125630f1af5dafd5831">SOCKET</a>&#160;</td>
+          <td class="paramtype">SOCKET&#160;</td>
           <td class="paramname"><em>sock</em></td><td>)</td>
           <td></td>
         </tr>
