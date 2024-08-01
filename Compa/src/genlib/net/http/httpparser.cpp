@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-07-31
+ * Redistribution only with this Copyright remark. Last modified: 2024-08-01
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -233,7 +233,8 @@ parse_status_t scanner_get_token( //
                 break;
             } else if (c == '\\') {
                 if (cursor < null_terminator) {
-                    c = *cursor++;
+                    /* c = *cursor++; */
+                    cursor++;
                     /* the char after '\\' could be ANY
                      * octet */
                 }

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-10-27
+ * Redistribution only with this Copyright remark. Last modified: 2024-08-01
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,7 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  **************************************************************************/
-// Last compare with pupnp original source file on 2023-08-24, ver 1.14.18
+// Last compare with pupnp original source file on 2024-08-01, ver 1.14.19
 
 /*!
  * \addtogroup SSDPlib
@@ -821,14 +821,8 @@ static int create_ssdp_sock_v4(
      * windows does not recognize the latter.
      */
     memset((void*)&ssdpMcastAddr, 0, sizeof ssdpMcastAddr);
-#ifdef _WIN32
-    inet_pton(AF_INET, (PCSTR)gIF_IPV4, &ssdpMcastAddr.imr_interface);
-    inet_pton(AF_INET, (PCSTR)SSDP_IP, &ssdpMcastAddr.imr_multiaddr);
-#else
-    ssdpMcastAddr.imr_interface.s_addr = inet_addr(gIF_IPV4);
-    /* ssdpMcastAddr.imr_address.s_addr = inet_addr(gIF_IPV4); */
-    ssdpMcastAddr.imr_multiaddr.s_addr = inet_addr(SSDP_IP);
-#endif
+    inet_pton(AF_INET, gIF_IPV4, &ssdpMcastAddr.imr_interface);
+    inet_pton(AF_INET, SSDP_IP, &ssdpMcastAddr.imr_multiaddr);
     ret = umock::sys_socket_h.setsockopt(
         *ssdpSock, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char*)&ssdpMcastAddr,
         sizeof(struct ip_mreq));
@@ -843,11 +837,7 @@ static int create_ssdp_sock_v4(
     }
     /* Set multicast interface. */
     memset((void*)&addr, 0, sizeof(struct in_addr));
-#ifdef _WIN32
-    inet_pton(AF_INET, (PCSTR)gIF_IPV4, &addr);
-#else
-    addr.s_addr = inet_addr(gIF_IPV4);
-#endif
+    inet_pton(AF_INET, gIF_IPV4, &addr);
     ret = umock::sys_socket_h.setsockopt(*ssdpSock, IPPROTO_IP, IP_MULTICAST_IF,
                                          (char*)&addr, sizeof addr);
     if (ret == -1) {

@@ -4,7 +4,7 @@ Not usable at time. README.md only as draft, work in progress.
 
 ## 1. Overview
 This is a fork of the <a href="https://github.com/pupnp/">Portable SDK for UPnP Devices (pupnp)</a> with the aim of a complete re-engeneering based on <a href="UPnP-arch-DeviceArchitecture-v2.0-20200417.pdf">UPnP™ Device Architecture 2.0</a>. The following general goals are in progress or planned:
-- Drop in compatibillity with the old pupnp library
+- Drop in compatibillity with the old pUPnP library version 1.14.19
 - Continue optimization for embedded devices
 - Based on C++ instead of C
 - Object oriented programming

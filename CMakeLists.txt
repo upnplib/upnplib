@@ -4,7 +4,7 @@
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
 
-set (UPNP_VERSION_STRING "1.14.18")
+set (UPNP_VERSION_STRING "1.14.19")
 set (UPNP_VERSION_MAJOR 1)
 project(UPNPLIB_PROJECT VERSION ${UPNP_VERSION_STRING}
                 DESCRIPTION "UPnP library"

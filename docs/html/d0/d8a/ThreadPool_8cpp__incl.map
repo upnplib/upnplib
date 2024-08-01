@@ -1,19 +1,21 @@
 <map id="Compa/src/threadutil/ThreadPool.cpp" name="Compa/src/threadutil/ThreadPool.cpp">
-<area shape="rect" id="Node000001" title="Manage a threadpool (for internal use only)." alt="" coords="67,5,226,45"/>
-<area shape="rect" id="Node000002" href="$d5/d91/ThreadPool_8hpp.html" title="Manage a threadpool (for internal use only)." alt="" coords="5,93,128,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="129,47,90,85,87,82,125,44"/>
-<area shape="rect" id="Node000007" href="$d1/d3b/synclog_8hpp.html" title="Define macro for synced logging to the console for detailed info and debug." alt="" coords="152,93,304,119"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="168,44,208,82,204,85,165,47"/>
-<area shape="rect" id="Node000003" href="$de/dd1/LinkedList_8hpp.html" title="Manage a linked list (for internal use only)." alt="" coords="9,167,124,192"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="69,119,69,153,64,153,64,119"/>
-<area shape="rect" id="Node000004" href="$d8/d1c/FreeList_8hpp.html" title="Manage a free list (for internal use only)." alt="" coords="16,240,117,265"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="69,192,69,226,64,226,64,192"/>
-<area shape="rect" id="Node000005" href="$d4/d0f/ithread_8hpp.html" title="Deprecated ithread functions redirected to pthread. Internal use Only." alt="" coords="19,313,115,339"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="69,266,69,300,64,300,64,266"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="25,387,109,412"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="69,339,69,373,64,373,64,339"/>
-<area shape="rect" id="Node000008" href="$d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="149,167,305,192"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="230,119,230,153,224,153,225,119"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="329,167,509,192"/>
-<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="260,116,376,159,374,164,258,121"/>
+<area shape="rect" id="Node000001" title="Manage a threadpool (for internal use only)." alt="" coords="239,5,398,45"/>
+<area shape="rect" id="Node000002" href="$d5/d91/ThreadPool_8hpp.html" title="Manage a threadpool (for internal use only)." alt="" coords="165,93,288,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="298,48,253,86,249,82,295,44"/>
+<area shape="rect" id="Node000008" href="$d1/d3b/synclog_8hpp.html" title="Define macro for synced logging to the console for detailed info and debug." alt="" coords="336,93,488,119"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="343,44,389,82,386,86,340,48"/>
+<area shape="rect" id="Node000003" href="$de/dd1/LinkedList_8hpp.html" title="Manage a linked list (for internal use only)." alt="" coords="5,167,120,192"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="201,121,103,164,101,159,199,116"/>
+<area shape="rect" id="Node000007" href="$d8/d43/port__sock_8hpp.html" title="Specifications to be portable with sockets between different platforms." alt="" coords="144,167,309,192"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="229,119,229,153,224,153,224,119"/>
+<area shape="rect" id="Node000004" href="$d8/d1c/FreeList_8hpp.html" title="Manage a free list (for internal use only)." alt="" coords="12,240,113,265"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="65,192,65,226,60,226,60,192"/>
+<area shape="rect" id="Node000005" href="$d4/d0f/ithread_8hpp.html" title="Deprecated ithread functions redirected to pthread. Internal use Only." alt="" coords="15,313,111,339"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="65,266,65,300,60,300,60,266"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="21,387,105,412"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="65,339,65,373,60,373,60,339"/>
+<area shape="rect" id="Node000009" href="$d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="334,167,490,192"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="415,119,415,153,409,153,409,119"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="514,167,694,192"/>
+<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="444,116,561,159,559,164,442,121"/>
 </map>

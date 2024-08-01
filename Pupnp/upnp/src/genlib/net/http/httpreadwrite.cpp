@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-10-26
+ * Redistribution only with this Copyright remark. Last modified: 2024-08-01
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,7 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-// Last compare with pupnp original source file on 2023-08-03, ver 1.14.17
+// Last compare with pupnp original source file on 2024-08-01, ver 1.14.19
 
 /*!
  * \file
@@ -60,7 +60,7 @@
 
 #include <assert.h>
 #include <stdarg.h>
-#include <cstring>
+#include <string.h>
 #include <string>
 
 #include "posix_overwrites.hpp"
@@ -77,12 +77,16 @@
 // #include <sys/types.h>
 #include <sys/utsname.h>
 // #include <sys/wait.h>
+#if defined(__ANDROID__) &&                                                    \
+    (!defined(__USE_FILE_OFFSET64) || __ANDROID_API__ < 24)
+#define fseeko fseek
+#endif
 #endif /* _WIN32 */
 
 // The version string is only used here and will not change much on upgrading to
 // upnplib. To reduce complexity by including upnpconfig.hpp I just set it here.
 // --Ingo
-#define UPNP_VERSION_STRING "1.14.18"
+#define UPNP_VERSION_STRING "1.14.19"
 
 #include "umock/pupnp_sock.hpp"
 #include "umock/pupnp_httprw.hpp"
@@ -333,7 +337,7 @@ SOCKET http_Connect(uri_type* destination_url, uri_type* url) {
 #endif
         if (umock::sys_socket_h.shutdown(connfd, SD_BOTH) == -1) {
             UpnpPrintf(UPNP_INFO, HTTP, __FILE__, __LINE__,
-                       "Error in shutdown: %s\n", std::strerror(errno));
+                       "Error in shutdown: %s\n", strerror(errno));
         }
         UpnpCloseSocket(connfd);
         return (SOCKET)(UPNP_E_SOCKET_CONNECT);

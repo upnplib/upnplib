@@ -1,6 +1,7 @@
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-10-23
+// Redistribution only with this Copyright remark. Last modified: 2024-08-01
 // Taken from authors who haven't made a note.
+// Last compare with pupnp original source file on 2024-08-01, ver 1.14.19
 
 #ifndef PUPNP_UPNPINET_HPP
 #define PUPNP_UPNPINET_HPP
@@ -20,10 +21,8 @@
 #include "umock/unistd.hpp"
 
 #ifdef _WIN32
-#include <winsock2.h>
-
-#include <iphlpapi.h>
 #include <stdarg.h>
+#include <winsock2.h>
 #include <ws2tcpip.h>
 
 #define UpnpCloseSocket umock::unistd_h.closesocket
@@ -34,7 +33,7 @@ typedef short sa_family_t;
 typedef ADDRESS_FAMILY sa_family_t;
 #endif
 
-#else // _WIN32
+#else /* _WIN32 */
 #include <sys/param.h>
 #if defined(__sun)
 // #include <fcntl.h>

@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-07-27
+ * Redistribution only with this Copyright remark. Last modified: 2024-08-01
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,6 +30,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
+// Last compare with pupnp original source file on 2023-08-01, ver 1.14.19
 /*!
  * \file
  * \ingroup UPnPsamples
@@ -291,8 +292,8 @@ error_handler:
 
 int TvDeviceHandleSubscriptionRequest(const UpnpSubscriptionRequest* sr_event) {
     unsigned int i = 0;
-    int cmp1 = 0;
-    int cmp2 = 0;
+    int cmp1{};
+    int cmp2{};
     const char* l_serviceId = NULL;
     const char* l_udn = NULL;
     const char* l_sid = NULL;
@@ -343,7 +344,7 @@ int TvDeviceHandleSubscriptionRequest(const UpnpSubscriptionRequest* sr_event) {
 
 int TvDeviceHandleGetVarRequest(UpnpStateVarRequest* cgv_event) {
     unsigned int i = 0;
-    int j = 0;
+    int j{};
     int getvar_succeeded = 0;
 
     UpnpStateVarRequest_set_CurrentVal(cgv_event, NULL);
@@ -667,40 +668,47 @@ int TvDeviceIncreaseChannel(IXML_Document* in, IXML_Document** out,
 
 int TvDeviceSetVolume(IXML_Document* in, IXML_Document** out,
                       const char** errorString) {
+    int ret;
     char* value = NULL;
     int volume = 0;
 
     (*out) = NULL;
     (*errorString) = NULL;
-    if (!(value = SampleUtil_GetFirstDocumentItem(in, "Volume"))) {
+
+    value = SampleUtil_GetFirstDocumentItem(in, "Volume");
+    if (!value) {
         (*errorString) = "Invalid Volume";
-        return UPNP_E_INVALID_PARAM;
+        ret = UPNP_E_INVALID_PARAM;
+        goto end_function_1;
     }
     volume = atoi(value);
     if (volume < MIN_VOLUME || volume > MAX_VOLUME) {
         SampleUtil_Print("error: can't change to volume %d\n", volume);
         (*errorString) = "Invalid Volume";
-        free(value);
-        return UPNP_E_INVALID_PARAM;
+        ret = UPNP_E_INVALID_PARAM;
+        goto end_function_2;
     }
     /* Vendor-specific code to set the volume goes here. */
-    if (TvDeviceSetServiceTableVar(TV_SERVICE_CONTROL, TV_CONTROL_VOLUME,
-                                   value)) {
-        if (UpnpAddToActionResponse(out, "SetVolume",
-                                    TvServiceType[TV_SERVICE_CONTROL],
-                                    "NewVolume", value) != UPNP_E_SUCCESS) {
-            (*out) = NULL;
-            (*errorString) = "Internal Error";
-            free(value);
-            return UPNP_E_INTERNAL_ERROR;
-        }
-        free(value);
-        return UPNP_E_SUCCESS;
-    } else {
-        free(value);
+    if (!TvDeviceSetServiceTableVar(TV_SERVICE_CONTROL, TV_CONTROL_VOLUME,
+                                    value)) {
         (*errorString) = "Internal Error";
-        return UPNP_E_INTERNAL_ERROR;
+        ret = UPNP_E_INTERNAL_ERROR;
+        goto end_function_2;
     }
+    if (UpnpAddToActionResponse(out, "SetVolume",
+                                TvServiceType[TV_SERVICE_CONTROL], "NewVolume",
+                                value) != UPNP_E_SUCCESS) {
+        (*out) = NULL;
+        (*errorString) = "Internal Error";
+        ret = UPNP_E_INTERNAL_ERROR;
+        goto end_function_2;
+    }
+    ret = UPNP_E_SUCCESS;
+
+end_function_2:
+    free(value);
+end_function_1:
+    return ret;
 }
 
 /*!
@@ -769,40 +777,47 @@ int TvDeviceDecreaseVolume(IXML_Document* in, IXML_Document** out,
 
 int TvDeviceSetColor(IXML_Document* in, IXML_Document** out,
                      const char** errorString) {
+    int ret;
     char* value = NULL;
     int color = 0;
 
     (*out) = NULL;
     (*errorString) = NULL;
-    if (!(value = SampleUtil_GetFirstDocumentItem(in, "Color"))) {
+
+    value = SampleUtil_GetFirstDocumentItem(in, "Color");
+    if (!value) {
         (*errorString) = "Invalid Color";
-        return UPNP_E_INVALID_PARAM;
+        ret = UPNP_E_INVALID_PARAM;
+        goto end_function_1;
     }
     color = atoi(value);
     if (color < MIN_COLOR || color > MAX_COLOR) {
         SampleUtil_Print("error: can't change to color %d\n", color);
         (*errorString) = "Invalid Color";
-        free(value);
-        return UPNP_E_INVALID_PARAM;
+        ret = UPNP_E_INVALID_PARAM;
+        goto end_function_2;
     }
     /* Vendor-specific code to set the volume goes here. */
-    if (TvDeviceSetServiceTableVar(TV_SERVICE_PICTURE, TV_PICTURE_COLOR,
-                                   value)) {
-        if (UpnpAddToActionResponse(out, "SetColor",
-                                    TvServiceType[TV_SERVICE_PICTURE],
-                                    "NewColor", value) != UPNP_E_SUCCESS) {
-            (*out) = NULL;
-            (*errorString) = "Internal Error";
-            free(value);
-            return UPNP_E_INTERNAL_ERROR;
-        }
-        free(value);
-        return UPNP_E_SUCCESS;
-    } else {
-        free(value);
+    if (!TvDeviceSetServiceTableVar(TV_SERVICE_PICTURE, TV_PICTURE_COLOR,
+                                    value)) {
         (*errorString) = "Internal Error";
-        return UPNP_E_INTERNAL_ERROR;
+        ret = UPNP_E_INTERNAL_ERROR;
+        goto end_function_2;
     }
+    if (UpnpAddToActionResponse(out, "SetColor",
+                                TvServiceType[TV_SERVICE_PICTURE], "NewColor",
+                                value) != UPNP_E_SUCCESS) {
+        (*out) = NULL;
+        (*errorString) = "Internal Error";
+        ret = UPNP_E_INTERNAL_ERROR;
+        goto end_function_2;
+    }
+    ret = UPNP_E_SUCCESS;
+
+end_function_2:
+    free(value);
+end_function_1:
+    return ret;
 }
 
 /*!
@@ -871,40 +886,47 @@ int TvDeviceIncreaseColor(IXML_Document* in, IXML_Document** out,
 
 int TvDeviceSetTint(IXML_Document* in, IXML_Document** out,
                     const char** errorString) {
+    int ret;
     char* value = NULL;
     int tint = -1;
 
     (*out) = NULL;
     (*errorString) = NULL;
-    if (!(value = SampleUtil_GetFirstDocumentItem(in, "Tint"))) {
+
+    value = SampleUtil_GetFirstDocumentItem(in, "Tint");
+    if (!value) {
         (*errorString) = "Invalid Tint";
-        return UPNP_E_INVALID_PARAM;
+        ret = UPNP_E_INVALID_PARAM;
+        goto end_function_1;
     }
     tint = atoi(value);
     if (tint < MIN_TINT || tint > MAX_TINT) {
         SampleUtil_Print("error: can't change to tint %d\n", tint);
         (*errorString) = "Invalid Tint";
-        free(value);
-        return UPNP_E_INVALID_PARAM;
+        ret = UPNP_E_INVALID_PARAM;
+        goto end_function_2;
     }
     /* Vendor-specific code to set the volume goes here. */
     if (TvDeviceSetServiceTableVar(TV_SERVICE_PICTURE, TV_PICTURE_TINT,
                                    value)) {
-        if (UpnpAddToActionResponse(out, "SetTint",
-                                    TvServiceType[TV_SERVICE_PICTURE],
-                                    "NewTint", value) != UPNP_E_SUCCESS) {
-            (*out) = NULL;
-            (*errorString) = "Internal Error";
-            free(value);
-            return UPNP_E_INTERNAL_ERROR;
-        }
-        free(value);
-        return UPNP_E_SUCCESS;
-    } else {
-        free(value);
         (*errorString) = "Internal Error";
-        return UPNP_E_INTERNAL_ERROR;
+        ret = UPNP_E_INTERNAL_ERROR;
+        goto end_function_2;
     }
+    if (UpnpAddToActionResponse(out, "SetTint",
+                                TvServiceType[TV_SERVICE_PICTURE], "NewTint",
+                                value) != UPNP_E_SUCCESS) {
+        (*out) = NULL;
+        (*errorString) = "Internal Error";
+        ret = UPNP_E_INTERNAL_ERROR;
+        goto end_function_2;
+    }
+    ret = UPNP_E_SUCCESS;
+
+end_function_2:
+    free(value);
+end_function_1:
+    return ret;
 }
 
 /*!
@@ -1013,41 +1035,47 @@ int TvDeviceDecreaseTint(IXML_Document* in, IXML_Document** out,
  ****************************************************************************/
 int TvDeviceSetContrast(IXML_Document* in, IXML_Document** out,
                         const char** errorString) {
+    int ret;
     char* value = NULL;
     int contrast = -1;
 
     (*out) = NULL;
     (*errorString) = NULL;
 
-    if (!(value = SampleUtil_GetFirstDocumentItem(in, "Contrast"))) {
+    value = SampleUtil_GetFirstDocumentItem(in, "Contrast");
+    if (!value) {
         (*errorString) = "Invalid Contrast";
-        return UPNP_E_INVALID_PARAM;
+        ret = UPNP_E_INVALID_PARAM;
+        goto end_function_1;
     }
     contrast = atoi(value);
     if (contrast < MIN_CONTRAST || contrast > MAX_CONTRAST) {
         SampleUtil_Print("error: can't change to contrast %d\n", contrast);
         (*errorString) = "Invalid Contrast";
-        free(value);
-        return UPNP_E_INVALID_PARAM;
+        ret = UPNP_E_INVALID_PARAM;
+        goto end_function_2;
     }
     /* Vendor-specific code to set the volume goes here. */
-    if (TvDeviceSetServiceTableVar(TV_SERVICE_PICTURE, TV_PICTURE_CONTRAST,
-                                   value)) {
-        if (UpnpAddToActionResponse(out, "SetContrast",
-                                    TvServiceType[TV_SERVICE_PICTURE],
-                                    "NewContrast", value) != UPNP_E_SUCCESS) {
-            (*out) = NULL;
-            (*errorString) = "Internal Error";
-            free(value);
-            return UPNP_E_INTERNAL_ERROR;
-        }
-        free(value);
-        return UPNP_E_SUCCESS;
-    } else {
-        free(value);
+    if (!TvDeviceSetServiceTableVar(TV_SERVICE_PICTURE, TV_PICTURE_CONTRAST,
+                                    value)) {
         (*errorString) = "Internal Error";
-        return UPNP_E_INTERNAL_ERROR;
+        ret = UPNP_E_INTERNAL_ERROR;
+        goto end_function_2;
     }
+    if (UpnpAddToActionResponse(out, "SetContrast",
+                                TvServiceType[TV_SERVICE_PICTURE],
+                                "NewContrast", value) != UPNP_E_SUCCESS) {
+        (*out) = NULL;
+        (*errorString) = "Internal Error";
+        ret = UPNP_E_INTERNAL_ERROR;
+        goto end_function_2;
+    }
+    ret = UPNP_E_SUCCESS;
+
+end_function_2:
+    free(value);
+end_function_1:
+    return ret;
 }
 
 /*!
@@ -1116,40 +1144,47 @@ int TvDeviceDecreaseContrast(IXML_Document* in, IXML_Document** out,
 
 int TvDeviceSetBrightness(IXML_Document* in, IXML_Document** out,
                           const char** errorString) {
+    int ret;
     char* value = NULL;
     int brightness = -1;
 
     (*out) = NULL;
     (*errorString) = NULL;
-    if (!(value = SampleUtil_GetFirstDocumentItem(in, "Brightness"))) {
+
+    value = SampleUtil_GetFirstDocumentItem(in, "Brightness");
+    if (!value) {
         (*errorString) = "Invalid Brightness";
-        return UPNP_E_INVALID_PARAM;
+        ret = UPNP_E_INVALID_PARAM;
+        goto end_function_1;
     }
     brightness = atoi(value);
     if (brightness < MIN_BRIGHTNESS || brightness > MAX_BRIGHTNESS) {
         SampleUtil_Print("error: can't change to brightness %d\n", brightness);
         (*errorString) = "Invalid Brightness";
-        free(value);
-        return UPNP_E_INVALID_PARAM;
+        ret = UPNP_E_INVALID_PARAM;
+        goto end_function_2;
     }
     /* Vendor-specific code to set the volume goes here. */
-    if (TvDeviceSetServiceTableVar(TV_SERVICE_PICTURE, TV_PICTURE_BRIGHTNESS,
-                                   value)) {
-        if (UpnpAddToActionResponse(out, "SetBrightness",
-                                    TvServiceType[TV_SERVICE_PICTURE],
-                                    "NewBrightness", value) != UPNP_E_SUCCESS) {
-            (*out) = NULL;
-            (*errorString) = "Internal Error";
-            free(value);
-            return UPNP_E_INTERNAL_ERROR;
-        }
-        free(value);
-        return UPNP_E_SUCCESS;
-    } else {
-        free(value);
+    if (!TvDeviceSetServiceTableVar(TV_SERVICE_PICTURE, TV_PICTURE_BRIGHTNESS,
+                                    value)) {
         (*errorString) = "Internal Error";
-        return UPNP_E_INTERNAL_ERROR;
+        ret = UPNP_E_INTERNAL_ERROR;
+        goto end_function_2;
     }
+    if (UpnpAddToActionResponse(out, "SetBrightness",
+                                TvServiceType[TV_SERVICE_PICTURE],
+                                "NewBrightness", value) != UPNP_E_SUCCESS) {
+        (*out) = NULL;
+        (*errorString) = "Internal Error";
+        ret = UPNP_E_INTERNAL_ERROR;
+        goto end_function_2;
+    }
+    ret = UPNP_E_SUCCESS;
+
+end_function_2:
+    free(value);
+end_function_1:
+    return ret;
 }
 
 /*!

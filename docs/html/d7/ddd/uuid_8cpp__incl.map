@@ -1,9 +1,9 @@
 <map id="Compa/src/uuid/uuid.cpp" name="Compa/src/uuid/uuid.cpp">
-<area shape="rect" id="Node000001" title="Manage UUIDs." alt="" coords="138,5,321,31"/>
+<area shape="rect" id="Node000001" title="Manage UUIDs." alt="" coords="147,5,330,31"/>
 <area shape="rect" id="Node000002" href="$d7/db4/uuid_8hpp.html" title="Manage UUIDs." alt="" coords="126,79,205,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="221,33,187,70,183,67,217,29"/>
-<area shape="rect" id="Node000010" href="$d1/d42/port_8hpp.html" title="Specifications to be portable between different platforms." alt="" coords="229,79,357,104"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="242,29,276,67,272,70,238,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="228,33,189,71,185,67,225,29"/>
+<area shape="rect" id="Node000010" href="$d8/d43/port__sock_8hpp.html" title="Specifications to be portable with sockets between different platforms." alt="" coords="229,79,395,104"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="253,29,292,67,288,71,249,33"/>
 <area shape="rect" id="Node000003" href="$d5/de9/sysdep_8hpp.html" title="Get some system dependent information." alt="" coords="117,152,213,177"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="168,104,168,138,163,138,163,104"/>
 <area shape="rect" id="Node000004" href="$d4/d0f/ithread_8hpp.html" title="Deprecated ithread functions redirected to pthread. Internal use Only." alt="" coords="5,225,101,251"/>

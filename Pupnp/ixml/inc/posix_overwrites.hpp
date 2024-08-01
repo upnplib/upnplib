@@ -3,6 +3,7 @@
 #ifdef _WIN32
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
 // Redistribution only with this Copyright remark. Last modified: 2023-10-07
+// Last compare with pupnp original source file on 2024-08-01, ver 1.14.19
 
 /* POSIX names for functions */
 #define fileno _fileno

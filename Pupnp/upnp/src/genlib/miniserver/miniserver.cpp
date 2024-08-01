@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-03-21
+ * Redistribution only with this Copyright remark. Last modified: 2024-08-01
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,7 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  **************************************************************************/
-// Last compare with pupnp original source file on 2023-08-24, ver 1.14.18
+// Last compare with pupnp original source file on 2024-08-01, ver 1.14.19
 
 #include "config.hpp"
 
@@ -1035,11 +1035,7 @@ static int get_miniserver_stopsock(
     /* Bind to local socket. */
     memset(&stop_sockaddr, 0, sizeof(stop_sockaddr));
     stop_sockaddr.sin_family = (sa_family_t)AF_INET;
-#ifdef _WIN32
     inet_pton(AF_INET, "127.0.0.1", &stop_sockaddr.sin_addr);
-#else
-    stop_sockaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-#endif
     ret = umock::sys_socket_h.bind(miniServerStopSock,
                                    (struct sockaddr*)&stop_sockaddr,
                                    sizeof(stop_sockaddr));
@@ -1220,11 +1216,7 @@ int StopMiniServer() {
     }
     while (gMServState != (MiniServerState)MSERV_IDLE) {
         ssdpAddr.sin_family = (sa_family_t)AF_INET;
-#ifdef _WIN32
         inet_pton(AF_INET, "127.0.0.1", &ssdpAddr.sin_addr);
-#else
-        ssdpAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-#endif
         ssdpAddr.sin_port = htons(miniStopSockPort);
         umock::sys_socket_h.sendto(sock, buf, bufLen, 0,
                                    (struct sockaddr*)&ssdpAddr, socklen);

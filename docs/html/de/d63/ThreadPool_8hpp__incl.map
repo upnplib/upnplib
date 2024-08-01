@@ -1,11 +1,13 @@
 <map id="Compa/src/threadutil/ThreadPool.hpp" name="Compa/src/threadutil/ThreadPool.hpp">
-<area shape="rect" id="Node000001" title="Manage a threadpool (for internal use only)." alt="" coords="5,5,164,45"/>
-<area shape="rect" id="Node000002" href="$de/dd1/LinkedList_8hpp.html" title="Manage a linked list (for internal use only)." alt="" coords="27,93,142,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,46,87,79,82,79,82,46"/>
-<area shape="rect" id="Node000003" href="$d8/d1c/FreeList_8hpp.html" title="Manage a free list (for internal use only)." alt="" coords="34,167,135,192"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="87,119,87,153,82,153,82,119"/>
-<area shape="rect" id="Node000004" href="$d4/d0f/ithread_8hpp.html" title="Deprecated ithread functions redirected to pthread. Internal use Only." alt="" coords="37,240,133,265"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="87,192,87,226,82,226,82,192"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="43,313,127,339"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="87,266,87,300,82,300,82,266"/>
+<area shape="rect" id="Node000001" title="Manage a threadpool (for internal use only)." alt="" coords="65,5,223,45"/>
+<area shape="rect" id="Node000002" href="$de/dd1/LinkedList_8hpp.html" title="Manage a linked list (for internal use only)." alt="" coords="5,93,120,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,47,87,85,83,82,122,44"/>
+<area shape="rect" id="Node000006" href="$d8/d43/port__sock_8hpp.html" title="Specifications to be portable with sockets between different platforms." alt="" coords="144,93,309,119"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="166,44,206,82,203,86,162,47"/>
+<area shape="rect" id="Node000003" href="$d8/d1c/FreeList_8hpp.html" title="Manage a free list (for internal use only)." alt="" coords="12,167,113,192"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="65,119,65,153,60,153,60,119"/>
+<area shape="rect" id="Node000004" href="$d4/d0f/ithread_8hpp.html" title="Deprecated ithread functions redirected to pthread. Internal use Only." alt="" coords="15,240,111,265"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="65,192,65,226,60,226,60,192"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="21,313,105,339"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="65,266,65,300,60,300,60,266"/>
 </map>

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-07-30
+ * Redistribution only with this Copyright remark. Last modified: 2024-08-01
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,7 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-// Last compare with ./pupnp source file on 2023-08-03, ver 1.14.17
+// Last adjustment with ./pupnp source file on 2024-08-01, pUPnP ver 1.14.19
 
 /*!
  * \file
@@ -65,6 +65,10 @@
 #else /* _WIN32 */
 /// \cond
 #include <sys/utsname.h>
+#if defined(__ANDROID__) &&                                                    \
+    (!defined(__USE_FILE_OFFSET64) || __ANDROID_API__ < 24)
+#define fseeko fseek
+#endif
 /// \endcond
 #endif /* _WIN32 */
 

@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-07-28
+ * Redistribution only with this Copyright remark. Last modified: 2024-08-01
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -2853,8 +2853,8 @@ int UpnpWriteHttpPost(void* handle, char* buf, size_t* size, int timeout) {
 int UpnpCloseHttpPost(void* handle, int* httpStatus, int timeout) {
     int status = http_EndHttpRequest(handle, timeout);
     if (status == UPNP_E_SUCCESS) {
-        status =
-            http_GetHttpResponse(handle, NULL, NULL, NULL, httpStatus, timeout);
+        /* status = */ http_GetHttpResponse(handle, NULL, NULL, NULL,
+                                            httpStatus, timeout);
     }
     status = http_CloseHttpConnection(handle);
     return status;

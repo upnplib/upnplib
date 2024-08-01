@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-02-26
+ * Redistribution only with this Copyright remark. Last modified: 2024-08-01
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,7 +31,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-// Last compare with pupnp original source file on 2023-07-08, ver 1.14.17
+// Last compare with pupnp original source file on 2024-08-01, ver 1.14.19
 
 /*!
  * \addtogroup UPnPAPI
@@ -85,7 +85,7 @@
 #include "posix_overwrites.hpp"
 
 #ifdef _WIN32
-/* Do not include these files */
+#include <iphlpapi.h>
 #else
 #include <ifaddrs.h>
 #include <sys/ioctl.h>
@@ -101,12 +101,6 @@
 
 #ifdef UPNP_ENABLE_OPEN_SSL
 #include <openssl/ssl.h>
-#endif
-
-// Guard for including correct header files. This is an issue with similar compa
-// header files.
-#ifndef PUPNP_UPNPSTRING_HPP
-#error "Wrong UpnpString.hpp header file included for PUPNP."
 #endif
 
 #ifndef IN6_IS_ADDR_GLOBAL
@@ -2946,8 +2940,8 @@ int UpnpWriteHttpPost(void* handle, char* buf, size_t* size, int timeout) {
 int UpnpCloseHttpPost(void* handle, int* httpStatus, int timeout) {
     int status = http_EndHttpRequest(handle, timeout);
     if (status == UPNP_E_SUCCESS) {
-        status =
-            http_GetHttpResponse(handle, NULL, NULL, NULL, httpStatus, timeout);
+        /* status = */ http_GetHttpResponse(handle, NULL, NULL, NULL,
+                                            httpStatus, timeout);
     }
     status = http_CloseHttpConnection(handle);
     return status;

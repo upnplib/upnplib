@@ -1,0 +1,239 @@
+commit 8881fa01b36e5043a492145f5ce6ba31a2dabf07 (HEAD, tag: release-1.14.19)
+
+git switch branch-1.14.x
+git checkout release-1.14.19
+git whatchanged release-1.14.18^..release-1.14.19
+updated files are marked with the word "updated" or "deleted" at the line end.
+============================================================================
+
+commit 8881fa01b36e5043a492145f5ce6ba31a2dabf07 (HEAD, tag: release-1.14.19)
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Mon Apr 22 15:44:46 2024 -0300
+
+    ChangeLog, README.md and THANKS
+
+:100644 100644 be67cf85 3170eba1 M	ChangeLog
+:100644 100644 355062e1 1299be77 M	README.md
+:100644 100644 ceb2a780 b570932b M	THANKS
+
+commit c8456393103e4f961817a30e14bead5cd5ccc505
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Mon Apr 22 15:27:08 2024 -0300
+
+    clang-format
+
+:100644 100644 045e5d51 ae695d18 M	upnp/src/genlib/net/http/httpreadwrite.c updated
+
+commit 531990c26baa95d95cf3f117e72803e7bccee599
+Author: Steve Lhomme <robux4@ycbcr.xyz>
+Date:   Mon Apr 22 13:17:15 2024 +0200
+
+    disable fseeko usage on 32-bit Android older than API 24
+
+    feesko is not supported on 32-bit Android older than API 24 [1].
+    Older SDKs would allow the call but the 64-bit off_t was not accurate.
+    With the NDK26 the call is hidden in that case and calling fseeko() results in a compilation error.
+
+    [1] https://android.googlesource.com/platform/bionic/+/main/docs/32-bit-abi.md
+
+:100644 100644 27e9c3a5 045e5d51 M	upnp/src/genlib/net/http/httpreadwrite.c updated
+
+commit 5ad7fd0a3b7461e3786f77df78d92f2a72c88eca
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Fri Feb 23 19:59:29 2024 -0300
+
+    clang-format
+
+:100644 100644 b228c944 de897f59 M	ixml/src/inc/ixmlparser.h no action
+:100644 100644 fc8c6431 8f41df0a M	ixml/src/ixmlparser.c no action
+
+commit f84e056d506801393e184e933203487f8cf72bea
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Fri Feb 23 19:43:08 2024 -0300
+
+    Fix some clangd complaints
+
+:100644 100644 35f2006d b228c944 M	ixml/src/inc/ixmlparser.h no aetion
+:100644 100644 ab902c3b fc8c6431 M	ixml/src/ixmlparser.c no action
+:100644 100644 9d81f366 590acbc7 M	upnp/src/api/upnpapi.c updated
+:100644 100644 3e8ae4ee 6281f6b4 M	upnp/src/genlib/net/http/httpparser.c updated
+
+commit 0ce298fa694780962ffd808ac6e3d802e96f3e7b
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Tue Feb 20 22:28:26 2024 -0300
+
+    Update gitignore
+
+:100644 100644 7086fe87 db5e53c5 M	.gitignore
+
+commit c6f9fc1b766c393d1ea9cc2d7f70ac4ef1d72d4c
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Mon Feb 19 16:36:50 2024 -0300
+
+    Some consts
+
+:100644 100644 3a75c373 3e58ddc8 M	upnp/generator/generator.c
+
+commit ffe5c454de1d004da16e94505e57584bce164dfb
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Mon Feb 19 16:36:28 2024 -0300
+
+    Bug fix: incorrect malloc test
+
+:100644 100644 7f1953ec 3a75c373 M	upnp/generator/generator.c
+
+commit 78a916ecb06af33c6dcc43b49744da4d85cae013
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Tue Feb 20 00:38:30 2024 -0300
+
+    generator: Improve script
+
+:100644 100644 7f363be2 e6680c5f M	upnp/generator/Makefile
+:100755 100755 963448da bff44270 M	upnp/generator/compile.sh
+
+commit d6c52e8f0c712dce879397aa43cd6bca22ebf04a
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Mon Feb 19 11:58:37 2024 -0300
+
+    Freelist: remove unused variable
+
+:100644 100644 41c51e91 3eede7c2 M	upnp/src/threadutil/FreeList.c updated
+
+commit 76008ceeee905dface9e0f417d6b0097b8189708
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Mon Feb 19 11:58:11 2024 -0300
+
+    Update .gitignore
+
+:100644 100644 6dd3d57b 7086fe87 M	.gitignore
+
+commit 5fb304af0e011b6b50e6d88ade4312da13d41212
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Mon Feb 19 11:57:25 2024 -0300
+
+    Remove log from repository
+
+:100644 000000 ff802310 00000000 D	upnp/libupnp_err.log no action
+
+commit d0e14be1737cc2015a70dea37266e45e0a6b7a0e
+Author: Rosen Penev <rosenp@gmail.com>
+Date:   Sat Jan 20 16:35:35 2024 -0800
+
+    get rid of no longer true comment
+    
+    Also remove gethostbyname checks as the function is not used.
+    
+    Signed-off-by: Rosen Penev <rosenp@gmail.com>
+
+:100644 100644 de7f4525 ae117fbb M	CMakeLists.txt
+:100644 100644 7d8e01c2 a5d38d18 M	configure.ac
+:100644 100644 556c9e56 772d671e M	upnp/src/genlib/net/uri/uri.c updated
+
+commit 564d743d80ed2072940c36ea28baf98472501380
+Author: Rosen Penev <rosenp@gmail.com>
+Date:   Sat Jan 20 16:33:09 2024 -0800
+
+    remove inet_addr usage
+    
+    Deprecated.
+    
+    Signed-off-by: Rosen Penev <rosenp@gmail.com>
+
+:100644 100644 f332e41d c4c1a25b M	upnp/src/genlib/miniserver/miniserver.c updated
+:100644 100644 e66efe1f 28c7b5a1 M	upnp/src/ssdp/ssdp_server.c updated
+
+commit f2d84e1835af805854122f98688f4ddcb35397aa
+Author: Rosen Penev <rosenp@gmail.com>
+Date:   Thu Dec 28 20:35:02 2023 -0800
+
+    UpnpInet: remove iphlpapi include
+
+    Not only is it unused, projects that pass -DNOCOMM under Windows end up
+    failing compilation as more headers need to be included. Simpler to just
+    move the include to where it's needed.
+
+:100644 100644 8a7d456c a940c9b0 M	upnp/inc/UpnpInet.h updated
+:100644 100644 d45dcbff 9d81f366 M	upnp/src/api/upnpapi.c updated
+
+commit 610c36cfe2c057de0d2b78a47789c0c8a4e65a7d
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Sun Oct 1 17:35:44 2023 -0300
+
+    [tv_device] Fix more memory leaks
+
+    Closes #430
+
+:000000 100644 00000000 ff802310 A	upnp/libupnp_err.log no action, removed later
+:100644 100644 3275d0b8 7b64f26f M	upnp/sample/common/tv_device.c updated 
+
+commit d988fec09b8b264ab7db693af13aabb8679f8363
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Sun Sep 17 10:51:01 2023 -0300
+
+    Fix typing error
+
+:100644 100644 db0aa2c4 162ccf9b M	ixml/inc/posix_overwrites.h updated
+
+commit 1b712a0c7d967eb0cd8d4cdcc8c92410fab83375
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Sat Sep 16 22:06:57 2023 -0300
+
+    Fix autotools bootstrap
+
+    Add necessary m4 files and remove AC_CHECK_INCLUDES_DEFAULT.
+
+:100644 100644 1351634f 7d8e01c2 M	configure.ac
+:000000 100644 00000000 039f99d2 A	m4/ax_compiler_vendor.m4
+:000000 100644 00000000 adac8c5a A	m4/ax_prepend_flag.m4
+:000000 100644 00000000 17c3eab7 A	m4/ax_require_defined.m4
+
+commit dd861d40adf70700877f04df929c37720ce85146
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Sat Sep 16 15:52:29 2023 -0300
+
+    Changelog update
+
+:100644 100644 af0d4213 be67cf85 M	ChangeLog
+
+commit 6fd9331439249db2a27c3b370f47d6014b1ba5be
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Sat Sep 16 15:48:29 2023 -0300
+
+    [tv_device] Fix memory allocation in TvDeviceSetContrast()
+
+    This is part of the work in #430
+
+:100644 100644 acf579df 3275d0b8 M	upnp/sample/common/tv_device.c updated
+
+commit 470041b0af217af0dd3f85f36ff1d65139d14dc4
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Sat Sep 16 15:44:08 2023 -0300
+
+    Updated some old AX macro files to fix bootstrap messages
+
+:100644 100644 caab3787 1351634f M	configure.ac
+:100644 100644 9a4d62a7 05df33b6 M	m4/ax_cflags_gcc_option.m4
+:100644 100644 48f9ecad 9235a18c M	m4/ax_cflags_warn_all.m4
+:100644 100644 0300e4ed 9f35d139 M	m4/ax_pthread.m4
+:100644 100644 9f5cff6c 88c0570c M	m4/ax_sys_largefile_sensitive.m4
+
+commit 2388207fc291cdc3bf1b3e98be96f80e3de3e992
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Mon Aug 21 18:47:15 2023 -0300
+
+    Homekeeping for the next release
+
+:100644 100644 56801c86 af0d4213 M	ChangeLog
+:100644 100644 3b10e17d caab3787 M	configure.ac
+:100644 100644 9ac77218 f406c61d M	docs/Doxyfile
+:100644 100644 45446ea8 12ccfc1d M	libupnp.spec
+
+commit c540ce2431bdeac73359029d4592b45790e1d154 (tag: release-1.14.18)
+Author: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Mon Aug 21 18:36:43 2023 -0300
+
+    ChangeLog, README.md and THANKS
+
+:100644 100644 0886c7fd 56801c86 M	ChangeLog
+:100644 100644 2dbdc144 355062e1 M	README.md
+:100644 100644 08e81df6 ceb2a780 M	THANKS
