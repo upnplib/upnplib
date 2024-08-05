@@ -4,7 +4,7 @@ Not usable at time. README.md only as draft, work in progress.
 
 ## 1. Overview
 This is a fork of the <a href="https://github.com/pupnp/">Portable SDK for UPnP Devices (pupnp)</a> with the aim of a complete re-engeneering based on <a href="UPnP-arch-DeviceArchitecture-v2.0-20200417.pdf">UPnP™ Device Architecture 2.0</a>. The following general goals are in progress or planned:
-- Drop in compatibillity with the old pUPnP library version 1.14.19
+- Drop in compatibillity with the old pUPnP library
 - Continue optimization for embedded devices
 - Based on C++ instead of C
 - Object oriented programming
@@ -17,19 +17,17 @@ Here you can find the [**Technical Documentation**](pages.html).\n
 If you want to be compatible with the classic pUPnP library here you find the [Compatible API](\ref compaAPI).\n
 To use the new written object oriented part of the library here you find its [UPnPlib API](\ref upnplibAPI).
 
-<!--
-## 2. Version numbering
-We follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html#semantic-versioning-200).
-
-The fork is based on [release-1.14.18](https://github.com/pupnp/pupnp/releases/tag/release-1.14.18) from the pupnp library. Because it is intended to be backwards compatible on the API we start with release number 1.14.0 for this repository to reflect it by following
+## 3. Version numbering
+We follow the [Semantic Versioning](https://semver.org/spec/v2.0.0.html#semantic-versioning-200). In short it defines
 - MAJOR version when you make incompatible API changes,
-- MINOR version when you add functionality in a backwards compatible manner, and
+- MINOR version when you add or modify functionality in a backwards compatible manner, and
 - PATCH version when you make backwards compatible bug fixes.
 
-Because we will use CMake to manage the code it can be seen as integral part of it. The version number will also include changes to the CMake system.
--->
+The UPnpLib version starts with 0.1.0. Major version 0 means it's not a productive version but under developement. Because we will use CMake to manage the code it can be seen as integral part of the project. The UPnPlib version number will also reflect changes to the CMake configuration.
 
-## 3. Milestones
+This fork is based on [release-1.14.19](https://github.com/pupnp/pupnp/releases/tag/release-1.14.19) of the pupnp library.
+
+## 4. Milestones
 - Ongoing: create extensive Unit Tests without modification of the old source code
 - Ongoing: define C++ interfaces for the API
 - Ongoing: change old C program to C++ objects but preserve drop in compatibility
@@ -51,10 +49,10 @@ Because we will use CMake to manage the code it can be seen as integral part of 
 These names are also the names of the CMake subprojects.
 -->
 
-## 4. Build Instructions
+## 5. Build Instructions
 If nothing others said we are always staying at the root directory of the project (CMAKE_SOURCE_DIR), that is **upnplib_project/** if you don't changed the name.
 
-### 4.1. Linux and MacOS build
+### 5.1. Linux and MacOS build
 First configure then build:
 
     upnplib_project$ cmake -S . -B build -D UPNPLIB_WITH_SAMPLES=YES
@@ -64,7 +62,7 @@ To clean up a build just delete the build folder:
 
     upnplib_project$ rm -rf build
 
-### 4.2. Microsoft Windows build
+### 5.2. Microsoft Windows build
 The developement of this UPnP Library has started on Linux. So for historical reasons it uses POSIX threads (pthreads) as specified by [The Open Group](http://get.posixcertified.ieee.org/certification_guide.html). Unfortunately Microsoft Windows does not support it so I have to use a third party library. I use the well known and well supported [pthreads4w library](https://sourceforge.net/p/pthreads4w). It will be downloaded on Microsoft Windows and compiled with building the project and should do out of the box. To build the UPnPlib you need a Developer Command Prompt. How to install it is out of scope of this description. Microsoft has good documentation about it. For example this is the prompt I used:
 
     **********************************************************************
@@ -90,7 +88,7 @@ To clean up a build just delete the build folder:
 
 If you need more details about installation of POSIX threads on Microsoft Windows I have made an example at [github pthreadsWinLin](https://github.com/upnplib/pthreadsWinLin.git).
 
-### 4.3 Googletest build
+### 5.3 Googletest build
 I strongly recommend to use shared gtest libraries for this project because there are situations where static and shared libraries are linked together. Using static linked Googletest libraries may fail then. If you know what you ar doing and you are able to manage possible linker errors you can try to use static built Googletest libraries.
 
     # strongly recommended shared libs
@@ -114,10 +112,10 @@ PT4W_BUILD_TESTING=[ON\|OFF] | OFF | Runs the testsuite of pthreads4w (PT4W) wit
 
 - -D DEVEL=OFF          This enables some additional information for developement. It preserves installation options that normaly will be deleted after Installation for Optimisation so you can examine them. These are mainly the installation directory from **pthread4w** and its temporary installation files even on a non MS Windows environment.
 -->
-## 5. Limitations
+## 6. Limitations
 No limits documented so far.
 
 <pre><sup>
 Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, \<Ingo@Hoeft-online.de>
-Redistribution only with this Copyright remark. Last modified: 2024-04-21
+Redistribution only with this Copyright remark. Last modified: 2024-08-04
 </sup></pre>

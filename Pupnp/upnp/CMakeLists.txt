@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-02-23
+# Redistribution only with this Copyright remark. Last modified: 2024-08-05
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -81,31 +81,29 @@ endif()
 #----------------------------------
 
 set(PUPNP_SOURCE_FILES
-    ./src/init.cpp
+    src/threadutil/FreeList.cpp
+    src/threadutil/LinkedList.cpp
+    src/threadutil/ThreadPool.cpp
+    src/threadutil/TimerThread.cpp
 
-    ./src/threadutil/FreeList.cpp
-    ./src/threadutil/LinkedList.cpp
-    ./src/threadutil/ThreadPool.cpp
-    ./src/threadutil/TimerThread.cpp
+    src/genlib/net/sock.cpp
+    src/genlib/net/uri/uri.cpp
 
-    ./src/genlib/net/sock.cpp
-    ./src/genlib/net/uri/uri.cpp
+    src/genlib/net/http/httpparser.cpp
+    src/genlib/net/http/httpreadwrite.cpp
+    src/genlib/net/http/statcodes.cpp
+    src/genlib/net/http/webserver.cpp
+    src/genlib/net/http/parsetools.cpp
 
-    ./src/genlib/net/http/httpparser.cpp
-    ./src/genlib/net/http/httpreadwrite.cpp
-    ./src/genlib/net/http/statcodes.cpp
-    ./src/genlib/net/http/webserver.cpp
-    ./src/genlib/net/http/parsetools.cpp
+    src/genlib/util/list.cpp
+    src/genlib/util/membuffer.cpp
+    src/genlib/util/strintmap.cpp
+    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>:src/genlib/util/util.cpp>
 
-    ./src/genlib/util/list.cpp
-    ./src/genlib/util/membuffer.cpp
-    ./src/genlib/util/strintmap.cpp
-    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>:./src/genlib/util/util.cpp>
-
-    $<$<BOOL:${PUPNP_DEF_DEVICE}>:./src/genlib/service-table/service_table.cpp>
-    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_GENA}>>:./src/genlib/client_table/GenlibClientSubscription.cpp>
-    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_GENA}>>:./src/genlib/client_table/client_table.cpp>
-    ./src/genlib/miniserver/miniserver.cpp
+    $<$<BOOL:${PUPNP_DEF_DEVICE}>:src/genlib/service-table/service_table.cpp>
+    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_GENA}>>:src/genlib/client_table/GenlibClientSubscription.cpp>
+    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_GENA}>>:src/genlib/client_table/client_table.cpp>
+    src/genlib/miniserver/miniserver.cpp
 
     $<$<BOOL:${PUPNP_DEF_SSDP}>:src/ssdp/ssdp_server.cpp>
     $<$<BOOL:${PUPNP_DEF_DEVICE}>:src/ssdp/ssdp_device.cpp>
@@ -113,17 +111,17 @@ set(PUPNP_SOURCE_FILES
     $<$<BOOL:${PUPNP_DEF_CLIENT}>:src/ssdp/SSDPResultData.cpp>
     $<$<BOOL:${PUPNP_DEF_CLIENT}>:src/ssdp/SSDPResultDataCallback.cpp>
 
-    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>:./src/soap/soap_device.cpp>
-    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>:./src/soap/soap_common.cpp>
-    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>:./src/soap/soap_ctrlpt.cpp>
+    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>:src/soap/soap_device.cpp>
+    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>:src/soap/soap_common.cpp>
+    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>:src/soap/soap_ctrlpt.cpp>
 
-    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_GENA}>>:./src/gena/gena_device.cpp>
-    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_GENA}>>:./src/gena/gena_callback2.cpp>
-    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_GENA}>>:./src/gena/gena_ctrlpt.cpp>
+    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_GENA}>>:src/gena/gena_device.cpp>
+    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_GENA}>>:src/gena/gena_callback2.cpp>
+    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_GENA}>>:src/gena/gena_ctrlpt.cpp>
 
-    $<$<OR:$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_GENA}>>,$<BOOL:${PUPNP_DEF_OPTSSDP}>>:./src/uuid/uuid.cpp>
-    $<$<OR:$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_GENA}>>,$<BOOL:${PUPNP_DEF_OPTSSDP}>>:./src/uuid/md5.cpp>
-    $<$<OR:$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_GENA}>>,$<BOOL:${PUPNP_DEF_OPTSSDP}>>:./src/uuid/sysdep.cpp>
+    $<$<OR:$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_GENA}>>,$<BOOL:${PUPNP_DEF_OPTSSDP}>>:src/uuid/uuid.cpp>
+    $<$<OR:$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_GENA}>>,$<BOOL:${PUPNP_DEF_OPTSSDP}>>:src/uuid/md5.cpp>
+    $<$<OR:$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_GENA}>>,$<BOOL:${PUPNP_DEF_OPTSSDP}>>:src/uuid/sysdep.cpp>
 
     src/api/UpnpExtraHeaders.cpp
     src/api/UpnpString.cpp
@@ -133,22 +131,22 @@ set(PUPNP_SOURCE_FILES
     $<$<BOOL:${PUPNP_DEF_CLIENT}>:src/api/UpnpDiscovery.cpp>
     #$<$<OR:$<BOOL:${PUPNP_DEF_CLIENT}>,$<BOOL:${PUPNP_DEF_DEBUG}>>:src/api/UpnpDiscovery.cpp>
 
-    $<$<OR:$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>,$<BOOL:${PUPNP_DEF_DEBUG}>>:./src/api/UpnpActionRequest.cpp>
-    $<$<OR:$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>,$<BOOL:${PUPNP_DEF_DEBUG}>>:./src/api/UpnpActionComplete.cpp>
-    $<$<OR:$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>,$<BOOL:${PUPNP_DEF_DEBUG}>>:./src/api/UpnpStateVarRequest.cpp>
-    $<$<OR:$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>,$<BOOL:${PUPNP_DEF_DEBUG}>>:./src/api/UpnpStateVarComplete.cpp>
-    $<$<OR:$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>,$<BOOL:${PUPNP_DEF_DEBUG}>>:./src/api/UpnpSubscriptionRequest.cpp>
-    $<$<OR:$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>,$<BOOL:${PUPNP_DEF_DEBUG}>>:./src/api/UpnpEvent.cpp>
-    $<$<OR:$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>,$<BOOL:${PUPNP_DEF_DEBUG}>>:./src/api/UpnpEventSubscribe.cpp>
-    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>:./src/api/UpnpStateVarRequest.cpp>
-    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>:./src/api/UpnpActionComplete.cpp>
-    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>:./src/api/UpnpStateVarComplete.cpp>
-    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_GENA}>>:./src/api/UpnpSubscriptionRequest.cpp>
-    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_GENA}>>:./src/api/UpnpEventSubscribe.cpp>
-    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_GENA}>>:./src/api/UpnpEvent.cpp>
-    $<$<CONFIG:Debug>:./src/api/upnpdebug.cpp>
+    $<$<OR:$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>,$<BOOL:${PUPNP_DEF_DEBUG}>>:src/api/UpnpActionRequest.cpp>
+    $<$<OR:$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>,$<BOOL:${PUPNP_DEF_DEBUG}>>:src/api/UpnpActionComplete.cpp>
+    $<$<OR:$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>,$<BOOL:${PUPNP_DEF_DEBUG}>>:src/api/UpnpStateVarRequest.cpp>
+    $<$<OR:$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>,$<BOOL:${PUPNP_DEF_DEBUG}>>:src/api/UpnpStateVarComplete.cpp>
+    $<$<OR:$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>,$<BOOL:${PUPNP_DEF_DEBUG}>>:src/api/UpnpSubscriptionRequest.cpp>
+    $<$<OR:$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>,$<BOOL:${PUPNP_DEF_DEBUG}>>:src/api/UpnpEvent.cpp>
+    $<$<OR:$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>,$<BOOL:${PUPNP_DEF_DEBUG}>>:src/api/UpnpEventSubscribe.cpp>
+    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>:src/api/UpnpStateVarRequest.cpp>
+    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>:src/api/UpnpActionComplete.cpp>
+    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_SOAP}>>:src/api/UpnpStateVarComplete.cpp>
+    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_GENA}>>:src/api/UpnpSubscriptionRequest.cpp>
+    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_GENA}>>:src/api/UpnpEventSubscribe.cpp>
+    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_GENA}>>:src/api/UpnpEvent.cpp>
+    $<$<CONFIG:Debug>:src/api/upnpdebug.cpp>
 
-    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_WEBSERVER}>>:./src/urlconfig/urlconfig.cpp>
+    $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_WEBSERVER}>>:src/urlconfig/urlconfig.cpp>
 
     ${UMOCK_SOURCE_DIR}/src/pupnp_sock.cpp
     ${UPNPLIB_PROJECT_SOURCE_DIR}/Interface/src/pupnp-sock.cpp
@@ -202,7 +200,7 @@ if(NOT WIN32)
         PUBLIC
             # if we are not on WIN32 the linker finds empty "headers.h" and will
             # not complain an error but will not use <headers.h> that isn't available.
-            ./inc/not_win32
+            inc/not_win32
     )
     target_compile_definitions(pupnp_shared
         ${PUPNP_COMPILE_DEFINITIONS}
@@ -225,7 +223,7 @@ if(NOT WIN32)
         PUBLIC
             # if we are not on WIN32 the linker finds empty "headers.h" and will
             # not complain an error but will not use <headers.h> that isn't available.
-            ./inc/not_win32
+            inc/not_win32
     )
     target_compile_definitions(pupnp_static
         ${PUPNP_COMPILE_DEFINITIONS}

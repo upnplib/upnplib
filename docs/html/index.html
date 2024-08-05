@@ -104,7 +104,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <h1><a class="anchor" id="autotoc_md1"></a>
 1. Overview</h1>
 <p>This is a fork of the <a href="https://github.com/pupnp/">Portable SDK for UPnP Devices (pupnp)</a> with the aim of a complete re-engeneering based on <a href="UPnP-arch-DeviceArchitecture-v2.0-20200417.pdf">UPnP™ Device Architecture 2.0</a>. The following general goals are in progress or planned:</p><ul>
-<li>Drop in compatibillity with the old pUPnP library version 1.14.19</li>
+<li>Drop in compatibillity with the old pUPnP library</li>
 <li>Continue optimization for embedded devices</li>
 <li>Based on C++ instead of C</li>
 <li>Object oriented programming</li>
@@ -117,8 +117,17 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <p>Here you can find the <a href="pages.html"><b>Technical Documentation</b></a>.<br  />
 If you want to be compatible with the classic pUPnP library here you find the <a class="el" href="d9/d54/group__compaAPI.html">Compatible API</a>.<br  />
 To use the new written object oriented part of the library here you find its <a class="el" href="d6/d14/group__upnplibAPI.html">UPnPlib API</a>.</p>
+<h1><a class="anchor" id="autotoc_md3"></a>
+3. Version numbering</h1>
+<p>We follow the <a href="https://semver.org/spec/v2.0.0.html#semantic-versioning-200">Semantic Versioning</a>. In short it defines</p><ul>
+<li>MAJOR version when you make incompatible API changes,</li>
+<li>MINOR version when you add or modify functionality in a backwards compatible manner, and</li>
+<li>PATCH version when you make backwards compatible bug fixes.</li>
+</ul>
+<p>The UPnpLib version starts with 0.1.0. Major version 0 means it's not a productive version but under developement. Because we will use CMake to manage the code it can be seen as integral part of the project. The UPnPlib version number will also reflect changes to the CMake configuration.</p>
+<p>This fork is based on <a href="https://github.com/pupnp/pupnp/releases/tag/release-1.14.19">release-1.14.19</a> of the pupnp library.</p>
 <h1><a class="anchor" id="autotoc_md4"></a>
-3. Milestones</h1>
+4. Milestones</h1>
 <ul>
 <li>Ongoing: create extensive Unit Tests without modification of the old source code</li>
 <li>Ongoing: define C++ interfaces for the API</li>
@@ -127,15 +136,15 @@ To use the new written object oriented part of the library here you find its <a 
 <li>Ongoing: support OpenSSL</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md6"></a>
-4. Build Instructions</h1>
+5. Build Instructions</h1>
 <p>If nothing others said we are always staying at the root directory of the project (CMAKE_SOURCE_DIR), that is <b>upnplib_project/</b> if you don't changed the name.</p>
 <h2><a class="anchor" id="autotoc_md7"></a>
-4.1. Linux and MacOS build</h2>
+5.1. Linux and MacOS build</h2>
 <p>First configure then build: </p><pre class="fragment">upnplib_project$ cmake -S . -B build -D UPNPLIB_WITH_SAMPLES=YES
 upnplib_project$ cmake --build build
 </pre><p> To clean up a build just delete the build folder: </p><pre class="fragment">upnplib_project$ rm -rf build
 </pre> <h2><a class="anchor" id="autotoc_md8"></a>
-4.2. Microsoft Windows build</h2>
+5.2. Microsoft Windows build</h2>
 <p>The developement of this UPnP Library has started on Linux. So for historical reasons it uses POSIX threads (pthreads) as specified by <a href="http://get.posixcertified.ieee.org/certification_guide.html">The Open Group</a>. Unfortunately Microsoft Windows does not support it so I have to use a third party library. I use the well known and well supported <a href="https://sourceforge.net/p/pthreads4w">pthreads4w library</a>. It will be downloaded on Microsoft Windows and compiled with building the project and should do out of the box. To build the UPnPlib you need a Developer Command Prompt. How to install it is out of scope of this description. Microsoft has good documentation about it. For example this is the prompt I used: </p><pre class="fragment">**********************************************************************
 ** Visual Studio 2019 Developer Command Prompt v16.9.5
 ** Copyright (c) 2021 Microsoft Corporation
@@ -151,7 +160,7 @@ PS C: upnplib_project&gt; cmake --build build --config Release
 <p>To clean up a build just delete the build folder: </p><pre class="fragment">PS C: upnplib_project&gt; rm -rf build
 </pre><p> If you need more details about installation of POSIX threads on Microsoft Windows I have made an example at <a href="https://github.com/upnplib/pthreadsWinLin.git">github pthreadsWinLin</a>.</p>
 <h2><a class="anchor" id="autotoc_md9"></a>
-4.3 Googletest build</h2>
+5.3 Googletest build</h2>
 <p>I strongly recommend to use shared gtest libraries for this project because there are situations where static and shared libraries are linked together. Using static linked Googletest libraries may fail then. If you know what you ar doing and you are able to manage possible linker errors you can try to use static built Googletest libraries. </p><pre class="fragment"># strongly recommended shared libs
 upnplib_project$ cmake -S . -B build -D CMAKE_BUILD_TYPE=Debug -D UPNPLIB_WITH_GOOGLETEST=ON
 upnplib_project$ cmake --build build --config Debug
@@ -161,11 +170,11 @@ upnplib_project$ cmake -S . -B build -D CMAKE_BUILD_TYPE=Debug -D UPNPLIB_WITH_G
 upnplib_project$ cmake --build build --config Debug
 </pre><p> Using build type "Debug" is not necessary for Googletest but it will enable additional debug messages from the library. if you don't need it you can just use "Release" instead of "Debug" above as option.</p>
 <h1><a class="anchor" id="autotoc_md11"></a>
-5. Limitations</h1>
+6. Limitations</h1>
 <p>No limits documented so far.</p>
 <pre><sup>
 Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, &lt;<a href="#" onclick="location.href='mai'+'lto:'+'Ing'+'o@'+'Hoe'+'ft'+'-on'+'li'+'ne.'+'de'; return false;">Ingo@<span class="obfuscator">.nosp@m.</span>Hoef<span class="obfuscator">.nosp@m.</span>t-onl<span class="obfuscator">.nosp@m.</span>ine.<span class="obfuscator">.nosp@m.</span>de</a>&gt;
-Redistribution only with this Copyright remark. Last modified: 2024-04-21
+Redistribution only with this Copyright remark. Last modified: 2024-08-04
 </sup></pre> </div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -1,0 +1,7 @@
+<map id="UpnpSubscriptionRequest_get_ServiceId_cstr" name="UpnpSubscriptionRequest_get_ServiceId_cstr">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,27,195,67"/>
+<area shape="rect" id="Node000002" href="$d1/d03/group__UpnpString.html#ga52a429bf778bf8c0a44a779d9446116c" title="Returns the pointer to char." alt="" coords="254,5,421,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="194,33,240,27,241,33,195,38"/>
+<area shape="rect" id="Node000003" href="$d4/d6b/UpnpSubscriptionRequest_8cpp.html#a0f18919d0f404c4380e1f61fbb006345" title=" " alt="" coords="243,55,432,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="195,56,229,60,229,65,194,61"/>
+</map>

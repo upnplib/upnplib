@@ -3,7 +3,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-02-25
+ * Redistribution only with this Copyright remark. Last modified: 2024-08-05
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,7 +42,7 @@
  * @{
  */
 
-#include "UpnpGlobal.hpp" /* For EXPORT_SPEC */
+#include <UpnpGlobal.hpp> /* For EXPORT_SPEC */
 
 /*!
  * \brief The type of DOM strings.

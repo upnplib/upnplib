@@ -1,14 +1,17 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-04-08
+# Redistribution only with this Copyright remark. Last modified: 2024-08-04
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
 
-set (UPNP_VERSION_STRING "1.14.19")
-set (UPNP_VERSION_MAJOR 1)
-project(UPNPLIB_PROJECT VERSION ${UPNP_VERSION_STRING}
+project(UPNPLIB_PROJECT VERSION "0.1.0"
                 DESCRIPTION "UPnP library"
                 HOMEPAGE_URL "https://github.com/upnplib")
+
+set(PUPNP_VERSION "1.14.19")
+if(NOT PUPNP_VERSION MATCHES "^[0-9]+\\.[0-9]+\\.[0-9]+$")
+    message(FATAL_ERROR "${PUPNP_VERSION} is not a valid pUPnP version number.")
+endif()
 
 enable_testing()
 
@@ -58,7 +61,7 @@ endif()
 
 if(GTESTS_WITH_SHARED_LIBS)
     set (BUILD_SHARED_LIBS ON CACHE INTERNAL
-        "This option belongs only to GOOGLETEST and build its libraries shared.")  # Implies FORCE?
+        "This option belongs only to GOOGLETEST and build its libraries shared.")  # Implies FORCE
 endif()
 
 option(PT4W_BUILD_TESTING "Build the time and space consuming test suite of pthreads4w" OFF)
@@ -80,6 +83,17 @@ option(PTW32_STATIC_LIB "For using the static pthreads4w library" OFF)
 add_compile_definitions(
     $<$<BOOL:${UPNPLIB_WITH_TOOLS}>:UPNP_HAVE_TOOLS>
 )
+
+# Update pUPnP version number in README.md but only if it has changed.
+if(NOT PUPNP_VERSION_STRING VERSION_EQUAL PUPNP_VERSION)
+    set(PUPNP_VERSION_STRING ${PUPNP_VERSION} CACHE INTERNAL
+        "The current version of the forked pUPnP library.")  # Implies FORCE
+    message("-- PUPNP_VERSION_STRING set to \"${PUPNP_VERSION_STRING}\"")
+    file(READ README.md FILE_CONTENTS)
+    string(REGEX REPLACE "release-[0-9]+\.[0-9]+\.[0-9]+"
+           "release-${PUPNP_VERSION_STRING}" FILE_CONTENTS_OUT ${FILE_CONTENTS})
+    file(WRITE README.md ${FILE_CONTENTS_OUT})
+endif()
 
 
 #################################
@@ -214,7 +228,7 @@ message(DEBUG "  DEBUG: UPNPLIB_RUNTIME_OUTPUT_DIRECTORY is: ${UPNPLIB_RUNTIME_O
 # TODO: Check large-file-sensitivity
 # [Add LFS flags to pkg-config? #89](https://github.com/pupnp/pupnp/issues/89)
 # Check for what CMAKE_REQUIRED_DEFINITIONS is needed
-# In the changelog I found this:
+# In the changelog I found this: (--Ingo)
 #
 #2011-01-16 Marcelo Roberto Jimenez <mroberto(at)users.sourceforge.net>
 #
@@ -277,33 +291,36 @@ message(DEBUG "  DEBUG: UPNPLIB_RUNTIME_OUTPUT_DIRECTORY is: ${UPNPLIB_RUNTIME_O
 #    Chandra
 
 include(CheckTypeSize)
-if (NOT OFF_T_SIZE)
+if (NOT HAVE_OFF_T_SIZE AND NOT MSVC)
     check_type_size (off_t OFF_T_SIZE)
     set (UPNP_LARGEFILE_SENSITIVE FALSE CACHE BOOL "whether the system defaults to 32bit off_t but can do 64bit when requested" FORCE)
 
     if (OFF_T_SIZE EQUAL 8)
-        message (STATUS "System uses 64 bit, no need to consider LFS (Large File Storage)")
+        message (STATUS "System uses 64 bit, no flags needed")
     else()
-        unset (OFF_T_SIZE CACHE)
-        set (CMAKE_REQUIRED_DEFINITIONS _FILE_OFFSET_BITS=64)
+        unset (HAVE_OFF_T_SIZE CACHE)
+        set (CMAKE_REQUIRED_DEFINITIONS -D_FILE_OFFSET_BITS=64)
         check_type_size (off_t OFF_T_SIZE)
 
         if (OFF_T_SIZE EQUAL 8)
-            message (STATUS "_FILE_OFFSET_BITS=64 needed to support LFS (Large File Storage)")
+            message (STATUS "_FILE_OFFSET_BITS=64 needed")
             set (UPNP_LARGEFILE_SENSITIVE TRUE CACHE BOOL "whether the system defaults to 32bit off_t but can do 64bit when requested" FORCE)
             set (_FILE_OFFSET_BITS 64 CACHE BOOL "Number of bits in a file offset, on hosts where this is settable" FORCE)
         else()
-            unset (OFF_T_SIZE CACHE)
-            set (CMAKE_REQUIRED_DEFINITIONS _LARGE_FILES)
+            unset (HAVE_OFF_T_SIZE CACHE)
+            set (CMAKE_REQUIRED_DEFINITIONS -D_LARGE_FILES)
             check_type_size (off_t OFF_T_SIZE)
 
             if (OFF_T_SIZE EQUAL 8)
-                message (STATUS "_LARGE_FILES needed to support LFS (Large File Storage)")
+                message (STATUS "_LARGE_FILES needed")
                 set (_LARGE_FILES TRUE CACHE BOOL "Define for large files, on AIX-style hosts." FORCE)
                 set (UPNP_LARGEFILE_SENSITIVE TRUE CACHE BOOL "whether the system defaults to 32bit off_t but can do 64bit when requested" FORCE)
             endif()
         endif()
     endif()
+elseif (MSVC)
+    set (_LARGE_FILES TRUE CACHE BOOL "Define for large files, on AIX-style hosts." FORCE)
+    set (UPNP_LARGEFILE_SENSITIVE TRUE CACHE BOOL "whether the system defaults to 32bit off_t but can do 64bit when requested" FORCE)
 endif()
 
 
@@ -519,7 +536,7 @@ endif()
 # #cmakedefine VAR1 ${VAR} does not work.
 # #cmakedefine VAR2 1  : VAR2 must be exist before even you set a constant.
 configure_file(${PROJECT_SOURCE_DIR}/cmake/cmake_vars.hpp.cmake
-               ${PROJECT_BINARY_DIR}/include/upnplib/cmake_vars.hpp
+               ${PROJECT_BINARY_DIR}/include/cmake_vars.hpp
 )
 
 # RPATH settings to find shared libraries

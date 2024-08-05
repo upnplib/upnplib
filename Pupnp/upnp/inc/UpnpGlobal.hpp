@@ -12,13 +12,15 @@
  */
 #include <cstddef>
 
+/* Following test is moved to cmake_vars.hpp.cmake
 #if defined UPNP_LARGEFILE_SENSITIVE && _FILE_OFFSET_BITS + 0 != 64
 #if defined __GNUC__
 #warning libupnp requires largefile mode - use AC_SYS_LARGEFILE
 #elif !defined _WIN32
 #error libupnp requires largefile mode - use AC_SYS_LARGEFILE
 #endif
-#endif
+#endif */
+#include <cmake_vars.hpp>
 
 #ifdef _WIN32
 /*

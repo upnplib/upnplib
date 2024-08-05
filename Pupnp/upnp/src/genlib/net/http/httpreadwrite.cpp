@@ -4,7 +4,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-08-01
+ * Redistribution only with this Copyright remark. Last modified: 2024-08-05
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -82,11 +82,6 @@
 #define fseeko fseek
 #endif
 #endif /* _WIN32 */
-
-// The version string is only used here and will not change much on upgrading to
-// upnplib. To reduce complexity by including upnpconfig.hpp I just set it here.
-// --Ingo
-#define UPNP_VERSION_STRING "1.14.19"
 
 #include "umock/pupnp_sock.hpp"
 #include "umock/pupnp_httprw.hpp"
@@ -2004,7 +1999,7 @@ void get_sdk_info(char* info, size_t infoSize) {
 #else /* UPNP_ENABLE_UNSPECIFIED_SERVER */
 #ifdef _WIN32
     snprintf(info, infoSize,
-             "UPnP/1.0, Portable SDK for UPnP devices/" UPNP_VERSION_STRING
+             "UPnP/1.0, Portable SDK for UPnP devices/" PUPNP_VERSION_STRING
              "on windows\r\n");
 #else
     int ret_code;
@@ -2015,7 +2010,7 @@ void get_sdk_info(char* info, size_t infoSize) {
         *info = '\0';
     snprintf(info, infoSize,
              "%s/%s, UPnP/1.0, Portable SDK for UPnP "
-             "devices/" UPNP_VERSION_STRING "\r\n",
+             "devices/" PUPNP_VERSION_STRING "\r\n",
              sys_info.sysname, sys_info.release);
 #endif
 #endif /* UPNP_ENABLE_UNSPECIFIED_SERVER */

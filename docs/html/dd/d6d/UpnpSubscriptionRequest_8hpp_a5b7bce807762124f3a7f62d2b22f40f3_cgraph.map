@@ -1,0 +1,7 @@
+<map id="UpnpSubscriptionRequest_set_ServiceId" name="UpnpSubscriptionRequest_set_ServiceId">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,23,195,63"/>
+<area shape="rect" id="Node000002" href="$d1/d03/group__UpnpString.html#ga52a429bf778bf8c0a44a779d9446116c" title="Returns the pointer to char." alt="" coords="243,5,409,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="194,30,229,26,230,31,195,35"/>
+<area shape="rect" id="Node000003" href="$d1/d03/group__UpnpString.html#ga0db13228160adbc4e7ad7f52157f987e" title="Sets the string from a pointer to char." alt="" coords="243,55,409,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="195,51,230,54,229,60,194,56"/>
+</map>

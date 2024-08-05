@@ -1,7 +1,7 @@
 #ifndef UPNPLIB_CMAKE_VARS_HPP
 #define UPNPLIB_CMAKE_VARS_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-07-28
+// Redistribution only with this Copyright remark. Last modified: 2024-08-04
 /*!
  * \file
  * \brief Defines symbols for the compiler that are provided by CMake.
@@ -32,19 +32,8 @@
 /***************************************************************************
  * Library version
  ***************************************************************************/
-// TODO: Check the version handling
-/** The library version (string) e.g. "1.3.0" */
-#cmakedefine UPNP_VERSION_STRING "${UPNP_VERSION_STRING}"
-/** Major version of the library */
-#cmakedefine UPNP_VERSION_MAJOR ${UPNP_VERSION_MAJOR}
-/** Minor version of the library */
-#define UPNP_VERSION_MINOR 0
-/** Patch version of the library */
-#define UPNP_VERSION_PATCH 0
-/** The library version (numeric) e.g. 10300 means version 1.3.0 */
-#define UPNP_VERSION \
-((UPNP_VERSION_MAJOR * 10000 + UPNP_VERSION_MINOR) * 100 + \
-UPNP_VERSION_PATCH)
+/** The pUPnP library version the fork is based on, e.g. "1.14.19" */
+#cmakedefine PUPNP_VERSION_STRING "${PUPNP_VERSION_STRING}"
 
 /***************************************************************************
  * UPNPLIB_PROJECT configuration settings
@@ -53,6 +42,13 @@ UPNP_VERSION_PATCH)
  * whether the system defaults to 32bit off_t but can do 64bit when requested
  * warning libupnp requires largefile mode - use AC_SYS_LARGEFILE */
 #cmakedefine UPNP_LARGEFILE_SENSITIVE
+#if defined UPNP_LARGEFILE_SENSITIVE && _FILE_OFFSET_BITS + 0 != 64
+#if defined __GNUC__
+#warning libupnp requires largefile mode - use AC_SYS_LARGEFILE
+#elif !defined _WIN32
+#error libupnp requires largefile mode - use AC_SYS_LARGEFILE
+#endif
+#endif
 
 /***************************************************************************
  * Other settings

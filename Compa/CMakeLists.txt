@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-03-10
+# Redistribution only with this Copyright remark. Last modified: 2024-08-05
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -92,8 +92,6 @@ endif()
 # =================================
 
 set(COMPA_SOURCE_FILES
-    src/lib_info.cpp
-
     src/genlib/util/membuffer.cpp
     src/genlib/util/list.cpp
     src/genlib/util/strintmap.cpp

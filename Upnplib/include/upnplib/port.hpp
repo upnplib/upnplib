@@ -71,6 +71,15 @@
   #define strncasecmp strnicmp
 #endif
 
+// Some different format specifications for printf() and friends
+// -------------------------------------------------------------
+#ifdef _MSC_VER
+  #define PRIzu "lu"
+  #define PRIzx "lx"
+#else
+  #define PRIzu "zu"
+  #define PRIzx "zx"
+#endif
 
 // Macros to disable and enable compiler warnings
 // ----------------------------------------------

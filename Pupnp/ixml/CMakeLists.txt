@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-02-27
+# Redistribution only with this Copyright remark. Last modified: 2024-08-05
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -9,21 +9,21 @@ project(PUPNP_IXML VERSION 0008
                    HOMEPAGE_URL "https://github.com/upnplib")
 
 set (IXML_SOURCES
-    ./src/attr.cpp
-    ./src/document.cpp
-    ./src/element.cpp
-    ./src/ixml.cpp
-    $<$<CONFIG:Debug>:./src/ixmldebug.cpp>
-    ./src/ixmlmembuf.cpp
-    ./src/ixmlparser.cpp
-    ./src/namedNodeMap.cpp
-    ./src/node.cpp
-    ./src/nodeList.cpp
+    src/attr.cpp
+    src/document.cpp
+    src/element.cpp
+    src/ixml.cpp
+    $<$<CONFIG:Debug>:src/ixmldebug.cpp>
+    src/ixmlmembuf.cpp
+    src/ixmlparser.cpp
+    src/namedNodeMap.cpp
+    src/node.cpp
+    src/nodeList.cpp
 )
 
 set (IXML_INCLUDE_DIRECTORIES
-    PUBLIC ./inc
-    PUBLIC ./src/inc
+    PUBLIC inc
+    PUBLIC src/inc
     # Next variable is needed for one step configure. Don't use
     # PRIVATE ${PUPNP_UPNP_SOURCE_DIR}/inc
     PRIVATE ${PUPNP_SOURCE_DIR}/upnp/inc
