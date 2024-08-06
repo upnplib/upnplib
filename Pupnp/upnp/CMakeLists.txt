@@ -149,7 +149,7 @@ set(PUPNP_SOURCE_FILES
     $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_WEBSERVER}>>:src/urlconfig/urlconfig.cpp>
 
     ${UMOCK_SOURCE_DIR}/src/pupnp_sock.cpp
-    ${UPNPLIB_PROJECT_SOURCE_DIR}/Interface/src/pupnp-sock.cpp
+    ${CMAKE_SOURCE_DIR}/Interface/src/pupnp-sock.cpp
 
     # Helper classes added but not original old pupnp code. To separate them,
     # they are in a parent directory of the original code. They only
@@ -165,7 +165,7 @@ set(PUPNP_INCLUDE_DIRECTORIES
     PUBLIC src/inc
     PUBLIC src/threadutil
     PUBLIC ${PUPNP_SOURCE_DIR}/include
-    PUBLIC ${UPNPLIB_PROJECT_SOURCE_DIR}/Interface/include
+    PUBLIC ${CMAKE_SOURCE_DIR}/Interface/include
     PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
 )
 

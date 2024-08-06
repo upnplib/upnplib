@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-12-26
+# Redistribution only with this Copyright remark. Last modified: 2024-08-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -198,4 +198,4 @@ endif()
 #                            $<$<BOOL:${MSVC}>:LIBUPNP_EXPORTS>)
 
 # set_tests_properties( ctest_tv_device PROPERTIES
-#     ENVIRONMENT "PATH=$ENV{PATH};${UPNPLIB_PROJECT_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}" )
+#     ENVIRONMENT "PATH=$ENV{PATH};${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}" )

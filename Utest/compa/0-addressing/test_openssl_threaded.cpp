@@ -1,5 +1,5 @@
 // Copyright (C) 2023+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-08-04
+// Redistribution only with this Copyright remark. Last modified: 2024-08-06
 
 #include <cmake_vars.hpp>
 #include <upnplib/global.hpp>
@@ -92,14 +92,14 @@ SSL_CTX* create_context() {
 void configure_context(SSL_CTX* ctx) {
     /* Set the key and cert */
     if (SSL_CTX_use_certificate_file(
-            ctx, UPNPLIB_PROJECT_SOURCE_DIR "/utest/cert.pem",
+            ctx, CMAKE_SOURCE_DIR "/utest/cert.pem",
             SSL_FILETYPE_PEM) <= 0) {
         ERR_print_errors_fp(stderr);
         exit(EXIT_FAILURE);
     }
 
     if (SSL_CTX_use_PrivateKey_file(ctx,
-                                    UPNPLIB_PROJECT_SOURCE_DIR "/utest/key.pem",
+                                    CMAKE_SOURCE_DIR "/utest/key.pem",
                                     SSL_FILETYPE_PEM) <= 0) {
         ERR_print_errors_fp(stderr);
         exit(EXIT_FAILURE);

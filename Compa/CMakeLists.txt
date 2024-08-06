@@ -166,7 +166,7 @@ set(COMPA_SOURCE_FILES
     $<$<CONFIG:Debug>:src/api/upnpdebug.cpp>
 
     ${UMOCK_SOURCE_DIR}/src/pupnp_sock.cpp
-    ${UPNPLIB_PROJECT_SOURCE_DIR}/Interface/src/pupnp-sock.cpp
+    ${CMAKE_SOURCE_DIR}/Interface/src/pupnp-sock.cpp
 
     # Helper classes added here. They are assigned with the UPnPlib rules, e.g.
     # throwing exceptions etc. They only encapsulate old functions mainly for
@@ -180,7 +180,7 @@ set(COMPA_INCLUDE_DIRECTORIES
     PUBLIC src/inc
     PUBLIC src/threadutil
     PUBLIC ${PUPNP_SOURCE_DIR}/include
-    PUBLIC ${UPNPLIB_PROJECT_SOURCE_DIR}/Interface/include
+    PUBLIC ${CMAKE_SOURCE_DIR}/Interface/include
     PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
 )
 

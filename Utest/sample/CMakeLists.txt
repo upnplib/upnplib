@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-09-27
+# Redistribution only with this Copyright remark. Last modified: 2024-08-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -95,7 +95,7 @@ add_executable(test_tv_device-psh
     ./test_tv_device.cpp
 )
 target_include_directories(test_tv_device-psh
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
 )
 target_compile_options(test_tv_device-psh
     PRIVATE
@@ -121,7 +121,7 @@ add_executable(test_tv_device-csh
     ./test_tv_device.cpp
 )
 target_include_directories(test_tv_device-csh
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
 )
 target_link_libraries(test_tv_device-csh
     PRIVATE

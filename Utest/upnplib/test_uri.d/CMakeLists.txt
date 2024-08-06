@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2023-12-08
+# Redistribution only with this Copyright remark. Last modified: 2024-08-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -15,7 +15,7 @@ add_executable(test_urlparser
     ./test_urlparser.cpp
 )
 target_include_directories(test_urlparser
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
     PRIVATE ${UPNPLIB_SOURCE_DIR}/include
 )
 add_test(NAME ctest_urlparser COMMAND test_urlparser --gtest_shuffle
@@ -34,7 +34,7 @@ add_executable(test_url_class
     ./test_url_class.cpp
 )
 target_include_directories(test_url_class
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
     PRIVATE ${UPNPLIB_SOURCE_DIR}/include
 )
 add_test(NAME ctest_url_class COMMAND test_url_class --gtest_shuffle

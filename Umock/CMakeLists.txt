@@ -35,8 +35,8 @@ set(UMOCK_SOURCE_FILES
 set(UMOCK_INCLUDE_DIRECTORIES
     PUBLIC ./include
     # We need this variable to find the path before subdir Upnplib is scanned.
-    PUBLIC ${UPNPLIB_PROJECT_SOURCE_DIR}/Upnplib/include
-    PUBLIC ${UPNPLIB_PROJECT_BINARY_DIR}/include
+    PUBLIC ${CMAKE_SOURCE_DIR}/Upnplib/include
+    PUBLIC ${CMAKE_BINARY_DIR}/include
     # if pthreads4w isn't installed this path is empty. The linker doesn't
     # find "pthread.h" and falls back to look at <pthread.h>.
     PUBLIC ${pthreads4w_SOURCE_DIR} # needed for pthread.h
