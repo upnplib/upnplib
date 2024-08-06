@@ -62,8 +62,7 @@ void* library_info(void*) {
         << '\n';
     msg << "CMAKE_BUILD_TYPE            = " << CMAKE_BUILD_TYPE << '\n';
     msg << "CMAKE_GENERATOR             = " << CMAKE_GENERATOR << '\n';
-    msg << "CMAKE_SOURCE_DIR            = " << CMAKE_SOURCE_DIR
-        << '\n';
+    msg << "CMAKE_SOURCE_DIR            = " << CMAKE_SOURCE_DIR << '\n';
     msg << "UPNPLIB_PROJECT_PATH_LENGTH = " << UPNPLIB_PROJECT_PATH_LENGTH
         << '\n';
     /*
