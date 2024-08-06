@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-08-05
+# Redistribution only with this Copyright remark. Last modified: 2024-08-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -195,6 +195,9 @@ if(NOT WIN32)
     add_library(pupnp_shared SHARED
             ${PUPNP_SOURCE_FILES}
     )
+    set_target_properties(pupnp_shared PROPERTIES
+            OUTPUT_NAME upnplib-pupnp
+    )
     target_include_directories(pupnp_shared
         ${PUPNP_INCLUDE_DIRECTORIES}
         PUBLIC
@@ -218,6 +221,9 @@ if(NOT WIN32)
     add_library(pupnp_static STATIC
             ${PUPNP_SOURCE_FILES}
     )
+    set_target_properties(pupnp_static PROPERTIES
+            OUTPUT_NAME upnplib-pupnp
+    )
     target_include_directories(pupnp_static
         ${PUPNP_INCLUDE_DIRECTORIES}
         PUBLIC
@@ -232,7 +238,9 @@ if(NOT WIN32)
     target_link_libraries(pupnp_static
         PUBLIC umock_static
         INTERFACE ixml_static
-)
+    )
+
+    install(TARGETS pupnp_shared pupnp_static)
 
 else() # WIN32
 
@@ -245,6 +253,9 @@ else() # WIN32
     #---------------------------------
     add_library(pupnp_shared SHARED
             ${PUPNP_SOURCE_FILES}
+    )
+    set_target_properties(pupnp_shared PROPERTIES
+            OUTPUT_NAME upnplib-pupnp
     )
     target_include_directories(pupnp_shared
         ${PUPNP_INCLUDE_DIRECTORIES}
@@ -267,6 +278,9 @@ else() # WIN32
     add_library(pupnp_static STATIC
             ${PUPNP_SOURCE_FILES}
     )
+    set_target_properties(pupnp_static PROPERTIES
+            OUTPUT_NAME upnplib-pupnp
+    )
     target_include_directories(pupnp_static
         ${PUPNP_INCLUDE_DIRECTORIES}
     )
@@ -280,6 +294,8 @@ else() # WIN32
         PUBLIC umock_static
         INTERFACE ixml_static
     )
+
+    install(TARGETS pupnp_shared pupnp_static)
 
 endif() # WIN32
 
