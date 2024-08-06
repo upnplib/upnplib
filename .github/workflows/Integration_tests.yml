@@ -72,23 +72,23 @@ jobs:
         name: Verify if NO Debug info
         # These two libraries are always built
         run: |
-          objdump -g ./build/lib/libpupnp_shared.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
-          objdump -g ./build/lib/libcompa_shared.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
-          objdump -g ./build/lib/libupnplib_shared.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
-          ls ./build/lib/libpupnp_static.a
-          ls ./build/lib/libcompa_static.a
-          ls ./build/lib/libupnplib_static.a
+          objdump -g ./build/lib/libupnplib-pupnp.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
+          objdump -g ./build/lib/libupnplib-compa.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
+          objdump -g ./build/lib/libupnplib.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
+          ls ./build/lib/libupnplib-pupnp.a
+          ls ./build/lib/libupnplib-compa.a
+          ls ./build/lib/libupnplib.a
 
       - if: matrix.buildtype == 'Debug'
         name: Verify if Debug info
         # These two libraries are always built
         run: |
-          objdump -g ./build/lib/libpupnp_shared.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
-          objdump -g ./build/lib/libcompa_shared.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
-          objdump -g ./build/lib/libupnplib_shared.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
-          ls ./build/lib/libpupnp_static.a
-          ls ./build/lib/libcompa_static.a
-          ls ./build/lib/libupnplib_static.a
+          objdump -g ./build/lib/libupnplib-pupnp.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
+          objdump -g ./build/lib/libupnplib-compa.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
+          objdump -g ./build/lib/libupnplib.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
+          ls ./build/lib/libupnplib-pupnp.a
+          ls ./build/lib/libupnplib-compa.a
+          ls ./build/lib/libupnplib.a
 
      #- name: Run upnplib info programs
      #  # This program is always built
@@ -155,23 +155,23 @@ jobs:
         name: Verify if NO Debug info
         # These two libraries are always built
         run: |
-          ls ./build/lib/libpupnp_shared.dylib
-          ls ./build/lib/libcompa_shared.dylib
-          ls ./build/lib/libupnplib_shared.dylib
-          ls ./build/lib/libpupnp_static.a
-          ls ./build/lib/libcompa_static.a
-          ls ./build/lib/libupnplib_static.a
+          ls ./build/lib/libupnplib-pupnp.dylib
+          ls ./build/lib/libupnplib-compa.dylib
+          ls ./build/lib/libupnplib.dylib
+          ls ./build/lib/libupnplib-pupnp.a
+          ls ./build/lib/libupnplib-compa.a
+          ls ./build/lib/libupnplib.a
 
       - if: matrix.buildtype == 'Debug'
         name: Verify if Debug info
         # These two libraries are always built
         run: |
-          ls ./build/lib/libpupnp_shared.dylib
-          ls ./build/lib/libcompa_shared.dylib
-          ls ./build/lib/libupnplib_shared.dylib
-          ls ./build/lib/libpupnp_static.a
-          ls ./build/lib/libcompa_static.a
-          ls ./build/lib/libupnplib_static.a
+          ls ./build/lib/libupnplib-pupnp.dylib
+          ls ./build/lib/libupnplib-compa.dylib
+          ls ./build/lib/libupnplib.dylib
+          ls ./build/lib/libupnplib-pupnp.a
+          ls ./build/lib/libupnplib-compa.a
+          ls ./build/lib/libupnplib.a
 
      #- name: Run upnplib info programs
      #  # This program is always built
@@ -283,7 +283,7 @@ jobs:
   # Job: Configure, build and test with NMake
   #------------------------------------------
   Build_with_NMake:
-    if: false
+    if: true
     name: Test w/ NMake
     needs: [ Build_Ubuntu, Build_MacOS ]
     runs-on: ${{ matrix.os }}
@@ -379,8 +379,8 @@ jobs:
   build_tests:
     if: true
     name: "build tests"
-    #needs: [ Build_with_Visual_Studio, Build_with_NMake ]
-    needs: [ Build_Ubuntu, Build_MacOS, Build_with_Visual_Studio ]
+    needs: [ Build_with_Visual_Studio, Build_with_NMake ]
+    #naeeds: [ Build_Ubuntu, Build_MacOS, Build_with_Visual_Studio ]
     runs-on: ${{ matrix.os }}
 
     strategy:
