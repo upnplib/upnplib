@@ -279,7 +279,7 @@ else() # WIN32
             ${PUPNP_SOURCE_FILES}
     )
     set_target_properties(pupnp_static PROPERTIES
-            OUTPUT_NAME upnplib-pupnp
+            OUTPUT_NAME upnplib-pupnp-static
     )
     target_include_directories(pupnp_static
         ${PUPNP_INCLUDE_DIRECTORIES}

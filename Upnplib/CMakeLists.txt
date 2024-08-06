@@ -108,7 +108,7 @@ else() # WIN32
             ${UPNPLIB_SOURCE_FILES}
     )
     set_target_properties(upnplib_static PROPERTIES
-            OUTPUT_NAME upnplib
+            OUTPUT_NAME upnplib-static
     )
     target_include_directories(upnplib_static
         ${UPNPLIB_INCLUDE_DIRECTORIES}

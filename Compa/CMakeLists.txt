@@ -321,7 +321,7 @@ else() # WIN32
             ${COMPA_SOURCE_FILES}
     )
     set_target_properties(compa_static PROPERTIES
-            OUTPUT_NAME upnplib-compa
+            OUTPUT_NAME upnplib-compa-static
     )
     target_include_directories(compa_static
         ${COMPA_INCLUDE_DIRECTORIES}

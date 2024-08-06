@@ -4,7 +4,7 @@
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
 
-project(UPNPLIB_PROJECT VERSION "0.1.0"
+project("UPnPlib-SDK" VERSION "0.1.0"
                 DESCRIPTION "UPnP library"
                 HOMEPAGE_URL "https://github.com/upnplib")
 

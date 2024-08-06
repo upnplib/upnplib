@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-01-23
+# Redistribution only with this Copyright remark. Last modified: 2024-08-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -25,7 +25,7 @@ set(UMOCK_SOURCE_FILES
     src/sysinfo.cpp
     src/arpa_inet.cpp
     $<$<BOOL:${UPNPLIB_WITH_OPENSSL}>:src/ssl.cpp>
-    ${UPNPLIB_PROJECT_SOURCE_DIR}/Upnplib/src/global.cpp
+    ${CMAKE_SOURCE_DIR}/Upnplib/src/global.cpp
     $<$<NOT:$<PLATFORM_ID:Windows>>:src/ifaddrs.cpp>
     $<$<NOT:$<PLATFORM_ID:Windows>>:src/net_if.cpp>
     $<$<PLATFORM_ID:Windows>:src/iphlpapi.cpp>
