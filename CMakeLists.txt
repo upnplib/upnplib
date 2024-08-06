@@ -1,10 +1,10 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-08-04
+# Redistribution only with this Copyright remark. Last modified: 2024-08-06
 
 cmake_minimum_required(VERSION 3.18)
 include(cmake/project-header.cmake)
 
-project(UPNPLIB_PROJECT VERSION "0.1.0"
+project("UPnPlib-SDK" VERSION "0.1.0"
                 DESCRIPTION "UPnP library"
                 HOMEPAGE_URL "https://github.com/upnplib")
 
@@ -145,7 +145,7 @@ set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 
 # Provide length of the path of the projects base directory. We need this
 # mainly for the compile time short file name of Debug and TRACE messages.
-string(LENGTH "${UPNPLIB_PROJECT_SOURCE_DIR}/" UPNPLIB_PROJECT_PATH_LENGTH)
+string(LENGTH "${CMAKE_SOURCE_DIR}/" UPNPLIB_PROJECT_PATH_LENGTH)
 
 # Set general compile definitions and options
 #--------------------------------------------
@@ -206,9 +206,9 @@ add_link_options(
 # Targets                       #
 #################################
 # Set target output directories
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${UPNPLIB_PROJECT_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${UPNPLIB_PROJECT_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${UPNPLIB_PROJECT_BINARY_DIR}/bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 if(WIN32)
     if(CMAKE_GENERATOR STREQUAL "NMake Makefiles")
         set(UPNPLIB_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})

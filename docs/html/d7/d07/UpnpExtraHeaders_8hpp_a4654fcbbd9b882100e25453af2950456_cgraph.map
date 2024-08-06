@@ -1,7 +1,7 @@
 <map id="UpnpExtraHeaders_new" name="UpnpExtraHeaders_new">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,184,56"/>
-<area shape="rect" id="Node000002" href="$d1/dd9/list_8cpp.html#a4896c23626b95e35ab284f5239467fd2" title="Initialize empty list." alt="" coords="246,5,346,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="184,29,232,23,233,29,185,35"/>
-<area shape="rect" id="Node000003" href="$d1/d03/group__UpnpString.html#gab66dcdfe778dd5e2e8d16e1131ef9ac1" title="Constructor." alt="" coords="232,55,360,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="185,51,219,55,218,61,184,57"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,169,56"/>
+<area shape="rect" id="Node000002" href="$d1/dd9/list_8cpp.html#a4896c23626b95e35ab284f5239467fd2" title="Initialize empty list." alt="" coords="231,5,323,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="169,30,217,23,217,29,170,35"/>
+<area shape="rect" id="Node000003" href="$d1/d03/group__UpnpString.html#gab66dcdfe778dd5e2e8d16e1131ef9ac1" title="Constructor." alt="" coords="217,55,336,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="170,51,204,55,203,61,169,56"/>
 </map>

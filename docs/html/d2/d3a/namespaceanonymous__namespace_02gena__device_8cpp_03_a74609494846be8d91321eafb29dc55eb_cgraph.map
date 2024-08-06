@@ -1,15 +1,15 @@
 <map id="anonymous_namespace{gena_device::cpp}::maybeDiscardEvents" name="anonymous_namespace{gena_device::cpp}::maybeDiscardEvents">
-<area shape="rect" id="Node000001" title="This gets called before queuing a new event." alt="" coords="5,95,185,149"/>
-<area shape="rect" id="Node000002" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#ae0ca4bdec01c3edef6b166d0641c9038" title="Frees memory used in notify_threads if the reference count is 0, otherwise decrements the refrence co..." alt="" coords="233,5,413,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,92,239,63,241,68,167,97"/>
-<area shape="rect" id="Node000003" href="$df/db8/LinkedList_8cpp.html#a751d0c613a5c8d83b2675c5f4261e2d7" title="Removes a node from the list. The memory for the node is freed." alt="" coords="273,84,374,109"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="185,109,259,101,259,106,186,115"/>
-<area shape="rect" id="Node000006" href="$df/db8/LinkedList_8cpp.html#a898216a354e8dd7089db150630862376" title="Returns the head of the list." alt="" coords="284,133,363,159"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="186,129,270,138,270,143,185,134"/>
-<area shape="rect" id="Node000007" href="$df/db8/LinkedList_8cpp.html#a13e9c21886d19bb76341f1d2a1aefc12" title="Returns the size of the list." alt="" coords="287,183,359,208"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="173,147,234,167,275,180,274,185,233,173,171,152"/>
-<area shape="rect" id="Node000004" href="$d6/d93/namespaceanonymous__namespace_02LinkedList_8cpp_03.html#a506e66beed0ac75aaee65b0b4d8a852a" title="Free list node." alt="" coords="461,77,687,117"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="374,94,448,94,448,99,374,99"/>
-<area shape="rect" id="Node000005" href="$d7/d20/FreeList_8cpp.html#a559c475ea4c5850cd427740512512df0" title="Returns an item to the Free List." alt="" coords="735,84,836,109"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="687,94,721,94,721,99,687,99"/>
+<area shape="rect" id="Node000001" title="This gets called before queuing a new event." alt="" coords="5,95,168,149"/>
+<area shape="rect" id="Node000002" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#ae0ca4bdec01c3edef6b166d0641c9038" title="Frees memory used in notify_threads if the reference count is 0, otherwise decrements the refrence co..." alt="" coords="216,5,379,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,92,218,63,220,68,153,97"/>
+<area shape="rect" id="Node000003" href="$df/db8/LinkedList_8cpp.html#a751d0c613a5c8d83b2675c5f4261e2d7" title="Removes a node from the list. The memory for the node is freed." alt="" coords="250,84,345,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="168,110,236,101,236,107,169,115"/>
+<area shape="rect" id="Node000006" href="$df/db8/LinkedList_8cpp.html#a898216a354e8dd7089db150630862376" title="Returns the head of the list." alt="" coords="260,133,335,159"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="169,129,246,138,246,143,168,134"/>
+<area shape="rect" id="Node000007" href="$df/db8/LinkedList_8cpp.html#a13e9c21886d19bb76341f1d2a1aefc12" title="Returns the size of the list." alt="" coords="263,183,332,208"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="160,147,217,167,250,179,249,184,215,173,158,152"/>
+<area shape="rect" id="Node000004" href="$d6/d93/namespaceanonymous__namespace_02LinkedList_8cpp_03.html#a506e66beed0ac75aaee65b0b4d8a852a" title="Free list node." alt="" coords="427,77,627,117"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="345,94,413,94,413,99,345,99"/>
+<area shape="rect" id="Node000005" href="$d7/d20/FreeList_8cpp.html#a559c475ea4c5850cd427740512512df0" title="Returns an item to the Free List." alt="" coords="675,84,769,109"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="627,94,661,94,661,99,627,99"/>
 </map>

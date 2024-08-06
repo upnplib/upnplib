@@ -107,7 +107,7 @@ $(document).ready(function(){initNavTree('d6/db1/Compa_2inc_2upnptools_8hpp_sour
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> * Copyright (c) 2000-2003 Intel Corporation</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * All rights reserved.</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft,  Ingo@Hoeft-online.de&gt;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment"> * Redistribution only with this Copyright remark. Last modified: 2023-07-24</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment"> * Redistribution only with this Copyright remark. Last modified: 2024-08-13</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment"> * Redistribution and use in source and binary forms, with or without</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment"> * modification, are permitted provided that the following conditions are met:</span></div>
@@ -139,58 +139,66 @@ $(document).ready(function(){initNavTree('d6/db1/Compa_2inc_2upnptools_8hpp_sour
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="preprocessor">#include &lt;ixml.hpp&gt;</span> <span class="comment">/* for IXML_Document */</span></div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="comment">// #include &quot;upnpconfig.h&quot; /* for UPNP_HAVE_TOOLS */</span></div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#gae9d8b5118d3a88f678be2b05125fd137">UpnpGetErrorMessage</a>(</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordtype">int</span> errorcode);</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <span class="keywordtype">int</span> <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#ga57ebb1ff5c0ddf5c3083a7f0d06ef2a3">UpnpResolveURL</a>(</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* BaseURL,</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* RelURL,</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keywordtype">char</span>* AbsURL);</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <span class="keywordtype">int</span> <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#ga03477b63ea460d397cfd61c67a5a7866">UpnpResolveURL2</a>(</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* BaseURL,</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* RelURL,</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    <span class="keywordtype">char</span>** AbsURL);</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> IXML_Document* <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#ga230b1c85d742030d8adfca84572a3e4d">UpnpMakeAction</a>(</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ActionName,</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ServType,</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    <span class="keywordtype">int</span> NumArg,</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* Arg,</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    ...);</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> IXML_Document* <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#ga221f2dc32af51ff01a8d375468a9624d">UpnpMakeActionResponse</a>(</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ActionName,</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ServType,</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    <span class="keywordtype">int</span> NumArg,</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* Arg,</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    ...);</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span> </div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <span class="keywordtype">int</span> <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#gaecd324ad2ede6fa97a0fb77a67074468">UpnpAddToAction</a>(</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>    IXML_Document** ActionDoc,</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ActionName,</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ServType,</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ArgName,</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ArgVal);</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span> </div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <span class="keywordtype">int</span> <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#ga6a5c02ae1eca518c8d6507eacd76a928">UpnpAddToActionResponse</a>(</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>    IXML_Document** ActionResponse,</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ActionName,</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ServType,</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ArgName,</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ArgVal);</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span> </div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> IXML_Document* <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#ga69a0a991a668c732c0a7f50261ffbd13">UpnpCreatePropertySet</a>(</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    <span class="keywordtype">int</span> NumArg,</div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* Arg,</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    ...);</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span> </div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <span class="keywordtype">int</span> <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#gae933908ded200771ae8dc9cb8d06d303">UpnpAddToPropertySet</a>(</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>    IXML_Document** PropSet,</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ArgName,</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ArgVal);</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span><span class="preprocessor">#endif </span><span class="comment">/* COMPA_UPNPTOOLS_HPP */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="preprocessor">#endif </span><span class="comment">/* __cplusplus */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#gae9d8b5118d3a88f678be2b05125fd137">UpnpGetErrorMessage</a>(</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keywordtype">int</span> errorcode);</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <span class="keywordtype">int</span> <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#ga57ebb1ff5c0ddf5c3083a7f0d06ef2a3">UpnpResolveURL</a>(</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* BaseURL,</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* RelURL,</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keywordtype">char</span>* AbsURL);</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <span class="keywordtype">int</span> <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#ga03477b63ea460d397cfd61c67a5a7866">UpnpResolveURL2</a>(</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* BaseURL,</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* RelURL,</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="keywordtype">char</span>** AbsURL);</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> IXML_Document* <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#ga230b1c85d742030d8adfca84572a3e4d">UpnpMakeAction</a>(</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ActionName,</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ServType,</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <span class="keywordtype">int</span> NumArg,</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* Arg,</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    ...);</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> IXML_Document* <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#ga221f2dc32af51ff01a8d375468a9624d">UpnpMakeActionResponse</a>(</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ActionName,</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ServType,</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    <span class="keywordtype">int</span> NumArg,</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* Arg,</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    ...);</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <span class="keywordtype">int</span> <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#gaecd324ad2ede6fa97a0fb77a67074468">UpnpAddToAction</a>(</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    IXML_Document** ActionDoc,</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ActionName,</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ServType,</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ArgName,</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ArgVal);</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span> </div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <span class="keywordtype">int</span> <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#ga6a5c02ae1eca518c8d6507eacd76a928">UpnpAddToActionResponse</a>(</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    IXML_Document** ActionResponse,</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ActionName,</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ServType,</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ArgName,</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ArgVal);</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span> </div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> IXML_Document* <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#ga69a0a991a668c732c0a7f50261ffbd13">UpnpCreatePropertySet</a>(</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    <span class="keywordtype">int</span> NumArg,</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* Arg,</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    ...);</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span> </div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span><a class="code hl_define" href="../../d0/d21/visibility_8hpp.html#a596de2c742b413e26eddc6d1751753c0">UPNPLIB_API</a> <span class="keywordtype">int</span> <a class="code hl_function" href="../../d3/d57/group__UPnPTools.html#gae933908ded200771ae8dc9cb8d06d303">UpnpAddToPropertySet</a>(</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    IXML_Document** PropSet,</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ArgName,</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    <span class="keyword">const</span> <span class="keywordtype">char</span>* ArgVal);</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span> </div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span><span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>}</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span><span class="preprocessor">#endif </span><span class="comment">/* __cplusplus */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span> </div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span><span class="preprocessor">#endif </span><span class="comment">/* COMPA_UPNPTOOLS_HPP */</span><span class="preprocessor"></span></div>
 <div class="ttc" id="agroup__UPnPTools_html_ga03477b63ea460d397cfd61c67a5a7866"><div class="ttname"><a href="../../d3/d57/group__UPnPTools.html#ga03477b63ea460d397cfd61c67a5a7866">UpnpResolveURL2</a></div><div class="ttdeci">UPNPLIB_API int UpnpResolveURL2(const char *BaseURL, const char *RelURL, char **AbsURL)</div><div class="ttdoc">Combines a base URL and a relative URL into a single absolute URL.</div><div class="ttdef"><b>Definition</b> <a href="../../d6/d13/Compa_2src_2api_2upnptools_8cpp_source.html#l00150">upnptools.cpp:150</a></div></div>
 <div class="ttc" id="agroup__UPnPTools_html_ga221f2dc32af51ff01a8d375468a9624d"><div class="ttname"><a href="../../d3/d57/group__UPnPTools.html#ga221f2dc32af51ff01a8d375468a9624d">UpnpMakeActionResponse</a></div><div class="ttdeci">UPNPLIB_API IXML_Document * UpnpMakeActionResponse(const char *ActionName, const char *ServType, int NumArg, const char *Arg,...)</div><div class="ttdoc">Ceates an action response packet based on its output parameters (status variable name and value pair)...</div><div class="ttdef"><b>Definition</b> <a href="../../d6/d13/Compa_2src_2api_2upnptools_8cpp_source.html#l00337">upnptools.cpp:337</a></div></div>
 <div class="ttc" id="agroup__UPnPTools_html_ga230b1c85d742030d8adfca84572a3e4d"><div class="ttname"><a href="../../d3/d57/group__UPnPTools.html#ga230b1c85d742030d8adfca84572a3e4d">UpnpMakeAction</a></div><div class="ttdeci">UPNPLIB_API IXML_Document * UpnpMakeAction(const char *ActionName, const char *ServType, int NumArg, const char *Arg,...)</div><div class="ttdoc">Creates an action request packet based on its input parameters (status variable name and value pair).</div><div class="ttdef"><b>Definition</b> <a href="../../d6/d13/Compa_2src_2api_2upnptools_8cpp_source.html#l00325">upnptools.cpp:325</a></div></div>

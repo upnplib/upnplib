@@ -1,5 +1,5 @@
 <map id="sock_init_with_ip" name="sock_init_with_ip">
-<area shape="rect" id="Node000001" title="Calls the sock_init function and assigns the passed in IP address and port to the IP address and port..." alt="" coords="5,5,140,31"/>
-<area shape="rect" id="Node000002" href="$d5/d78/sock_8cpp.html#af13a5f56b9850283b5813dff5592149a" title="Assign the passed in socket descriptor to socket descriptor in the SOCKINFO structure." alt="" coords="188,5,268,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,15,174,15,174,21,140,21"/>
+<area shape="rect" id="Node000001" title="Calls the sock_init function and assigns the passed in IP address and port to the IP address and port..." alt="" coords="5,5,128,31"/>
+<area shape="rect" id="Node000002" href="$d5/d78/sock_8cpp.html#af13a5f56b9850283b5813dff5592149a" title="Assign the passed in socket descriptor to socket descriptor in the SOCKINFO structure." alt="" coords="176,5,251,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,15,162,15,162,21,128,21"/>
 </map>

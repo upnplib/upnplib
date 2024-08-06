@@ -1,7 +1,7 @@
 <map id="UpnpDiscovery_get_Ext_Length" name="UpnpDiscovery_get_Ext_Length">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,23,183,63"/>
-<area shape="rect" id="Node000002" href="$d8/db8/UpnpDiscovery_8cpp.html#a01e1526557f4085cb439829b4b067a44" title=" " alt="" coords="231,5,408,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="182,31,217,27,217,32,183,36"/>
-<area shape="rect" id="Node000003" href="$d1/d03/group__UpnpString.html#ga33ac65c54233d98e057c755c095fe152" title="Returns the length of the string." alt="" coords="233,55,406,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="183,50,219,54,219,59,182,55"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,23,169,63"/>
+<area shape="rect" id="Node000002" href="$d8/db8/UpnpDiscovery_8cpp.html#a01e1526557f4085cb439829b4b067a44" title=" " alt="" coords="217,5,381,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="169,31,204,27,204,32,170,36"/>
+<area shape="rect" id="Node000003" href="$d1/d03/group__UpnpString.html#ga33ac65c54233d98e057c755c095fe152" title="Returns the length of the string." alt="" coords="220,55,379,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="170,50,206,54,206,59,169,55"/>
 </map>

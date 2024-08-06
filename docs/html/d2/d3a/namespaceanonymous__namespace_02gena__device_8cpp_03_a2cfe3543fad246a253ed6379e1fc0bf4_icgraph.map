@@ -1,11 +1,11 @@
 <map id="anonymous_namespace{gena_device::cpp}::genaInitNotifyCommon" name="anonymous_namespace{gena_device::cpp}::genaInitNotifyCommon">
-<area shape="rect" id="Node000001" title="We take ownership of propertySet and will free it." alt="" coords="437,16,617,71"/>
-<area shape="rect" id="Node000002" href="$dd/de6/gena__device_8cpp.html#afe08f0a722cafb84faa9def7850da596" title="Sends the intial state table dump to newly subscribed control point." alt="" coords="265,5,379,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="423,33,379,28,380,22,424,28"/>
-<area shape="rect" id="Node000004" href="$dd/de6/gena__device_8cpp.html#aadf54fcafc02a512a76124ab8bf938f6" title="Similar to the genaInitNofity. The only difference is that it takes the xml document for the state ta..." alt="" coords="255,55,389,80"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="424,58,390,62,389,57,423,53"/>
-<area shape="rect" id="Node000003" href="$d9/d54/group__compaAPI.html#ga19f65dc15aaf56d2f9390c4d3b13a5c8" title="Accepts a subscription request and sends out the current state of the eventable variables for a servi..." alt="" coords="16,5,196,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="251,21,196,21,196,15,251,15"/>
-<area shape="rect" id="Node000005" href="$d4/d99/upnpapi_8cpp.html#ab7f67326e349b9025ac62d0b8ae8ae43" title="Similar to UpnpAcceptSubscription() except that it takes a DOM document for the variables to event ra..." alt="" coords="5,55,207,80"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="241,70,207,70,207,65,241,65"/>
+<area shape="rect" id="Node000001" title="We take ownership of propertySet and will free it." alt="" coords="411,16,573,71"/>
+<area shape="rect" id="Node000002" href="$dd/de6/gena__device_8cpp.html#afe08f0a722cafb84faa9def7850da596" title="Sends the intial state table dump to newly subscribed control point." alt="" coords="250,5,353,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="397,33,352,27,353,22,397,28"/>
+<area shape="rect" id="Node000004" href="$dd/de6/gena__device_8cpp.html#aadf54fcafc02a512a76124ab8bf938f6" title="Similar to the genaInitNofity. The only difference is that it takes the xml document for the state ta..." alt="" coords="240,55,363,80"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="397,58,363,62,362,57,396,53"/>
+<area shape="rect" id="Node000003" href="$d9/d54/group__compaAPI.html#ga19f65dc15aaf56d2f9390c4d3b13a5c8" title="Accepts a subscription request and sends out the current state of the eventable variables for a servi..." alt="" coords="15,5,182,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="236,21,182,21,182,15,236,15"/>
+<area shape="rect" id="Node000005" href="$d4/d99/upnpapi_8cpp.html#ab7f67326e349b9025ac62d0b8ae8ae43" title="Similar to UpnpAcceptSubscription() except that it takes a DOM document for the variables to event ra..." alt="" coords="5,55,192,80"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="227,70,192,70,192,65,227,65"/>
 </map>

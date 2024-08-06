@@ -7,7 +7,7 @@
  * All rights reserved.
  * Copyright (c) 2012 France Telecom All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2022-05-25
+ * Redistribution only with this Copyright remark. Last modified: 2024-08-12
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -297,11 +297,12 @@ static UPNP_INLINE int ithread_cleanup_thread(void) {
  *      Returns EINVAL if the kind is not supported.
  *      See man page for pthread_mutexattr_setkind_np
  *****************************************************************************/
-#if defined(PTHREAD_MUTEX_RECURSIVE) || defined(__DragonFly__)
+// pthread_mutexattr_setkind_np is deprecated and not available anymore
+// #if defined(PTHREAD_MUTEX_RECURSIVE) || defined(__DragonFly__)
 #define ithread_mutexattr_setkind_np pthread_mutexattr_settype
-#else
-#define ithread_mutexattr_setkind_np pthread_mutexattr_setkind_np
-#endif /* UPNP_USE_RWLOCK */
+// #else
+// #define ithread_mutexattr_setkind_np pthread_mutexattr_setkind_np
+// #endif /* UPNP_USE_RWLOCK */
 
 /****************************************************************************
  * Function: ithread_mutexattr_getkind_np
@@ -322,11 +323,12 @@ static UPNP_INLINE int ithread_cleanup_thread(void) {
  *      Always returns 0.
  *      See man page for pthread_mutexattr_getkind_np
  *****************************************************************************/
-#if defined(PTHREAD_MUTEX_RECURSIVE) || defined(__DragonFly__)
+// pthread_mutexattr_getkind_np is deprecated and not available anymore
+// #if defined(PTHREAD_MUTEX_RECURSIVE) || defined(__DragonFly__)
 #define ithread_mutexattr_getkind_np pthread_mutexattr_gettype
-#else
-#define ithread_mutexattr_getkind_np pthread_mutexattr_getkind_np
-#endif /* UPNP_USE_RWLOCK */
+// #else
+// #define ithread_mutexattr_getkind_np pthread_mutexattr_getkind_np
+// #endif /* UPNP_USE_RWLOCK */
 
 /****************************************************************************
  * Function: ithread_mutex_init
@@ -902,13 +904,14 @@ static UPNP_INLINE int ithread_cleanup_thread(void) {
 #endif
 #endif
 
-#if !defined(PTHREAD_MUTEX_RECURSIVE) && !defined(__DragonFly__) &&            \
-    !defined(UPNP_USE_MSVCPP)
+// pthread_mutexattr_setkind_np is deprecated and not available anymore
+/* #if !defined(PTHREAD_MUTEX_RECURSIVE) && !defined(__DragonFly__) && \
+     !defined(UPNP_USE_MSVCPP) */
 /* !defined(UPNP_USE_MSVCPP) should probably also have pthreads version check -
  * but it's not clear if that is possible */
 /* NK: Added for satisfying the gcc compiler */
 // EXPORT_SPEC int pthread_mutexattr_setkind_np(
 //         pthread_mutexattr_t *attr, int kind);
-#endif
+// #endif
 
 #endif /* UPNPLIB_ITHREAD_HPP */

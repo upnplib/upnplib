@@ -1,32 +1,32 @@
 <map id="anonymous_namespace{webserver::cpp}::get_file_info" name="anonymous_namespace{webserver::cpp}::get_file_info">
-<area shape="rect" id="Node000001" title="Get file information." alt="" coords="5,329,185,384"/>
-<area shape="rect" id="Node000002" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#a9b4d96d558dd0f0ff64698fc841bd3ba" title="Based on the extension of the filename, clones an XML string based on type and content subtype." alt="" coords="255,65,435,120"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,328,124,287,152,236,188,184,232,137,249,125,252,129,235,141,192,187,156,239,129,289,110,330"/>
-<area shape="rect" id="Node000006" href="$dd/da6/UpnpFileInfo_8cpp.html#a7524c9edad2266425f46231128592c2f" title=" " alt="" coords="505,137,723,163"/>
-<area shape="poly" id="edge10_Node000001_Node000006" title=" " alt="" coords="107,328,127,293,154,252,190,213,232,182,295,157,362,142,428,135,491,135,491,140,429,140,363,147,296,162,235,187,193,217,159,256,131,296,112,330"/>
-<area shape="rect" id="Node000007" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#a62839c9e5e505c93e0f9eb71d1089594" title="Portable gmtime_r for Microsoft Windows." alt="" coords="285,196,404,221"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="118,327,167,278,198,253,232,232,271,217,273,222,235,236,201,257,171,282,122,331"/>
-<area shape="rect" id="Node000008" href="$dd/da6/UpnpFileInfo_8cpp.html#a5e35da7e954ab5ff7fcd44ea37fcd9c7" title=" " alt="" coords="241,245,448,271"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="140,327,184,303,232,281,261,272,263,277,234,286,186,307,142,331"/>
-<area shape="rect" id="Node000009" href="$dd/da6/UpnpFileInfo_8cpp.html#a3b4513343da61dc94c15e82cac61658f" title=" " alt="" coords="239,295,450,320"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="185,336,266,320,267,325,186,342"/>
-<area shape="rect" id="Node000010" href="$dd/da6/UpnpFileInfo_8cpp.html#a6683f66989e0c4579d124a440f7b96ed" title=" " alt="" coords="233,344,456,369"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="185,354,220,354,220,359,185,359"/>
-<area shape="rect" id="Node000011" href="$dd/da6/UpnpFileInfo_8cpp.html#a7199a144c596f18960b5be5ad4393514" title=" " alt="" coords="242,393,447,419"/>
-<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="186,372,267,388,266,393,185,377"/>
-<area shape="rect" id="Node000012" href="$dd/da6/UpnpFileInfo_8cpp.html#a2267585986dd4f52382c761fbc68f312" title=" " alt="" coords="240,443,449,468"/>
-<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="141,382,185,407,234,429,259,437,257,442,232,434,183,411,138,387"/>
-<area shape="rect" id="Node000013" href="$dd/da6/UpnpFileInfo_8cpp.html#aeba9fa8ab52f4d524744789522766109" title=" " alt="" coords="239,492,450,517"/>
-<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="121,383,170,432,201,457,235,478,250,485,248,490,232,483,198,462,166,436,117,386"/>
-<area shape="rect" id="Node000014" href="$dd/da6/UpnpFileInfo_8cpp.html#a29dc896ad2d56c765904573694e68212" title=" " alt="" coords="234,541,455,567"/>
-<area shape="poly" id="edge14_Node000001_Node000014" title=" " alt="" coords="113,383,133,417,160,457,194,495,235,528,246,534,243,538,232,532,191,499,156,460,128,420,108,386"/>
-<area shape="rect" id="Node000015" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#ae03b8bd3b162ff0ea2114c78a5be6abb" title="Multiplatform wrapper to make win32 asctime_s compatible to posix asctime_r." alt="" coords="255,591,435,645"/>
-<area shape="poly" id="edge15_Node000001_Node000015" title=" " alt="" coords="109,383,127,426,154,478,190,531,235,577,244,584,241,588,232,581,186,534,149,481,122,428,104,385"/>
-<area shape="rect" id="Node000003" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#a71803083adb2cd9161d21498188148d1" title="Based on the extension, returns the content type and content subtype." alt="" coords="520,5,708,60"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="434,70,506,54,507,59,435,75"/>
-<area shape="rect" id="Node000005" href="$dd/da6/UpnpFileInfo_8cpp.html#a696978fd27f314992b4bf33d4ffe5fb3" title=" " alt="" coords="504,84,724,109"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="435,91,490,92,490,97,435,97"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="435,109,541,132,540,137,434,114"/>
-<area shape="rect" id="Node000004" href="$dc/d6d/namespaceupnplib.html#a1b07641cbe43d7d273439a6c03cb1de4" title="Based on the extension, returns the content type and content subtype." alt="" coords="772,20,945,45"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="708,30,758,30,758,35,708,35"/>
+<area shape="rect" id="Node000001" title="Get file information." alt="" coords="5,329,168,384"/>
+<area shape="rect" id="Node000002" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#a9b4d96d558dd0f0ff64698fc841bd3ba" title="Based on the extension of the filename, clones an XML string based on type and content subtype." alt="" coords="236,65,399,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,328,113,287,139,237,172,184,214,137,230,125,233,129,218,141,177,187,143,239,118,289,100,330"/>
+<area shape="rect" id="Node000006" href="$dd/da6/UpnpFileInfo_8cpp.html#a7524c9edad2266425f46231128592c2f" title=" " alt="" coords="467,137,669,163"/>
+<area shape="poly" id="edge10_Node000001_Node000006" title=" " alt="" coords="97,328,115,293,141,253,174,214,215,182,272,158,334,143,395,137,453,136,453,141,396,142,335,148,274,163,217,187,178,217,145,256,120,296,102,330"/>
+<area shape="rect" id="Node000007" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#a62839c9e5e505c93e0f9eb71d1089594" title="Portable gmtime_r for Microsoft Windows." alt="" coords="265,196,370,221"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="108,327,153,278,183,253,215,232,250,217,252,222,217,236,186,257,157,282,111,331"/>
+<area shape="rect" id="Node000008" href="$dd/da6/UpnpFileInfo_8cpp.html#a5e35da7e954ab5ff7fcd44ea37fcd9c7" title=" " alt="" coords="223,245,411,271"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="128,327,169,303,215,281,241,272,243,277,217,286,172,308,131,332"/>
+<area shape="rect" id="Node000009" href="$dd/da6/UpnpFileInfo_8cpp.html#a3b4513343da61dc94c15e82cac61658f" title=" " alt="" coords="220,295,415,320"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="168,337,244,320,245,326,169,342"/>
+<area shape="rect" id="Node000010" href="$dd/da6/UpnpFileInfo_8cpp.html#a6683f66989e0c4579d124a440f7b96ed" title=" " alt="" coords="216,344,419,369"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="168,354,202,354,202,359,168,359"/>
+<area shape="rect" id="Node000011" href="$dd/da6/UpnpFileInfo_8cpp.html#a7199a144c596f18960b5be5ad4393514" title=" " alt="" coords="223,393,411,419"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="169,371,245,388,244,393,168,377"/>
+<area shape="rect" id="Node000012" href="$dd/da6/UpnpFileInfo_8cpp.html#a2267585986dd4f52382c761fbc68f312" title=" " alt="" coords="221,443,413,468"/>
+<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="129,382,171,407,217,429,238,436,237,441,215,434,168,411,127,386"/>
+<area shape="rect" id="Node000013" href="$dd/da6/UpnpFileInfo_8cpp.html#aeba9fa8ab52f4d524744789522766109" title=" " alt="" coords="220,492,415,517"/>
+<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="111,382,156,432,185,457,217,478,231,485,229,490,215,483,182,461,153,436,107,386"/>
+<area shape="rect" id="Node000014" href="$dd/da6/UpnpFileInfo_8cpp.html#a29dc896ad2d56c765904573694e68212" title=" " alt="" coords="216,541,419,567"/>
+<area shape="poly" id="edge14_Node000001_Node000014" title=" " alt="" coords="103,383,121,417,147,456,179,495,218,528,227,534,225,538,214,532,175,499,142,459,117,420,98,386"/>
+<area shape="rect" id="Node000015" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#ae03b8bd3b162ff0ea2114c78a5be6abb" title="Multiplatform wrapper to make win32 asctime_s compatible to posix asctime_r." alt="" coords="236,591,399,645"/>
+<area shape="poly" id="edge15_Node000001_Node000015" title=" " alt="" coords="99,383,116,426,141,478,175,531,218,577,226,584,223,588,214,581,171,534,137,480,111,428,94,385"/>
+<area shape="rect" id="Node000003" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#a71803083adb2cd9161d21498188148d1" title="Based on the extension, returns the content type and content subtype." alt="" coords="485,5,651,60"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="398,71,471,53,472,58,399,76"/>
+<area shape="rect" id="Node000005" href="$dd/da6/UpnpFileInfo_8cpp.html#a696978fd27f314992b4bf33d4ffe5fb3" title=" " alt="" coords="467,84,669,109"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="399,91,453,92,453,97,399,97"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="399,109,499,132,498,137,398,114"/>
+<area shape="rect" id="Node000004" href="$dc/d6d/namespaceupnplib.html#a1b07641cbe43d7d273439a6c03cb1de4" title="Based on the extension, returns the content type and content subtype." alt="" coords="717,20,872,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="651,30,704,30,704,35,651,35"/>
 </map>

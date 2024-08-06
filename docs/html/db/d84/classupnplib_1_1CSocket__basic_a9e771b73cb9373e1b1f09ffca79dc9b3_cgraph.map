@@ -1,5 +1,5 @@
 <map id="upnplib::CSocket_basic::netaddr" name="upnplib::CSocket_basic::netaddr">
-<area shape="rect" id="Node000001" title="Get netaddress without port." alt="" coords="5,5,176,45"/>
-<area shape="rect" id="Node000002" href="$d1/dc2/structupnplib_1_1SSockaddr.html#a7177ca7af8e89e62f3a9ace32d429a0b" title="Get the assosiated netaddress without port." alt="" coords="224,5,369,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,23,210,23,210,28,176,28"/>
+<area shape="rect" id="Node000001" title="Get netaddress without port." alt="" coords="5,5,165,45"/>
+<area shape="rect" id="Node000002" href="$d1/dc2/structupnplib_1_1SSockaddr.html#a7177ca7af8e89e62f3a9ace32d429a0b" title="Get the assosiated netaddress without port." alt="" coords="213,5,348,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="166,23,200,23,200,28,166,28"/>
 </map>

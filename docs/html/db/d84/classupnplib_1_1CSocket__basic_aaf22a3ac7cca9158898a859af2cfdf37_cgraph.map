@@ -1,7 +1,7 @@
 <map id="upnplib::CSocket_basic::load" name="upnplib::CSocket_basic::load">
-<area shape="rect" id="Node000001" title="Load the raw socket file descriptor from the constructor into the object." alt="" coords="5,37,176,77"/>
-<area shape="rect" id="Node000002" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catch error for later use." alt="" coords="224,5,372,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,41,210,36,211,42,177,47"/>
-<area shape="rect" id="Node000003" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4" title="Get human readable error description of the catched error." alt="" coords="224,69,372,109"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="177,68,211,73,210,78,176,73"/>
+<area shape="rect" id="Node000001" title="Load the raw socket file descriptor from the constructor into the object." alt="" coords="5,37,165,77"/>
+<area shape="rect" id="Node000002" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catch error for later use." alt="" coords="213,5,352,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,42,199,36,200,41,166,47"/>
+<area shape="rect" id="Node000003" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4" title="Get human readable error description of the catched error." alt="" coords="213,69,352,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="166,68,200,73,199,79,165,73"/>
 </map>

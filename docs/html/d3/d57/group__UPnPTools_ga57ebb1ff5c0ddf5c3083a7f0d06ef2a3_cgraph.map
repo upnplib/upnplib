@@ -1,27 +1,27 @@
 <map id="UpnpResolveURL" name="UpnpResolveURL">
-<area shape="rect" id="Node000001" title="Combines a base URL and a relative URL into a single absolute URL." alt="" coords="5,198,140,223"/>
-<area shape="rect" id="Node000002" href="$d8/dd2/uri_8cpp.html#a108ec7fc0704f362d70140d838e6e356" title="Resolves a relative url with a base url." alt="" coords="188,198,307,223"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,208,174,208,174,213,140,213"/>
-<area shape="rect" id="Node000003" href="$d8/dd2/uri_8cpp.html#ae59095a3e023c16f4dd68bc60e21f7c7" title="Parses a uri as defined in RFC 2396 (explaining URIs)." alt="" coords="367,141,449,166"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="283,195,358,168,360,173,285,200"/>
-<area shape="rect" id="Node000012" href="$d8/dd2/uri_8cpp.html#a259b5aed5805a1f66475a483a201f587" title="Removes &quot;.&quot;, and &quot;..&quot; from a path." alt="" coords="355,222,461,247"/>
-<area shape="poly" id="edge11_Node000002_Node000012" title=" " alt="" coords="307,217,341,222,340,227,307,222"/>
-<area shape="rect" id="Node000004" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#afb6a0fce453e470360da2b0d0d5f8a8b" title="Parses a string with host and port and fills a hostport structure." alt="" coords="509,5,700,45"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="418,138,455,98,480,75,508,55,520,49,522,53,511,60,483,79,458,102,422,142"/>
-<area shape="rect" id="Node000005" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#ab8f57212a00e026034f1864f0239bad9" title="parses a uri scheme starting at in[0]." alt="" coords="511,69,699,109"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="447,138,529,111,530,116,449,143"/>
-<area shape="rect" id="Node000006" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#ab0786f41a45f36864383bcca2f4f2658" title="Parses a string of uric characters starting at in[0]." alt="" coords="515,133,695,173"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="450,151,501,151,501,156,450,156"/>
-<area shape="rect" id="Node000011" href="$d8/dd2/uri_8cpp.html#a8f32e8ba916b944b37e9f23e1fc60ec9" title="Compares buffer in the token object with the buffer in in2 case insensitive." alt="" coords="521,198,688,223"/>
-<area shape="poly" id="edge10_Node000003_Node000011" title=" " alt="" coords="448,164,510,183,542,192,541,197,509,188,447,169"/>
-<area shape="rect" id="Node000007" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a4666c8d916f7397270c5cc93734482d3" title="Check that a char[3] sequence is ESCAPED." alt="" coords="751,69,931,109"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="678,131,753,110,754,115,680,136"/>
-<area shape="rect" id="Node000008" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a72aa299b86ca4486b62de1ac2e11b649" title="Check for a RESERVED character." alt="" coords="751,133,931,173"/>
-<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="695,151,737,151,737,156,695,156"/>
-<area shape="rect" id="Node000009" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#abb4b2d5f48da8f6aaa405da333b3ab45" title="Check for an UNRESERVED character." alt="" coords="748,197,933,237"/>
-<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="680,171,754,191,753,196,678,176"/>
-<area shape="rect" id="Node000010" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a1425dfc37b98f61a0b49a36ac07660d1" title="Check for a MARK character." alt="" coords="981,197,1161,237"/>
-<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="933,215,968,215,968,220,933,220"/>
-<area shape="rect" id="Node000013" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a3ee49f49a4ad5c7d3058bb6e67d5ff7f" title="Check if end of a path." alt="" coords="515,248,695,288"/>
-<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="462,241,501,248,501,253,461,246"/>
+<area shape="rect" id="Node000001" title="Combines a base URL and a relative URL into a single absolute URL." alt="" coords="5,198,133,223"/>
+<area shape="rect" id="Node000002" href="$d8/dd2/uri_8cpp.html#a108ec7fc0704f362d70140d838e6e356" title="Resolves a relative url with a base url." alt="" coords="181,198,288,223"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,208,168,208,168,213,134,213"/>
+<area shape="rect" id="Node000003" href="$d8/dd2/uri_8cpp.html#ae59095a3e023c16f4dd68bc60e21f7c7" title="Parses a uri as defined in RFC 2396 (explaining URIs)." alt="" coords="347,141,422,166"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="268,195,337,168,339,173,270,200"/>
+<area shape="rect" id="Node000012" href="$d8/dd2/uri_8cpp.html#a259b5aed5805a1f66475a483a201f587" title="Removes &quot;.&quot;, and &quot;..&quot; from a path." alt="" coords="336,222,433,247"/>
+<area shape="poly" id="edge11_Node000002_Node000012" title=" " alt="" coords="289,217,323,222,322,227,288,222"/>
+<area shape="rect" id="Node000004" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#afb6a0fce453e470360da2b0d0d5f8a8b" title="Parses a string with host and port and fills a hostport structure." alt="" coords="481,5,648,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="394,139,429,98,453,75,480,55,490,49,493,54,483,60,457,80,433,102,398,142"/>
+<area shape="rect" id="Node000005" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#ab8f57212a00e026034f1864f0239bad9" title="parses a uri scheme starting at in[0]." alt="" coords="481,69,648,109"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="421,138,494,112,496,117,422,143"/>
+<area shape="rect" id="Node000006" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#ab0786f41a45f36864383bcca2f4f2658" title="Parses a string of uric characters starting at in[0]." alt="" coords="483,133,646,173"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="422,151,470,151,470,156,422,156"/>
+<area shape="rect" id="Node000011" href="$d8/dd2/uri_8cpp.html#a8f32e8ba916b944b37e9f23e1fc60ec9" title="Compares buffer in the token object with the buffer in in2 case insensitive." alt="" coords="488,198,641,223"/>
+<area shape="poly" id="edge10_Node000003_Node000011" title=" " alt="" coords="423,163,482,183,509,191,508,196,481,188,421,168"/>
+<area shape="rect" id="Node000007" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a4666c8d916f7397270c5cc93734482d3" title="Check that a char[3] sequence is ESCAPED." alt="" coords="696,69,859,109"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="631,131,696,111,698,116,633,136"/>
+<area shape="rect" id="Node000008" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a72aa299b86ca4486b62de1ac2e11b649" title="Check for a RESERVED character." alt="" coords="696,133,859,173"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="647,151,683,151,683,156,647,156"/>
+<area shape="rect" id="Node000009" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#abb4b2d5f48da8f6aaa405da333b3ab45" title="Check for an UNRESERVED character." alt="" coords="696,197,859,237"/>
+<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="633,171,698,191,696,196,631,176"/>
+<area shape="rect" id="Node000010" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a1425dfc37b98f61a0b49a36ac07660d1" title="Check for a MARK character." alt="" coords="907,197,1069,237"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="859,215,893,215,893,220,859,220"/>
+<area shape="rect" id="Node000013" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a3ee49f49a4ad5c7d3058bb6e67d5ff7f" title="Check if end of a path." alt="" coords="483,248,646,288"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="434,241,470,248,470,253,433,246"/>
 </map>

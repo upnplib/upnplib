@@ -1,0 +1,14 @@
+diff --git a/upnp/sample/common/tv_ctrlpt.c b/upnp/sample/common/tv_ctrlpt.c
+index 5ec73d53..1431021f 100644
+--- a/upnp/sample/common/tv_ctrlpt.c
++++ b/upnp/sample/common/tv_ctrlpt.c
+@@ -747,7 +747,9 @@ void TvCtrlPointAddDevice(
+    strcpy(deviceNode->device.UDN, UDN);
+    strcpy(deviceNode->device.DescDocURL, location);
+    strcpy(deviceNode->device.FriendlyName, friendlyName);
+-   strcpy(deviceNode->device.PresURL, presURL);
++   // BUGFIX: Next could segfault
++   if(presURL)
++       strcpy(deviceNode->device.PresURL, presURL);
+    deviceNode->device.AdvrTimeOut = expires;
+    for (service = 0; service < TV_SERVICE_SERVCOUNT; service++) {

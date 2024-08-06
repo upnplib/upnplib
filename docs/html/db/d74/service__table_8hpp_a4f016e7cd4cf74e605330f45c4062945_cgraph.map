@@ -1,11 +1,11 @@
 <map id="copy_subscription" name="copy_subscription">
-<area shape="rect" id="Node000001" title="Makes a copy of the subscription." alt="" coords="5,42,144,67"/>
-<area shape="rect" id="Node000002" href="$d8/dd2/uri_8cpp.html#a374e6c139790318fbeeb52f69574f491" title="Copies one URL_list into another." alt="" coords="192,15,305,41"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="144,41,178,36,178,41,145,47"/>
-<area shape="rect" id="Node000004" href="$df/db8/LinkedList_8cpp.html#acafc3d2a391f494afc5947668191cc0e" title="Initializes LinkedList. Must be called first and only once for List." alt="" coords="215,66,282,91"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="145,62,202,70,201,75,144,67"/>
-<area shape="rect" id="Node000003" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#afda48d566eed98c513c1e4a235d729bf" title="Copy the offset and size from a token to another token." alt="" coords="353,5,533,45"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="305,25,340,24,340,29,306,30"/>
-<area shape="rect" id="Node000005" href="$d7/d20/FreeList_8cpp.html#a2a1bcf0da31489886910109d5f45ee89" title="Initializes Free List." alt="" coords="396,70,491,95"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="282,77,382,79,382,84,282,82"/>
+<area shape="rect" id="Node000001" title="Makes a copy of the subscription." alt="" coords="5,42,132,67"/>
+<area shape="rect" id="Node000002" href="$d8/dd2/uri_8cpp.html#a374e6c139790318fbeeb52f69574f491" title="Copies one URL_list into another." alt="" coords="180,15,288,41"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,42,166,36,167,42,133,47"/>
+<area shape="rect" id="Node000004" href="$df/db8/LinkedList_8cpp.html#acafc3d2a391f494afc5947668191cc0e" title="Initializes LinkedList. Must be called first and only once for List." alt="" coords="203,66,265,91"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="133,61,190,70,190,75,132,67"/>
+<area shape="rect" id="Node000003" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#afda48d566eed98c513c1e4a235d729bf" title="Copy the offset and size from a token to another token." alt="" coords="336,5,499,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="288,25,323,24,323,29,288,30"/>
+<area shape="rect" id="Node000005" href="$d7/d20/FreeList_8cpp.html#a2a1bcf0da31489886910109d5f45ee89" title="Initializes Free List." alt="" coords="374,70,461,95"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="265,77,360,79,360,84,265,82"/>
 </map>

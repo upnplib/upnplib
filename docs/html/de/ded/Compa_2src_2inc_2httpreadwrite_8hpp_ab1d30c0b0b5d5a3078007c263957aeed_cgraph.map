@@ -1,29 +1,29 @@
 <map id="http_CloseHttpConnection" name="http_CloseHttpConnection">
-<area shape="rect" id="Node000001" title="Closes the connection created with UpnpOpenHttpConnection() and frees any memory associated with the ..." alt="" coords="5,176,197,201"/>
-<area shape="rect" id="Node000002" href="$dd/d1d/httpparser_8cpp.html#aae19f051c772e39575e48ddb2615f6b5" title="Free memory allocated for the http message." alt="" coords="245,115,377,140"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="145,173,253,141,255,146,146,179"/>
-<area shape="rect" id="Node000011" href="$d5/d78/sock_8cpp.html#a90f3d17250e4a8df679a4b88a8abd4da" title="Shutsdown the socket using the ShutdownMethod to indicate whether sends and receives on the socket wi..." alt="" coords="257,204,365,229"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="197,199,244,205,243,210,196,204"/>
-<area shape="rect" id="Node000003" href="$df/db8/LinkedList_8cpp.html#a28e5dc6ff4a189982c97ae5780d360fd" title="Removes all memory associated with list nodes. Does not free LinkedList *list." alt="" coords="453,55,549,80"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="351,112,446,82,448,87,353,117"/>
-<area shape="rect" id="Node000008" href="$da/dd9/membuffer_8cpp.html#a132a367b6d8baf0d9de4b6e1f0fffe14" title="Free&#39;s memory allocated for membuffer* m." alt="" coords="425,115,576,140"/>
-<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="377,125,412,125,412,130,377,130"/>
-<area shape="rect" id="Node000004" href="$d7/d20/FreeList_8cpp.html#ae64c10055f937a33eff150f678303b7f" title="Releases the resources stored with the free list." alt="" coords="624,5,748,31"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="548,52,623,32,625,37,550,57"/>
-<area shape="rect" id="Node000005" href="$df/db8/LinkedList_8cpp.html#a751d0c613a5c8d83b2675c5f4261e2d7" title="Removes a node from the list. The memory for the node is freed." alt="" coords="635,55,737,80"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="549,65,622,65,622,70,549,70"/>
-<area shape="rect" id="Node000006" href="$d6/d93/namespaceanonymous__namespace_02LinkedList_8cpp_03.html#a506e66beed0ac75aaee65b0b4d8a852a" title="Free list node." alt="" coords="796,43,1021,83"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="737,64,782,63,782,68,737,69"/>
-<area shape="rect" id="Node000007" href="$d7/d20/FreeList_8cpp.html#a559c475ea4c5850cd427740512512df0" title="Returns an item to the Free List." alt="" coords="1069,51,1171,76"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="1022,61,1056,61,1056,66,1022,66"/>
-<area shape="rect" id="Node000009" href="$da/dd9/membuffer_8cpp.html#a53d54a6586b380b385d18ae7dcd37e80" title="Wrapper to membuffer_initialize()." alt="" coords="625,117,747,143"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="576,126,611,126,611,132,576,131"/>
-<area shape="rect" id="Node000010" href="$d8/d45/namespaceanonymous__namespace_02membuffer_8cpp_03.html#aa81aeb90fb3c8389c7eb0a77b847101e" title="Initialize the buffer." alt="" coords="798,108,1019,163"/>
-<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="748,129,784,130,784,135,747,134"/>
-<area shape="rect" id="Node000012" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catch error for later use." alt="" coords="427,165,575,205"/>
-<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="365,205,412,197,413,202,366,210"/>
-<area shape="rect" id="Node000013" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4" title="Get human readable error description of the catched error." alt="" coords="427,229,575,269"/>
-<area shape="poly" id="edge12_Node000011_Node000013" title=" " alt="" coords="366,223,413,231,412,236,365,228"/>
-<area shape="rect" id="Node000014" href="$d6/df0/sock_8hpp.html#a703577f3b40fc1c9e865b798beab18e5" title="Closes the socket if it is different from &#45;1." alt="" coords="454,293,547,319"/>
-<area shape="poly" id="edge13_Node000011_Node000014" title=" " alt="" coords="334,227,376,252,426,278,446,286,444,291,424,283,373,257,331,232"/>
+<area shape="rect" id="Node000001" title="Closes the connection created with UpnpOpenHttpConnection() and frees any memory associated with the ..." alt="" coords="5,176,181,201"/>
+<area shape="rect" id="Node000002" href="$dd/d1d/httpparser_8cpp.html#aae19f051c772e39575e48ddb2615f6b5" title="Free memory allocated for the http message." alt="" coords="229,115,348,140"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,173,234,142,235,147,135,178"/>
+<area shape="rect" id="Node000011" href="$d5/d78/sock_8cpp.html#a90f3d17250e4a8df679a4b88a8abd4da" title="Shutsdown the socket using the ShutdownMethod to indicate whether sends and receives on the socket wi..." alt="" coords="239,204,339,229"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="182,199,225,205,225,210,181,204"/>
+<area shape="rect" id="Node000003" href="$df/db8/LinkedList_8cpp.html#a28e5dc6ff4a189982c97ae5780d360fd" title="Removes all memory associated with list nodes. Does not free LinkedList *list." alt="" coords="421,55,510,80"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="326,112,414,82,415,87,328,117"/>
+<area shape="rect" id="Node000008" href="$da/dd9/membuffer_8cpp.html#a132a367b6d8baf0d9de4b6e1f0fffe14" title="Free&#39;s memory allocated for membuffer* m." alt="" coords="399,115,532,140"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="348,125,385,125,385,130,348,130"/>
+<area shape="rect" id="Node000004" href="$d7/d20/FreeList_8cpp.html#ae64c10055f937a33eff150f678303b7f" title="Releases the resources stored with the free list." alt="" coords="583,5,697,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="509,52,580,32,582,37,511,57"/>
+<area shape="rect" id="Node000005" href="$df/db8/LinkedList_8cpp.html#a751d0c613a5c8d83b2675c5f4261e2d7" title="Removes a node from the list. The memory for the node is freed." alt="" coords="593,55,687,80"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="510,65,579,65,579,70,510,70"/>
+<area shape="rect" id="Node000006" href="$d6/d93/namespaceanonymous__namespace_02LinkedList_8cpp_03.html#a506e66beed0ac75aaee65b0b4d8a852a" title="Free list node." alt="" coords="745,43,945,83"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="688,64,732,63,732,68,688,69"/>
+<area shape="rect" id="Node000007" href="$d7/d20/FreeList_8cpp.html#a559c475ea4c5850cd427740512512df0" title="Returns an item to the Free List." alt="" coords="993,51,1088,76"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="946,61,980,61,980,66,946,66"/>
+<area shape="rect" id="Node000009" href="$da/dd9/membuffer_8cpp.html#a53d54a6586b380b385d18ae7dcd37e80" title="Wrapper to membuffer_initialize()." alt="" coords="587,117,693,143"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="532,126,573,126,573,132,532,131"/>
+<area shape="rect" id="Node000010" href="$d8/d45/namespaceanonymous__namespace_02membuffer_8cpp_03.html#aa81aeb90fb3c8389c7eb0a77b847101e" title="Initialize the buffer." alt="" coords="751,108,940,163"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="694,129,737,130,736,135,693,134"/>
+<area shape="rect" id="Node000012" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catch error for later use." alt="" coords="396,165,535,205"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="338,205,382,197,383,202,339,210"/>
+<area shape="rect" id="Node000013" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4" title="Get human readable error description of the catched error." alt="" coords="396,229,535,269"/>
+<area shape="poly" id="edge12_Node000011_Node000013" title=" " alt="" coords="339,223,383,231,382,236,338,228"/>
+<area shape="rect" id="Node000014" href="$d6/df0/sock_8hpp.html#a703577f3b40fc1c9e865b798beab18e5" title="Closes the socket if it is different from &#45;1." alt="" coords="421,293,509,319"/>
+<area shape="poly" id="edge13_Node000011_Node000014" title=" " alt="" coords="310,227,350,252,397,278,414,286,412,291,395,283,347,257,308,232"/>
 </map>

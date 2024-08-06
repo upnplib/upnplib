@@ -1,11 +1,11 @@
 <map id="GetClientSubActualSID" name="GetClientSubActualSID">
-<area shape="rect" id="Node000001" title="Returns the client subscription from the client subscription table that has the matching token *sid b..." alt="" coords="5,73,176,98"/>
-<area shape="rect" id="Node000002" href="$dc/d2f/GenlibClientSubscription_8cpp.html#a1978700a068ca00617e40c5047435d82" title=" " alt="" coords="224,33,407,73"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,71,210,66,211,71,177,76"/>
-<area shape="rect" id="Node000005" href="$dc/d2f/GenlibClientSubscription_8cpp.html#a1be96764999991413d29cebdbc27ffff" title=" " alt="" coords="224,97,407,137"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="177,95,211,100,210,105,176,100"/>
-<area shape="rect" id="Node000003" href="$dc/d2f/GenlibClientSubscription_8cpp.html#a40eb3122f64bdb5bb8dc15437be1562d" title=" " alt="" coords="455,5,637,45"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="406,40,441,35,441,41,407,45"/>
-<area shape="rect" id="Node000004" href="$d1/d03/group__UpnpString.html#ga52a429bf778bf8c0a44a779d9446116c" title="Returns the pointer to char." alt="" coords="463,70,629,95"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="407,62,450,68,449,73,406,68"/>
+<area shape="rect" id="Node000001" title="Returns the client subscription from the client subscription table that has the matching token *sid b..." alt="" coords="5,73,165,98"/>
+<area shape="rect" id="Node000002" href="$dc/d2f/GenlibClientSubscription_8cpp.html#a1978700a068ca00617e40c5047435d82" title=" " alt="" coords="213,33,379,73"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,71,200,65,200,71,166,76"/>
+<area shape="rect" id="Node000005" href="$dc/d2f/GenlibClientSubscription_8cpp.html#a1be96764999991413d29cebdbc27ffff" title=" " alt="" coords="213,97,379,137"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="166,95,200,100,200,105,165,100"/>
+<area shape="rect" id="Node000003" href="$dc/d2f/GenlibClientSubscription_8cpp.html#a40eb3122f64bdb5bb8dc15437be1562d" title=" " alt="" coords="427,5,592,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="378,40,413,35,413,41,379,45"/>
+<area shape="rect" id="Node000004" href="$d1/d03/group__UpnpString.html#ga52a429bf778bf8c0a44a779d9446116c" title="Returns the pointer to char." alt="" coords="433,70,586,95"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="379,62,420,68,419,73,378,67"/>
 </map>

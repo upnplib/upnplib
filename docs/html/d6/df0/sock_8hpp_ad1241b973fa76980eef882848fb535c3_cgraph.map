@@ -1,10 +1,10 @@
 <map id="sock_write" name="sock_write">
-<area shape="rect" id="Node000001" title="Writes data on the socket in sockinfo." alt="" coords="5,49,97,74"/>
-<area shape="rect" id="Node000002" href="$db/dc4/namespaceanonymous__namespace_02sock_8cpp_03.html#a2356245ef3089394fee85fd3f34be80f" title="Write to an SSL protected socket." alt="" coords="145,5,348,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,50,131,44,132,49,98,56"/>
-<area shape="rect" id="Node000004" href="$db/dc4/namespaceanonymous__namespace_02sock_8cpp_03.html#a64de72048c9ed20f9673c4d9564d5457" title="Write to a not SSL protected socket." alt="" coords="157,70,337,125"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="98,67,144,76,143,81,97,72"/>
-<area shape="rect" id="Node000003" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catch error for later use." alt="" coords="396,41,544,81"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="348,39,382,45,382,50,348,44"/>
-<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="337,80,382,73,383,78,338,85"/>
+<area shape="rect" id="Node000001" title="Writes data on the socket in sockinfo." alt="" coords="5,49,91,74"/>
+<area shape="rect" id="Node000002" href="$db/dc4/namespaceanonymous__namespace_02sock_8cpp_03.html#a2356245ef3089394fee85fd3f34be80f" title="Write to an SSL protected socket." alt="" coords="139,5,321,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,50,125,43,126,49,91,56"/>
+<area shape="rect" id="Node000004" href="$db/dc4/namespaceanonymous__namespace_02sock_8cpp_03.html#a64de72048c9ed20f9673c4d9564d5457" title="Write to a not SSL protected socket." alt="" coords="149,70,311,125"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="91,67,136,76,135,81,90,72"/>
+<area shape="rect" id="Node000003" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catch error for later use." alt="" coords="369,41,508,81"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="322,38,356,44,355,50,321,44"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="311,81,355,73,356,78,312,86"/>
 </map>

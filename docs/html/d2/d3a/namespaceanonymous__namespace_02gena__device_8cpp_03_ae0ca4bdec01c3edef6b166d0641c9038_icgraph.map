@@ -1,92 +1,92 @@
 <map id="anonymous_namespace{gena_device::cpp}::free_notify_struct" name="anonymous_namespace{gena_device::cpp}::free_notify_struct">
-<area shape="rect" id="Node000001" title="Frees memory used in notify_threads if the reference count is 0, otherwise decrements the refrence co..." alt="" coords="1923,493,2103,548"/>
-<area shape="rect" id="Node000002" href="$dd/de6/gena__device_8cpp.html#a1503915b6cd3d0ea5adc7b5493b589ab" title="???" alt="" coords="1652,457,1875,483"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1909,502,1826,485,1827,480,1910,497"/>
-<area shape="rect" id="Node000027" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#ac1a38d06cf74cd21f7f8ac40f00efb11" title="We take ownership of propertySet and will free it." alt="" coords="507,581,687,636"/>
-<area shape="poly" id="edge48_Node000001_Node000027" title=" " alt="" coords="1960,558,1877,605,1769,655,1708,677,1645,695,1580,707,1515,711,1077,711,904,715,828,708,734,686,682,664,636,638,639,634,684,660,735,681,829,703,904,710,1077,706,1515,706,1580,702,1644,690,1707,672,1767,650,1875,600,1957,553"/>
-<area shape="rect" id="Node000036" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#a2cfe3543fad246a253ed6379e1fc0bf4" title="We take ownership of propertySet and will free it." alt="" coords="507,400,687,455"/>
-<area shape="poly" id="edge47_Node000001_Node000036" title=" " alt="" coords="1973,486,1896,418,1845,379,1787,341,1724,306,1657,277,1587,258,1515,251,1077,251,978,246,900,238,863,238,825,244,783,256,736,276,720,287,710,300,689,332,625,402,621,398,685,328,706,297,716,284,733,272,781,251,824,238,863,233,900,233,979,240,1077,246,1515,246,1588,253,1659,272,1726,301,1790,336,1848,374,1899,413,1977,482"/>
-<area shape="rect" id="Node000041" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#ae2ea03f611c00f8ca5691e59f7e988c6" title="Thread job to Notify a control point." alt="" coords="743,465,923,520"/>
-<area shape="poly" id="edge49_Node000001_Node000041" title=" " alt="" coords="1909,523,1515,523,1299,523,1097,517,923,504,924,499,1098,511,1299,518,1515,518,1909,518"/>
-<area shape="rect" id="Node000043" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#a74609494846be8d91321eafb29dc55eb" title="This gets called before queuing a new event." alt="" coords="1424,747,1604,801"/>
-<area shape="poly" id="edge50_Node000001_Node000043" title=" " alt="" coords="1999,562,1981,603,1954,649,1919,694,1876,730,1844,747,1810,760,1738,777,1668,785,1604,785,1604,780,1667,779,1737,772,1808,755,1842,742,1873,725,1915,690,1950,646,1976,601,1994,560"/>
-<area shape="rect" id="Node000003" href="$dd/d10/service__table_8cpp.html#a749aa5278c90b85e8af8c5eb80f65564" title="Free&#39;s the memory allocated for storing the URL of the subscription." alt="" coords="1450,457,1578,483"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1638,473,1578,473,1578,467,1638,467"/>
-<area shape="rect" id="Node000004" href="$dd/d10/service__table_8cpp.html#a9f501c03d21e7c4135ddaa8e9303eacb" title="Free&#39;s memory allocated for all the subscriptions in the service table." alt="" coords="1225,407,1376,432"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="1446,457,1354,435,1355,429,1447,451"/>
-<area shape="poly" id="edge46_Node000003_Node000041" title=" " alt="" coords="1436,475,923,492,923,487,1436,470"/>
-<area shape="rect" id="Node000005" href="$dd/d10/service__table_8cpp.html#a4d079e2620831263f2dffddcfd66ddbc" title="Free&#39;s memory allocated for the various components of the service entry in the service table." alt="" coords="1031,627,1127,652"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="1290,446,1247,520,1216,562,1179,599,1152,616,1124,629,1122,624,1150,612,1176,595,1212,558,1243,517,1285,443"/>
-<area shape="rect" id="Node000007" href="$dd/d10/service__table_8cpp.html#a6b3dbe041f246ff64f7464036778ae62" title="Free&#39;s memory allocated for the various components of each service entry in the service table." alt="" coords="1019,135,1138,160"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="1279,398,1088,162,1093,159,1283,394"/>
-<area shape="rect" id="Node000024" href="$dd/de6/gena__device_8cpp.html#a25ad1852d4d32c6f34a87b92225202fd" title="Handles a subscription request from a ctrl point. The socket is not closed on return." alt="" coords="980,289,1177,329"/>
-<area shape="poly" id="edge18_Node000004_Node000024" title=" " alt="" coords="1268,401,1225,374,1176,347,1139,331,1141,326,1178,342,1228,369,1271,396"/>
-<area shape="rect" id="Node000026" href="$dd/d10/service__table_8cpp.html#aedf09f505f0e859795d2a676fc48b989" title="Get current and valid subscription from the service table." alt="" coords="1001,559,1157,584"/>
-<area shape="poly" id="edge21_Node000004_Node000026" title=" " alt="" coords="1271,442,1100,561,1097,556,1268,438"/>
-<area shape="rect" id="Node000033" href="$dd/d10/service__table_8cpp.html#a3cf11ce072bd3fa99ae7c35260e0335b" title="Return the subscription from the service table that matches const Upnp_SID sid value." alt="" coords="1005,407,1152,432"/>
-<area shape="poly" id="edge29_Node000004_Node000033" title=" " alt="" coords="1212,422,1152,422,1152,417,1212,417"/>
-<area shape="rect" id="Node000042" href="$dd/d10/service__table_8cpp.html#a83dcd33a616a1b22a5794229c40c31f2" title="Remove the subscription from the service table and update it." alt="" coords="989,357,1168,383"/>
-<area shape="poly" id="edge42_Node000004_Node000042" title=" " alt="" coords="1229,406,1136,385,1137,380,1230,401"/>
-<area shape="rect" id="Node000006" href="$dd/d10/service__table_8cpp.html#a7660753396d84ef2e242a134c65294cd" title="Remove all services for a root device." alt="" coords="756,645,911,671"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="1017,647,911,655,911,649,1017,641"/>
-<area shape="rect" id="Node000008" href="$dd/d10/service__table_8cpp.html#a4f91e3d3fa42bb88912c895598c4689f" title="Free&#39;s dynamic memory in table (does not free table, only memory within the structure)." alt="" coords="768,135,899,160"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="1006,150,899,150,899,145,1006,145"/>
-<area shape="rect" id="Node000017" href="$d9/da9/namespaceanonymous__namespace_02service__table_8cpp_03.html#a75316464db9843014fb2e2311ad6f0b4" title="Returns pointer to service info after getting the sub&#45;elements of the service info." alt="" coords="743,48,923,103"/>
-<area shape="poly" id="edge11_Node000007_Node000017" title=" " alt="" coords="1021,133,923,104,925,99,1022,128"/>
-<area shape="rect" id="Node000009" href="$dd/de6/gena__device_8cpp.html#a4cc29d7a5d53dccd66f6b11abb532a05" title="Cleans the service table of the device." alt="" coords="513,140,680,165"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="754,152,680,153,680,148,754,146"/>
-<area shape="rect" id="Node000010" href="$d4/d99/upnpapi_8cpp.html#ab04dfc9206cdac78f584e6d208ba9c72" title="Unregisters a root device registered with UpnpRegisterRootDevice, UpnpRegisterRootDevice2,..." alt="" coords="256,141,459,181"/>
-<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="500,159,459,160,459,155,499,153"/>
-<area shape="rect" id="Node000011" href="$d4/d99/upnpapi_8cpp.html#abb1c47010971d19ecd2b46ee842871ec" title="Unregisters a root device registered with UpnpRegisterRootDevice, UpnpRegisterRootDevice2,..." alt="" coords="5,153,208,179"/>
-<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="243,166,208,167,208,161,242,160"/>
-<area shape="rect" id="Node000018" href="$d9/da9/namespaceanonymous__namespace_02service__table_8cpp_03.html#a7359ea5e4d70db0a82faa1cdd447b5d5" title="Returns pointer to service info after getting the sub&#45;elements of the service info." alt="" coords="507,44,687,99"/>
-<area shape="poly" id="edge12_Node000017_Node000018" title=" " alt="" coords="730,76,687,76,687,70,730,71"/>
-<area shape="rect" id="Node000019" href="$dd/d10/service__table_8cpp.html#a6a15f56e772dfbe60a5edbfb590f86b3" title="Add Service to the table." alt="" coords="293,9,421,35"/>
-<area shape="poly" id="edge13_Node000018_Node000019" title=" " alt="" coords="493,53,419,37,420,32,494,47"/>
-<area shape="rect" id="Node000020" href="$dd/d10/service__table_8cpp.html#a93dca6df0d19011183259fe98fafce8e" title="Retrieve service from the table." alt="" coords="295,59,420,84"/>
-<area shape="poly" id="edge14_Node000018_Node000020" title=" " alt="" coords="493,74,420,74,420,69,493,69"/>
-<area shape="rect" id="Node000021" href="$d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers one root&#45; or logical&#45;device object with the UPnP Library to get a handle for it." alt="" coords="14,104,199,129"/>
-<area shape="poly" id="edge15_Node000020_Node000021" title=" " alt="" coords="281,88,178,107,177,101,280,82"/>
-<area shape="rect" id="Node000022" href="$d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers one root&#45; or logical&#45;device object with the UPnP Library with additional description and ge..." alt="" coords="10,5,203,31"/>
-<area shape="poly" id="edge16_Node000020_Node000022" title=" " alt="" coords="283,58,166,33,167,28,284,53"/>
-<area shape="rect" id="Node000023" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers one UPnP device object for a specific address family with the UPnP library and get a handle..." alt="" coords="10,55,203,80"/>
-<area shape="poly" id="edge17_Node000020_Node000023" title=" " alt="" coords="280,73,203,72,203,66,281,67"/>
-<area shape="rect" id="Node000025" href="$dc/d02/gena__callback2_8cpp.html#a6f658b4eab5786398a00a53b87e7c622" title="This is the callback function called by the miniserver to handle incoming GENA requests." alt="" coords="541,293,652,319"/>
-<area shape="poly" id="edge19_Node000024_Node000025" title=" " alt="" coords="994,288,932,277,833,269,735,277,687,285,642,296,641,291,686,280,734,271,833,264,932,271,995,283"/>
-<area shape="rect" id="Node000014" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="288,293,427,319"/>
-<area shape="poly" id="edge20_Node000025_Node000014" title=" " alt="" coords="527,309,427,309,427,303,527,303"/>
-<area shape="poly" id="edge22_Node000026_Node000027" title=" " alt="" coords="987,574,867,578,735,587,687,594,686,589,734,582,867,572,987,569"/>
-<area shape="rect" id="Node000032" href="$dd/d10/service__table_8cpp.html#a3bcd2c5b6fa23fb7a7bd8fb30df6b40e" title="Gets pointer to the first subscription node in the service table." alt="" coords="757,596,910,621"/>
-<area shape="poly" id="edge27_Node000026_Node000032" title=" " alt="" coords="988,588,911,600,910,594,987,583"/>
-<area shape="rect" id="Node000028" href="$dd/de6/gena__device_8cpp.html#a3300ba366cae7db4f8c21b0119cdacd9" title="Sends a notification to all the subscribed control points." alt="" coords="302,571,413,596"/>
-<area shape="poly" id="edge23_Node000027_Node000028" title=" " alt="" coords="493,600,413,592,413,586,493,595"/>
-<area shape="rect" id="Node000030" href="$dd/de6/gena__device_8cpp.html#a8f2185f7e2ef6345535174b920c6e86b" title="Sends a notification to all the subscribed control points." alt="" coords="292,620,423,645"/>
-<area shape="poly" id="edge25_Node000027_Node000030" title=" " alt="" coords="493,622,423,629,423,624,492,616"/>
-<area shape="rect" id="Node000029" href="$d4/d99/upnpapi_8cpp.html#a889522712799600d91e157c50e8bcd38" title="Sends out an event change notification to all control points subscribed to a particular service." alt="" coords="59,571,154,596"/>
-<area shape="poly" id="edge24_Node000028_Node000029" title=" " alt="" coords="288,586,154,586,154,581,288,581"/>
-<area shape="rect" id="Node000031" href="$d4/d99/upnpapi_8cpp.html#a2244040bbe493e66273b8b53a61a1959" title="Similar to UpnpNotify except that it takes a DOM document for the event rather than an array of strin..." alt="" coords="49,620,165,645"/>
-<area shape="poly" id="edge26_Node000030_Node000031" title=" " alt="" coords="278,635,165,635,165,630,278,630"/>
-<area shape="poly" id="edge28_Node000032_Node000027" title=" " alt="" coords="742,611,687,611,687,606,742,606"/>
-<area shape="rect" id="Node000034" href="$dd/de6/gena__device_8cpp.html#a6fd1575d4217390506014c896b22251e" title="Handles a subscription renewal request from a ctrl point. The connection is not destroyed on return." alt="" coords="735,286,932,326"/>
-<area shape="poly" id="edge30_Node000033_Node000034" title=" " alt="" coords="991,404,978,398,962,383,953,368,945,354,930,340,909,328,911,324,934,336,949,351,958,366,967,380,982,393,994,400"/>
-<area shape="rect" id="Node000035" href="$dd/de6/gena__device_8cpp.html#a4b03afbfa4cbf8c318857a43bbf92d8e" title="Handles a subscription cancellation request from a ctrl point. The connection is not destroyed on ret..." alt="" coords="735,350,931,390"/>
-<area shape="poly" id="edge32_Node000033_Node000035" title=" " alt="" coords="1001,407,931,392,932,387,1002,401"/>
-<area shape="poly" id="edge34_Node000033_Node000036" title=" " alt="" coords="992,423,687,429,687,423,992,418"/>
-<area shape="poly" id="edge39_Node000033_Node000041" title=" " alt="" coords="1023,439,924,468,923,463,1021,433"/>
-<area shape="poly" id="edge31_Node000034_Node000025" title=" " alt="" coords="721,309,652,309,652,303,721,303"/>
-<area shape="poly" id="edge33_Node000035_Node000025" title=" " alt="" coords="745,349,644,321,645,316,746,344"/>
-<area shape="rect" id="Node000037" href="$dd/de6/gena__device_8cpp.html#afe08f0a722cafb84faa9def7850da596" title="Sends the intial state table dump to newly subscribed control point." alt="" coords="300,389,415,415"/>
-<area shape="poly" id="edge35_Node000036_Node000037" title=" " alt="" coords="493,419,415,411,415,405,493,414"/>
-<area shape="rect" id="Node000039" href="$dd/de6/gena__device_8cpp.html#aadf54fcafc02a512a76124ab8bf938f6" title="Similar to the genaInitNofity. The only difference is that it takes the xml document for the state ta..." alt="" coords="290,439,425,464"/>
-<area shape="poly" id="edge37_Node000036_Node000039" title=" " alt="" coords="493,440,425,447,425,442,493,435"/>
-<area shape="rect" id="Node000038" href="$d9/d54/group__compaAPI.html#ga19f65dc15aaf56d2f9390c4d3b13a5c8" title="Accepts a subscription request and sends out the current state of the eventable variables for a servi..." alt="" coords="17,389,197,415"/>
-<area shape="poly" id="edge36_Node000037_Node000038" title=" " alt="" coords="286,405,197,405,197,399,286,399"/>
-<area shape="rect" id="Node000040" href="$d4/d99/upnpapi_8cpp.html#ab7f67326e349b9025ac62d0b8ae8ae43" title="Similar to UpnpAcceptSubscription() except that it takes a DOM document for the variables to event ra..." alt="" coords="6,439,207,464"/>
-<area shape="poly" id="edge38_Node000039_Node000040" title=" " alt="" coords="276,454,208,454,208,449,276,449"/>
-<area shape="poly" id="edge41_Node000041_Node000027" title=" " alt="" coords="763,528,736,542,653,583,651,579,733,537,761,524"/>
-<area shape="poly" id="edge40_Node000041_Node000036" title=" " alt="" coords="729,467,686,455,687,450,731,462"/>
-<area shape="poly" id="edge43_Node000042_Node000034" title=" " alt="" coords="1015,356,910,329,911,324,1016,351"/>
-<area shape="poly" id="edge44_Node000042_Node000035" title=" " alt="" coords="975,373,932,373,932,367,975,367"/>
-<area shape="poly" id="edge45_Node000042_Node000041" title=" " alt="" coords="1003,389,981,398,921,431,870,467,867,463,918,427,979,393,1002,384"/>
-<area shape="poly" id="edge51_Node000043_Node000027" title=" " alt="" coords="1410,791,1272,801,1189,803,1100,801,1007,794,914,781,822,760,734,730,699,711,667,687,618,638,622,634,670,683,701,707,736,725,823,755,915,776,1008,789,1100,796,1189,798,1271,796,1410,785"/>
+<area shape="rect" id="Node000001" title="Frees memory used in notify_threads if the reference count is 0, otherwise decrements the refrence co..." alt="" coords="1791,493,1953,548"/>
+<area shape="rect" id="Node000002" href="$dd/de6/gena__device_8cpp.html#a1503915b6cd3d0ea5adc7b5493b589ab" title="???" alt="" coords="1540,457,1743,483"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1777,502,1699,485,1700,480,1778,497"/>
+<area shape="rect" id="Node000027" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#ac1a38d06cf74cd21f7f8ac40f00efb11" title="We take ownership of propertySet and will free it." alt="" coords="477,581,640,636"/>
+<area shape="poly" id="edge48_Node000001_Node000027" title=" " alt="" coords="1823,558,1747,605,1647,655,1591,677,1533,695,1472,707,1412,711,1005,711,844,715,774,708,687,686,638,665,596,639,598,634,641,660,689,681,775,702,844,709,1005,706,1412,706,1472,702,1531,690,1589,672,1645,650,1745,600,1820,553"/>
+<area shape="rect" id="Node000036" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#a2cfe3543fad246a253ed6379e1fc0bf4" title="We take ownership of propertySet and will free it." alt="" coords="477,400,640,455"/>
+<area shape="poly" id="edge47_Node000001_Node000036" title=" " alt="" coords="1835,485,1765,417,1718,378,1665,340,1606,306,1544,277,1479,258,1412,251,1005,251,913,246,840,240,806,240,771,245,733,257,690,276,584,402,580,398,686,272,731,252,770,240,806,235,841,234,913,241,1005,246,1412,246,1480,253,1546,272,1609,301,1668,336,1721,374,1768,413,1839,481"/>
+<area shape="rect" id="Node000041" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#ae2ea03f611c00f8ca5691e59f7e988c6" title="Thread job to Notify a control point." alt="" coords="697,465,859,520"/>
+<area shape="poly" id="edge49_Node000001_Node000041" title=" " alt="" coords="1776,523,1412,523,1211,523,1022,517,859,504,860,498,1022,511,1211,518,1412,518,1776,518"/>
+<area shape="rect" id="Node000043" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#a74609494846be8d91321eafb29dc55eb" title="This gets called before queuing a new event." alt="" coords="1329,747,1492,801"/>
+<area shape="poly" id="edge50_Node000001_Node000043" title=" " alt="" coords="1860,562,1843,603,1818,649,1786,693,1744,730,1715,746,1683,759,1617,776,1551,783,1492,784,1492,778,1551,778,1616,771,1681,754,1712,741,1741,725,1782,690,1814,646,1838,601,1855,560"/>
+<area shape="rect" id="Node000003" href="$dd/d10/service__table_8cpp.html#a749aa5278c90b85e8af8c5eb80f65564" title="Free&#39;s the memory allocated for storing the URL of the subscription." alt="" coords="1353,457,1469,483"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1526,473,1469,473,1469,467,1526,467"/>
+<area shape="rect" id="Node000004" href="$dd/d10/service__table_8cpp.html#a9f501c03d21e7c4135ddaa8e9303eacb" title="Free&#39;s memory allocated for all the subscriptions in the service table." alt="" coords="1144,407,1281,432"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="1346,456,1262,435,1264,429,1348,451"/>
+<area shape="poly" id="edge46_Node000003_Node000041" title=" " alt="" coords="1339,475,860,492,860,487,1339,470"/>
+<area shape="rect" id="Node000005" href="$dd/d10/service__table_8cpp.html#a4d079e2620831263f2dffddcfd66ddbc" title="Free&#39;s memory allocated for the various components of the service entry in the service table." alt="" coords="962,627,1050,652"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="1203,446,1163,520,1133,561,1098,599,1073,616,1046,629,1044,624,1070,612,1094,595,1129,558,1158,517,1198,444"/>
+<area shape="rect" id="Node000007" href="$dd/d10/service__table_8cpp.html#a6b3dbe041f246ff64f7464036778ae62" title="Free&#39;s memory allocated for the various components of each service entry in the service table." alt="" coords="951,135,1061,160"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="1192,397,1015,162,1019,159,1196,394"/>
+<area shape="rect" id="Node000024" href="$dd/de6/gena__device_8cpp.html#a25ad1852d4d32c6f34a87b92225202fd" title="Handles a subscription request from a ctrl point. The socket is not closed on return." alt="" coords="916,289,1096,329"/>
+<area shape="poly" id="edge18_Node000004_Node000024" title=" " alt="" coords="1182,401,1141,374,1095,347,1060,331,1063,326,1097,342,1144,370,1185,397"/>
+<area shape="rect" id="Node000026" href="$dd/d10/service__table_8cpp.html#aedf09f505f0e859795d2a676fc48b989" title="Get current and valid subscription from the service table." alt="" coords="935,559,1077,584"/>
+<area shape="poly" id="edge21_Node000004_Node000026" title=" " alt="" coords="1185,442,1026,560,1023,556,1182,438"/>
+<area shape="rect" id="Node000033" href="$dd/d10/service__table_8cpp.html#a3cf11ce072bd3fa99ae7c35260e0335b" title="Return the subscription from the service table that matches const Upnp_SID sid value." alt="" coords="937,407,1075,432"/>
+<area shape="poly" id="edge29_Node000004_Node000033" title=" " alt="" coords="1130,422,1076,422,1076,417,1130,417"/>
+<area shape="rect" id="Node000042" href="$dd/d10/service__table_8cpp.html#a83dcd33a616a1b22a5794229c40c31f2" title="Remove the subscription from the service table and update it." alt="" coords="923,357,1089,383"/>
+<area shape="poly" id="edge42_Node000004_Node000042" title=" " alt="" coords="1145,406,1059,385,1061,380,1146,401"/>
+<area shape="rect" id="Node000006" href="$dd/d10/service__table_8cpp.html#a7660753396d84ef2e242a134c65294cd" title="Remove all services for a root device." alt="" coords="708,645,848,671"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="949,647,848,655,848,650,948,641"/>
+<area shape="rect" id="Node000008" href="$dd/d10/service__table_8cpp.html#a4f91e3d3fa42bb88912c895598c4689f" title="Free&#39;s dynamic memory in table (does not free table, only memory within the structure)." alt="" coords="719,135,837,160"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="938,150,837,150,837,145,938,145"/>
+<area shape="rect" id="Node000017" href="$d9/da9/namespaceanonymous__namespace_02service__table_8cpp_03.html#a75316464db9843014fb2e2311ad6f0b4" title="Returns pointer to service info after getting the sub&#45;elements of the service info." alt="" coords="697,48,859,103"/>
+<area shape="poly" id="edge11_Node000007_Node000017" title=" " alt="" coords="951,133,859,104,861,98,953,128"/>
+<area shape="rect" id="Node000009" href="$dd/de6/gena__device_8cpp.html#a4cc29d7a5d53dccd66f6b11abb532a05" title="Cleans the service table of the device." alt="" coords="483,140,634,165"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="705,152,634,154,634,148,705,146"/>
+<area shape="rect" id="Node000010" href="$d4/d99/upnpapi_8cpp.html#ab04dfc9206cdac78f584e6d208ba9c72" title="Unregisters a root device registered with UpnpRegisterRootDevice, UpnpRegisterRootDevice2,..." alt="" coords="241,141,429,181"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="470,159,429,160,429,155,470,153"/>
+<area shape="rect" id="Node000011" href="$d4/d99/upnpapi_8cpp.html#abb1c47010971d19ecd2b46ee842871ec" title="Unregisters a root device registered with UpnpRegisterRootDevice, UpnpRegisterRootDevice2,..." alt="" coords="5,153,193,179"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="227,166,194,167,194,161,227,160"/>
+<area shape="rect" id="Node000018" href="$d9/da9/namespaceanonymous__namespace_02service__table_8cpp_03.html#a7359ea5e4d70db0a82faa1cdd447b5d5" title="Returns pointer to service info after getting the sub&#45;elements of the service info." alt="" coords="477,44,640,99"/>
+<area shape="poly" id="edge12_Node000017_Node000018" title=" " alt="" coords="683,76,640,75,640,70,683,71"/>
+<area shape="rect" id="Node000019" href="$dd/d10/service__table_8cpp.html#a6a15f56e772dfbe60a5edbfb590f86b3" title="Add Service to the table." alt="" coords="276,9,395,35"/>
+<area shape="poly" id="edge13_Node000018_Node000019" title=" " alt="" coords="463,53,393,37,394,32,464,48"/>
+<area shape="rect" id="Node000020" href="$dd/d10/service__table_8cpp.html#a93dca6df0d19011183259fe98fafce8e" title="Retrieve service from the table." alt="" coords="278,59,393,84"/>
+<area shape="poly" id="edge14_Node000018_Node000020" title=" " alt="" coords="463,74,393,74,393,69,463,69"/>
+<area shape="rect" id="Node000021" href="$d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers one root&#45; or logical&#45;device object with the UPnP Library to get a handle for it." alt="" coords="14,104,185,129"/>
+<area shape="poly" id="edge15_Node000020_Node000021" title=" " alt="" coords="265,88,167,107,166,101,264,82"/>
+<area shape="rect" id="Node000022" href="$d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers one root&#45; or logical&#45;device object with the UPnP Library with additional description and ge..." alt="" coords="10,5,189,31"/>
+<area shape="poly" id="edge16_Node000020_Node000022" title=" " alt="" coords="264,58,156,33,157,28,265,53"/>
+<area shape="rect" id="Node000023" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers one UPnP device object for a specific address family with the UPnP library and get a handle..." alt="" coords="10,55,189,80"/>
+<area shape="poly" id="edge17_Node000020_Node000023" title=" " alt="" coords="264,73,189,72,189,66,264,67"/>
+<area shape="rect" id="Node000025" href="$dc/d02/gena__callback2_8cpp.html#a6f658b4eab5786398a00a53b87e7c622" title="This is the callback function called by the miniserver to handle incoming GENA requests." alt="" coords="508,293,609,319"/>
+<area shape="poly" id="edge19_Node000024_Node000025" title=" " alt="" coords="926,288,868,277,778,269,688,277,643,285,601,296,600,291,642,280,688,271,778,264,868,271,927,283"/>
+<area shape="rect" id="Node000014" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="272,293,399,319"/>
+<area shape="poly" id="edge20_Node000025_Node000014" title=" " alt="" coords="494,309,399,309,399,303,494,303"/>
+<area shape="poly" id="edge22_Node000026_Node000027" title=" " alt="" coords="921,574,810,578,688,587,641,594,640,589,688,582,810,572,921,569"/>
+<area shape="rect" id="Node000032" href="$dd/d10/service__table_8cpp.html#a3bcd2c5b6fa23fb7a7bd8fb30df6b40e" title="Gets pointer to the first subscription node in the service table." alt="" coords="707,596,849,621"/>
+<area shape="poly" id="edge27_Node000026_Node000032" title=" " alt="" coords="921,588,849,600,849,594,920,583"/>
+<area shape="rect" id="Node000028" href="$dd/de6/gena__device_8cpp.html#a3300ba366cae7db4f8c21b0119cdacd9" title="Sends a notification to all the subscribed control points." alt="" coords="285,571,385,596"/>
+<area shape="poly" id="edge23_Node000027_Node000028" title=" " alt="" coords="463,601,385,592,386,586,464,595"/>
+<area shape="rect" id="Node000030" href="$dd/de6/gena__device_8cpp.html#a8f2185f7e2ef6345535174b920c6e86b" title="Sends a notification to all the subscribed control points." alt="" coords="275,620,395,645"/>
+<area shape="poly" id="edge25_Node000027_Node000030" title=" " alt="" coords="464,622,396,629,395,624,463,616"/>
+<area shape="rect" id="Node000029" href="$d4/d99/upnpapi_8cpp.html#a889522712799600d91e157c50e8bcd38" title="Sends out an event change notification to all control points subscribed to a particular service." alt="" coords="55,571,143,596"/>
+<area shape="poly" id="edge24_Node000028_Node000029" title=" " alt="" coords="271,586,144,586,144,581,271,581"/>
+<area shape="rect" id="Node000031" href="$d4/d99/upnpapi_8cpp.html#a2244040bbe493e66273b8b53a61a1959" title="Similar to UpnpNotify except that it takes a DOM document for the event rather than an array of strin..." alt="" coords="45,620,153,645"/>
+<area shape="poly" id="edge26_Node000030_Node000031" title=" " alt="" coords="262,635,154,635,154,630,262,630"/>
+<area shape="poly" id="edge28_Node000032_Node000027" title=" " alt="" coords="693,611,640,611,640,606,693,606"/>
+<area shape="rect" id="Node000034" href="$dd/de6/gena__device_8cpp.html#a6fd1575d4217390506014c896b22251e" title="Handles a subscription renewal request from a ctrl point. The connection is not destroyed on return." alt="" coords="688,286,868,326"/>
+<area shape="poly" id="edge30_Node000033_Node000034" title=" " alt="" coords="926,404,914,398,898,383,889,368,881,354,866,340,846,328,848,324,870,336,885,351,894,366,903,380,918,393,928,399"/>
+<area shape="rect" id="Node000035" href="$dd/de6/gena__device_8cpp.html#a4b03afbfa4cbf8c318857a43bbf92d8e" title="Handles a subscription cancellation request from a ctrl point. The connection is not destroyed on ret..." alt="" coords="688,350,868,390"/>
+<area shape="poly" id="edge32_Node000033_Node000035" title=" " alt="" coords="933,406,868,392,869,387,934,401"/>
+<area shape="poly" id="edge34_Node000033_Node000036" title=" " alt="" coords="923,423,640,429,640,423,923,418"/>
+<area shape="poly" id="edge39_Node000033_Node000041" title=" " alt="" coords="953,439,860,469,859,464,952,434"/>
+<area shape="poly" id="edge31_Node000034_Node000025" title=" " alt="" coords="674,309,610,309,610,303,674,303"/>
+<area shape="poly" id="edge33_Node000035_Node000025" title=" " alt="" coords="695,349,602,321,604,316,696,343"/>
+<area shape="rect" id="Node000037" href="$dd/de6/gena__device_8cpp.html#afe08f0a722cafb84faa9def7850da596" title="Sends the intial state table dump to newly subscribed control point." alt="" coords="284,389,387,415"/>
+<area shape="poly" id="edge35_Node000036_Node000037" title=" " alt="" coords="463,419,387,410,387,405,464,414"/>
+<area shape="rect" id="Node000039" href="$dd/de6/gena__device_8cpp.html#aadf54fcafc02a512a76124ab8bf938f6" title="Similar to the genaInitNofity. The only difference is that it takes the xml document for the state ta..." alt="" coords="274,439,397,464"/>
+<area shape="poly" id="edge37_Node000036_Node000039" title=" " alt="" coords="463,440,397,447,397,442,463,435"/>
+<area shape="rect" id="Node000038" href="$d9/d54/group__compaAPI.html#ga19f65dc15aaf56d2f9390c4d3b13a5c8" title="Accepts a subscription request and sends out the current state of the eventable variables for a servi..." alt="" coords="16,389,183,415"/>
+<area shape="poly" id="edge36_Node000037_Node000038" title=" " alt="" coords="270,405,183,405,183,399,270,399"/>
+<area shape="rect" id="Node000040" href="$d4/d99/upnpapi_8cpp.html#ab7f67326e349b9025ac62d0b8ae8ae43" title="Similar to UpnpAcceptSubscription() except that it takes a DOM document for the variables to event ra..." alt="" coords="6,439,193,464"/>
+<area shape="poly" id="edge38_Node000039_Node000040" title=" " alt="" coords="260,454,193,454,193,449,260,449"/>
+<area shape="poly" id="edge41_Node000041_Node000027" title=" " alt="" coords="713,529,689,542,612,584,609,579,687,537,711,524"/>
+<area shape="poly" id="edge40_Node000041_Node000036" title=" " alt="" coords="683,467,639,454,641,449,684,462"/>
+<area shape="poly" id="edge43_Node000042_Node000034" title=" " alt="" coords="946,356,849,329,851,324,947,351"/>
+<area shape="poly" id="edge44_Node000042_Node000035" title=" " alt="" coords="909,373,868,373,868,367,909,367"/>
+<area shape="poly" id="edge45_Node000042_Node000041" title=" " alt="" coords="938,389,917,398,860,431,813,467,809,463,857,427,915,393,935,384"/>
+<area shape="poly" id="edge51_Node000043_Node000027" title=" " alt="" coords="1316,790,1187,800,1110,802,1027,800,941,793,854,780,769,759,687,730,654,711,624,687,578,638,582,634,627,683,657,707,689,725,770,754,855,774,942,787,1027,794,1110,796,1187,795,1315,785"/>
 </map>

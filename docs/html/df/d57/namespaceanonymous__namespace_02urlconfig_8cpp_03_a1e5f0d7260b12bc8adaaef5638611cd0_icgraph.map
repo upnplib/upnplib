@@ -1,9 +1,9 @@
 <map id="anonymous_namespace{urlconfig::cpp}::config_description_doc" name="anonymous_namespace{urlconfig::cpp}::config_description_doc">
-<area shape="rect" id="Node000001" title="Configure the description document." alt="" coords="675,5,855,60"/>
-<area shape="rect" id="Node000002" href="$d1/d4a/urlconfig_8cpp.html#a2fa72177f842afa6e0b87182387aac88" title="Configure the full URL for the description document." alt="" coords="489,20,627,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="661,35,627,35,627,30,661,30"/>
-<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a9300edc4f96f8f3e563bcaf49bffd514" title="Fills the sockadr_in with miniserver information." alt="" coords="247,20,441,45"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="476,35,441,35,441,30,476,30"/>
-<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers one root&#45; or logical&#45;device object with the UPnP Library with additional description and ge..." alt="" coords="5,20,199,45"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="233,35,199,35,199,30,233,30"/>
+<area shape="rect" id="Node000001" title="Configure the description document." alt="" coords="636,5,799,60"/>
+<area shape="rect" id="Node000002" href="$d1/d4a/urlconfig_8cpp.html#a2fa72177f842afa6e0b87182387aac88" title="Configure the full URL for the description document." alt="" coords="464,20,588,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="622,35,588,35,588,30,622,30"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a9300edc4f96f8f3e563bcaf49bffd514" title="Fills the sockadr_in with miniserver information." alt="" coords="232,20,416,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="450,35,416,35,416,30,450,30"/>
+<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers one root&#45; or logical&#45;device object with the UPnP Library with additional description and ge..." alt="" coords="5,20,184,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="218,35,184,35,184,30,218,30"/>
 </map>

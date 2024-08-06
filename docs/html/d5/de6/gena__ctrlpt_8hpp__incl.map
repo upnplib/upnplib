@@ -1,11 +1,11 @@
 <map id="Compa/src/inc/gena_ctrlpt.hpp" name="Compa/src/inc/gena_ctrlpt.hpp">
-<area shape="rect" id="Node000001" title="Processes NOTIFY events that are sent by devices." alt="" coords="189,5,339,45"/>
-<area shape="rect" id="Node000002" href="$d6/df0/sock_8hpp.html" title="Manage network sockets and connections." alt="" coords="224,93,304,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="267,46,267,79,261,79,261,46"/>
-<area shape="rect" id="Node000003" href="$d8/d43/port__sock_8hpp.html" title="Specifications to be portable with sockets between different platforms." alt="" coords="5,167,171,192"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="237,121,131,164,129,159,235,116"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="195,167,333,192"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="267,119,267,153,261,153,261,119"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="357,167,464,192"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="289,116,376,158,373,163,286,121"/>
+<area shape="rect" id="Node000001" title="Processes NOTIFY events that are sent by devices." alt="" coords="172,5,311,45"/>
+<area shape="rect" id="Node000002" href="$d6/df0/sock_8hpp.html" title="Manage network sockets and connections." alt="" coords="204,93,279,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="244,46,244,79,239,79,239,46"/>
+<area shape="rect" id="Node000003" href="$d8/d43/port__sock_8hpp.html" title="Specifications to be portable with sockets between different platforms." alt="" coords="5,167,155,192"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="216,121,120,163,118,159,214,116"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="179,167,304,192"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="244,119,244,153,239,153,239,119"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="328,167,427,192"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="264,116,344,158,342,163,262,121"/>
 </map>

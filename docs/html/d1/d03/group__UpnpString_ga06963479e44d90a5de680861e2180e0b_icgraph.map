@@ -1,108 +1,108 @@
 <map id="UpnpString_set_StringN" name="UpnpString_set_StringN">
-<area shape="rect" id="Node000001" title="Sets the string from a pointer to char using a maximum of N chars." alt="" coords="1773,1163,1949,1188"/>
-<area shape="rect" id="Node000002" href="$d6/dd1/namespaceanonymous__namespace_02gena__ctrlpt_8cpp_03.html#aab6385b3da2410ba5921c203635b7e28" title="Subscribes or renew subscription." alt="" coords="1514,169,1694,224"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1857,1149,1852,969,1846,838,1834,695,1818,553,1794,421,1780,363,1763,312,1744,270,1723,238,1710,226,1693,216,1696,211,1713,221,1727,235,1749,268,1768,311,1785,362,1799,420,1823,552,1840,695,1851,837,1858,968,1862,1149"/>
-<area shape="rect" id="Node000016" href="$dc/d2f/GenlibClientSubscription_8cpp.html#a480a2a51159d6aa40b7af16bcae9da39" title=" " alt="" coords="1513,249,1695,289"/>
-<area shape="poly" id="edge14_Node000001_Node000016" title=" " alt="" coords="1857,1149,1852,980,1844,857,1833,725,1816,592,1793,470,1778,417,1762,370,1744,331,1723,302,1710,291,1695,283,1697,278,1713,287,1727,299,1748,329,1767,368,1783,415,1798,469,1821,591,1838,724,1850,857,1857,979,1862,1149"/>
-<area shape="rect" id="Node000017" href="$dc/d2f/GenlibClientSubscription_8cpp.html#a3000c7fd54df3bd6b33c10ff589baf57" title=" " alt="" coords="1513,313,1695,353"/>
-<area shape="poly" id="edge15_Node000001_Node000017" title=" " alt="" coords="1857,1149,1849,990,1829,754,1812,632,1789,520,1760,428,1742,393,1723,366,1710,355,1694,347,1697,342,1713,351,1727,363,1747,390,1764,426,1794,519,1817,631,1834,754,1855,990,1862,1149"/>
-<area shape="rect" id="Node000018" href="$dc/d2f/GenlibClientSubscription_8cpp.html#a0d90930b22cedd0f0916817002f43143" title=" " alt="" coords="1513,377,1695,417"/>
-<area shape="poly" id="edge16_Node000001_Node000018" title=" " alt="" coords="1856,1149,1847,1001,1825,785,1807,673,1785,571,1757,487,1741,455,1723,430,1710,419,1694,411,1697,406,1713,415,1727,427,1746,452,1762,485,1790,569,1813,672,1830,784,1852,1000,1862,1148"/>
-<area shape="rect" id="Node000019" href="$d4/d18/UpnpActionComplete_8cpp.html#a7abba7f983c311e7a1bc776e3c7a880f" title=" " alt="" coords="1524,441,1684,481"/>
-<area shape="poly" id="edge17_Node000001_Node000019" title=" " alt="" coords="1856,1149,1845,1012,1821,815,1803,714,1781,621,1755,545,1740,516,1723,494,1705,480,1683,471,1686,466,1708,476,1727,491,1744,514,1760,543,1786,620,1809,713,1826,814,1850,1012,1861,1149"/>
-<area shape="rect" id="Node000020" href="$d4/d6b/UpnpActionRequest_8cpp.html#adc208b1c12d5f9783b1ec6a162e5dea9" title=" " alt="" coords="1501,505,1707,545"/>
-<area shape="poly" id="edge18_Node000001_Node000020" title=" " alt="" coords="1855,1149,1842,1024,1817,846,1799,755,1778,672,1752,604,1738,578,1723,559,1705,545,1709,540,1727,555,1743,575,1757,602,1783,670,1804,754,1822,845,1848,1023,1861,1149"/>
-<area shape="rect" id="Node000021" href="$d4/d6b/UpnpActionRequest_8cpp.html#a30d1e590ca82d775320ead67eae8a15c" title=" " alt="" coords="1501,569,1707,609"/>
-<area shape="poly" id="edge19_Node000001_Node000021" title=" " alt="" coords="1854,1149,1840,1035,1813,877,1795,796,1774,723,1750,663,1723,622,1705,609,1708,604,1727,619,1755,660,1779,721,1800,795,1818,876,1845,1034,1860,1148"/>
-<area shape="rect" id="Node000022" href="$d4/d6b/UpnpActionRequest_8cpp.html#a7c3f869972fc0c189c82bb0f355ddf1a" title=" " alt="" coords="1501,633,1707,673"/>
-<area shape="poly" id="edge20_Node000001_Node000022" title=" " alt="" coords="1854,1150,1837,1048,1809,908,1791,838,1770,774,1748,722,1723,686,1705,673,1708,669,1727,683,1752,719,1775,772,1796,836,1814,907,1842,1047,1859,1149"/>
-<area shape="rect" id="Node000023" href="$d4/d6b/UpnpActionRequest_8cpp.html#a595b92bb888f5663f043405c11b8136a" title=" " alt="" coords="1489,697,1719,723"/>
-<area shape="poly" id="edge21_Node000001_Node000023" title=" " alt="" coords="1858,1149,1854,1068,1848,1015,1837,956,1820,897,1796,838,1765,784,1724,737,1705,725,1708,721,1727,733,1769,781,1801,836,1825,895,1842,955,1853,1014,1859,1068,1863,1149"/>
-<area shape="rect" id="Node000028" href="$d4/d6b/UpnpActionRequest_8cpp.html#a640ffacfe5b4849204d2b5e6df838ffb" title=" " alt="" coords="1501,747,1707,787"/>
-<area shape="poly" id="edge24_Node000001_Node000028" title=" " alt="" coords="1856,1149,1848,1079,1827,985,1810,935,1787,886,1759,841,1724,801,1705,788,1708,784,1727,797,1763,838,1792,884,1815,933,1832,984,1853,1079,1861,1149"/>
-<area shape="rect" id="Node000029" href="$d8/db8/UpnpDiscovery_8cpp.html#a75b1640dd97f15d956e0e6bf0acac05a" title=" " alt="" coords="1497,812,1711,837"/>
-<area shape="poly" id="edge25_Node000001_Node000029" title=" " alt="" coords="1855,1150,1844,1088,1822,1007,1805,964,1783,923,1756,885,1724,852,1704,840,1707,835,1727,848,1760,881,1787,920,1809,962,1827,1005,1849,1087,1860,1149"/>
-<area shape="rect" id="Node000030" href="$d8/db8/UpnpDiscovery_8cpp.html#a487984f8fe37859c54542c7b238454f2" title=" " alt="" coords="1516,862,1692,902"/>
-<area shape="poly" id="edge26_Node000001_Node000030" title=" " alt="" coords="1852,1150,1837,1100,1812,1037,1774,971,1751,942,1724,916,1691,898,1693,893,1727,912,1755,938,1779,968,1816,1034,1842,1098,1857,1149"/>
-<area shape="rect" id="Node000031" href="$d8/db8/UpnpDiscovery_8cpp.html#ab724f7b445fc7eb1f98b9d2e55e241a1" title=" " alt="" coords="1516,926,1692,966"/>
-<area shape="poly" id="edge27_Node000001_Node000031" title=" " alt="" coords="1847,1151,1829,1113,1802,1066,1767,1020,1724,980,1691,964,1694,959,1727,976,1771,1016,1807,1063,1834,1110,1852,1149"/>
-<area shape="rect" id="Node000032" href="$d8/db8/UpnpDiscovery_8cpp.html#a9664ff1acca2c5974f51374791e4fcb8" title=" " alt="" coords="1502,991,1706,1016"/>
-<area shape="poly" id="edge28_Node000001_Node000032" title=" " alt="" coords="1843,1152,1795,1090,1762,1058,1724,1031,1695,1019,1697,1014,1727,1026,1765,1054,1799,1087,1847,1149"/>
-<area shape="rect" id="Node000038" href="$d8/db8/UpnpDiscovery_8cpp.html#a999784a89cf00994e04cd74eb1b3c668" title=" " alt="" coords="1516,1041,1692,1081"/>
-<area shape="poly" id="edge31_Node000001_Node000038" title=" " alt="" coords="1831,1157,1782,1125,1724,1095,1691,1083,1693,1078,1726,1090,1785,1121,1833,1153"/>
-<area shape="rect" id="Node000039" href="$d8/db8/UpnpDiscovery_8cpp.html#a0c411cf401940584ce04b130b76fd7ad" title=" " alt="" coords="1504,1105,1704,1131"/>
-<area shape="poly" id="edge33_Node000001_Node000039" title=" " alt="" coords="1794,1162,1725,1146,1666,1133,1668,1128,1726,1141,1795,1157"/>
-<area shape="rect" id="Node000040" href="$d8/db8/UpnpDiscovery_8cpp.html#a814c08b25d4ceb9ec7cfba162161ce3d" title=" " alt="" coords="1516,1155,1692,1195"/>
-<area shape="poly" id="edge35_Node000001_Node000040" title=" " alt="" coords="1759,1178,1692,1178,1692,1173,1759,1173"/>
-<area shape="rect" id="Node000041" href="$d8/db8/UpnpDiscovery_8cpp.html#aee020a365d5107b39a519191844a6205" title=" " alt="" coords="1516,1219,1692,1259"/>
-<area shape="poly" id="edge36_Node000001_Node000041" title=" " alt="" coords="1797,1194,1686,1222,1685,1217,1795,1189"/>
-<area shape="rect" id="Node000042" href="$d6/daa/UpnpEvent_8cpp.html#a20d4ddf9661ff92d883e29c14b31cf9f" title=" " alt="" coords="1515,1284,1693,1309"/>
-<area shape="poly" id="edge37_Node000001_Node000042" title=" " alt="" coords="1838,1199,1789,1238,1726,1274,1689,1286,1687,1281,1724,1269,1786,1233,1834,1195"/>
-<area shape="rect" id="Node000043" href="$de/df3/UpnpEventSubscribe_8cpp.html#a75258fd3c7e17c36efe1f9ef04193f61" title=" " alt="" coords="1523,1334,1685,1374"/>
-<area shape="poly" id="edge38_Node000001_Node000043" title=" " alt="" coords="1847,1201,1798,1262,1764,1295,1727,1323,1686,1341,1684,1336,1724,1318,1761,1291,1794,1258,1842,1197"/>
-<area shape="rect" id="Node000044" href="$de/df3/UpnpEventSubscribe_8cpp.html#a0896dfcca40971edd916e3760b4f1b65" title=" " alt="" coords="1526,1398,1682,1438"/>
-<area shape="poly" id="edge39_Node000001_Node000044" title=" " alt="" coords="1853,1202,1836,1243,1809,1293,1773,1344,1751,1368,1727,1388,1706,1400,1683,1409,1681,1404,1704,1396,1724,1384,1747,1364,1768,1341,1804,1290,1831,1240,1848,1200"/>
-<area shape="rect" id="Node000045" href="$d7/d3a/UpnpExtraHeaders_8cpp.html#af73e2e53973503fa1a9bbda322d609f9" title=" " alt="" coords="1483,1463,1725,1488"/>
-<area shape="poly" id="edge40_Node000001_Node000045" title=" " alt="" coords="1858,1202,1844,1255,1819,1323,1802,1359,1781,1393,1756,1425,1727,1452,1705,1465,1702,1460,1724,1448,1752,1421,1777,1390,1797,1356,1814,1321,1839,1254,1853,1201"/>
-<area shape="rect" id="Node000051" href="$d7/d3a/UpnpExtraHeaders_8cpp.html#abce00101ec59dcd7c90497c2e7233119" title=" " alt="" coords="1505,1513,1703,1553"/>
-<area shape="poly" id="edge44_Node000001_Node000051" title=" " alt="" coords="1859,1202,1848,1263,1825,1344,1808,1387,1786,1428,1759,1467,1727,1501,1705,1516,1702,1511,1724,1497,1755,1464,1781,1426,1803,1384,1820,1342,1843,1262,1854,1201"/>
-<area shape="rect" id="Node000052" href="$dd/da6/UpnpFileInfo_8cpp.html#ad1d64a519a9f3aea2d75610ebd755a0b" title=" " alt="" coords="1210,1577,1393,1603"/>
-<area shape="poly" id="edge46_Node000001_Node000052" title=" " alt="" coords="1863,1202,1858,1277,1851,1325,1839,1377,1822,1430,1798,1482,1767,1528,1727,1567,1702,1580,1668,1589,1581,1599,1484,1601,1393,1599,1393,1593,1484,1596,1581,1594,1667,1584,1700,1575,1724,1562,1763,1525,1794,1479,1817,1429,1834,1376,1845,1324,1852,1276,1857,1202"/>
-<area shape="rect" id="Node000053" href="$d2/dc8/UpnpStateVarComplete_8cpp.html#a632151713225be67da32220727c847c3" title=" " alt="" coords="1517,1627,1691,1667"/>
-<area shape="poly" id="edge48_Node000001_Node000053" title=" " alt="" coords="1862,1202,1857,1281,1838,1390,1821,1449,1797,1507,1767,1562,1727,1611,1711,1623,1693,1633,1691,1628,1708,1619,1723,1607,1762,1559,1793,1505,1816,1447,1833,1389,1852,1280,1857,1202"/>
-<area shape="rect" id="Node000054" href="$d2/dc8/UpnpStateVarComplete_8cpp.html#a4aa0d911195e37eda3da8680fb112e64" title=" " alt="" coords="1515,1691,1693,1731"/>
-<area shape="poly" id="edge49_Node000001_Node000054" title=" " alt="" coords="1859,1202,1843,1306,1815,1450,1797,1523,1776,1589,1753,1644,1727,1681,1712,1693,1695,1702,1693,1697,1709,1689,1723,1677,1748,1641,1771,1587,1791,1521,1810,1449,1838,1305,1854,1201"/>
-<area shape="rect" id="Node000055" href="$d3/d7b/UpnpStateVarRequest_8cpp.html#a0127417343a27be7b309908574690f9b" title=" " alt="" coords="1522,1755,1686,1795"/>
-<area shape="poly" id="edge50_Node000001_Node000055" title=" " alt="" coords="1860,1202,1846,1318,1819,1481,1801,1564,1780,1640,1755,1702,1727,1745,1709,1759,1687,1769,1685,1764,1706,1755,1723,1741,1750,1700,1775,1638,1796,1563,1814,1480,1840,1317,1855,1201"/>
-<area shape="rect" id="Node000056" href="$d3/d7b/UpnpStateVarRequest_8cpp.html#a06239aaafb1a65667872f4ecdd6c11fb" title=" " alt="" coords="1522,1819,1686,1859"/>
-<area shape="poly" id="edge51_Node000001_Node000056" title=" " alt="" coords="1861,1203,1848,1330,1823,1512,1805,1606,1783,1691,1758,1761,1743,1788,1727,1809,1709,1824,1687,1833,1685,1828,1706,1819,1723,1805,1739,1785,1753,1759,1778,1689,1800,1605,1818,1512,1843,1330,1855,1202"/>
-<area shape="rect" id="Node000057" href="$d3/d7b/UpnpStateVarRequest_8cpp.html#a8fda2b48cfeac57d9a2bd91a892efc37" title=" " alt="" coords="1522,1883,1686,1923"/>
-<area shape="poly" id="edge52_Node000001_Node000057" title=" " alt="" coords="1861,1202,1851,1341,1827,1542,1809,1646,1787,1741,1760,1819,1744,1850,1727,1873,1709,1888,1687,1897,1685,1892,1706,1883,1723,1869,1740,1847,1755,1817,1782,1740,1804,1645,1822,1541,1845,1340,1856,1201"/>
-<area shape="rect" id="Node000058" href="$d3/d7b/UpnpStateVarRequest_8cpp.html#af4b93d17f4ad794e1becde982c2b28f5" title=" " alt="" coords="1515,1947,1693,1987"/>
-<area shape="poly" id="edge53_Node000001_Node000058" title=" " alt="" coords="1862,1202,1853,1352,1831,1573,1814,1687,1791,1792,1763,1878,1746,1911,1727,1937,1712,1950,1695,1959,1693,1954,1709,1945,1723,1933,1741,1909,1758,1876,1786,1790,1808,1686,1826,1572,1848,1352,1856,1202"/>
-<area shape="rect" id="Node000059" href="$d4/d6b/UpnpSubscriptionRequest_8cpp.html#a28fd6b0c793737b9bcda8f001126fdfc" title=" " alt="" coords="1509,2011,1699,2051"/>
-<area shape="poly" id="edge54_Node000001_Node000059" title=" " alt="" coords="1862,1202,1855,1363,1835,1603,1818,1728,1795,1842,1765,1936,1747,1973,1727,2001,1700,2020,1697,2016,1723,1997,1743,1970,1760,1934,1790,1841,1813,1727,1830,1603,1850,1363,1857,1202"/>
-<area shape="rect" id="Node000060" href="$d4/d6b/UpnpSubscriptionRequest_8cpp.html#abcce55521671ff16a630dd0b4f41101b" title=" " alt="" coords="1509,2075,1699,2115"/>
-<area shape="poly" id="edge55_Node000001_Node000060" title=" " alt="" coords="1862,1202,1857,1374,1850,1498,1839,1633,1822,1768,1798,1892,1784,1947,1767,1995,1749,2035,1727,2065,1700,2085,1697,2080,1723,2061,1744,2032,1762,1993,1779,1945,1793,1891,1817,1768,1834,1633,1845,1498,1852,1374,1857,1202"/>
-<area shape="rect" id="Node000061" href="$d4/d6b/UpnpSubscriptionRequest_8cpp.html#aeff1820041f282ab4007805b138a05f3" title=" " alt="" coords="1509,2139,1699,2179"/>
-<area shape="poly" id="edge56_Node000001_Node000061" title=" " alt="" coords="1863,1202,1859,1385,1853,1519,1843,1664,1826,1809,1802,1943,1787,2002,1770,2053,1750,2096,1727,2129,1700,2149,1697,2144,1723,2125,1745,2094,1765,2051,1782,2000,1797,1942,1821,1808,1837,1663,1848,1518,1854,1385,1857,1202"/>
-<area shape="rect" id="Node000003" href="$d6/de3/gena__ctrlpt_8cpp.html#ac18ff86dd814e974314f13e3f4b12316" title="Renews a SID." alt="" coords="1212,133,1391,159"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1500,182,1378,161,1378,156,1501,177"/>
-<area shape="rect" id="Node000006" href="$d6/de3/gena__ctrlpt_8cpp.html#a8fa71879823e3dc936bac4847ca1fcc5" title="This function subscribes to a PublisherURL (also mentioned as EventURL in some places)." alt="" coords="507,119,624,144"/>
-<area shape="poly" id="edge13_Node000002_Node000006" title=" " alt="" coords="1500,208,1339,216,1132,217,1018,213,902,205,785,192,671,173,630,161,593,146,595,142,632,156,673,167,786,187,902,200,1018,208,1132,212,1339,210,1500,202"/>
-<area shape="rect" id="Node000004" href="$d6/dd1/namespaceanonymous__namespace_02gena__ctrlpt_8cpp_03.html#a6d433d434965ae0ed59a09f3c38bf03a" title="This is a thread function to send the renewal just before the subscription times out." alt="" coords="909,55,1120,109"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="1230,133,1119,108,1121,103,1231,128"/>
-<area shape="rect" id="Node000008" href="$d4/d99/upnpapi_8cpp.html#a282c8419fef146b7170ee266159029e6" title="Schedule async functions in threadpool." alt="" coords="281,37,459,63"/>
-<area shape="poly" id="edge12_Node000003_Node000008" title=" " alt="" coords="1272,127,1205,82,1164,61,1119,45,1026,25,929,13,833,9,738,9,568,22,439,40,439,35,567,17,738,4,833,3,930,8,1027,19,1121,39,1166,56,1208,78,1275,123"/>
-<area shape="rect" id="Node000015" href="$d4/d99/upnpapi_8cpp.html#a35ef4435d66e949e612a9ca4f17c48f8" title="Renews a subscription that is about to expire." alt="" coords="925,133,1105,159"/>
-<area shape="poly" id="edge11_Node000003_Node000015" title=" " alt="" coords="1198,149,1105,149,1105,143,1198,143"/>
-<area shape="rect" id="Node000005" href="$d6/dd1/namespaceanonymous__namespace_02gena__ctrlpt_8cpp_03.html#a997a87554e5a4d733d3cc13bcb1c1dd8" title="Schedules a job to renew the subscription just before time out." alt="" coords="672,104,861,159"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="896,108,862,115,861,110,895,103"/>
-<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="867,159,910,167,995,173,1081,172,1161,165,1228,156,1229,161,1161,170,1081,177,995,179,909,173,866,164"/>
-<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="658,134,624,134,624,129,658,129"/>
-<area shape="rect" id="Node000007" href="$d4/d99/upnpapi_8cpp.html#a0777bb16dfc74c68a8202e2d9169ebe5" title="Registers a control point to receive event notifications from another device." alt="" coords="311,119,429,144"/>
-<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="493,134,430,134,430,129,493,129"/>
-<area shape="poly" id="edge8_Node000006_Node000008" title=" " alt="" coords="520,116,401,65,403,60,522,111"/>
-<area shape="rect" id="Node000009" href="$d4/d99/upnpapi_8cpp.html#a8cd338e66ebab077fa1f0d9bb0bec183" title="Queries the state of a variable of a service, generating a callback when the operation is complete." alt="" coords="5,13,233,39"/>
-<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="267,43,233,40,234,34,268,38"/>
-<area shape="rect" id="Node000010" href="$d4/d99/upnpapi_8cpp.html#a69d01558a5fdec26320b6ea9683f9d70" title="Renews a subscription that is about to expire, generating a callback when the operation is complete." alt="" coords="10,63,229,88"/>
-<area shape="poly" id="edge10_Node000008_Node000010" title=" " alt="" coords="268,63,229,67,229,62,267,58"/>
-<area shape="rect" id="Node000024" href="$d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#aef9e66b433f64923b1142779a4cdced6" title="Handles the SOAP action request." alt="" coords="1211,683,1391,737"/>
-<area shape="poly" id="edge22_Node000023_Node000024" title=" " alt="" coords="1476,713,1391,713,1391,707,1476,707"/>
-<area shape="rect" id="Node000025" href="$d6/d92/soap__device_8cpp.html#a4b5104845d73b836d6365a306fba1679" title="This is a callback called by minisever." alt="" coords="933,697,1097,723"/>
-<area shape="poly" id="edge23_Node000024_Node000025" title=" " alt="" coords="1198,713,1097,713,1097,707,1198,707"/>
-<area shape="rect" id="Node000033" href="$d7/d5e/group__SSDP-ctrlpt__functions.html#ga07ee8d9e5104cbeb9949ec23e0d4113b" title="This function handles the ssdp messages from the devices." alt="" coords="1212,1048,1391,1073"/>
-<area shape="poly" id="edge29_Node000032_Node000033" title=" " alt="" coords="1523,1021,1370,1051,1369,1045,1522,1016"/>
-<area shape="rect" id="Node000034" href="$db/daf/namespaceanonymous__namespace_02ssdp__common_8cpp_03.html#a73ff71f907e2bf442c51b304f877d07a" title="This function is a thread that handles SSDP requests." alt="" coords="914,1033,1115,1088"/>
-<area shape="poly" id="edge30_Node000033_Node000034" title=" " alt="" coords="1198,1063,1116,1063,1116,1058,1198,1058"/>
-<area shape="poly" id="edge32_Node000038_Node000033" title=" " alt="" coords="1502,1063,1391,1063,1391,1058,1502,1058"/>
-<area shape="poly" id="edge34_Node000039_Node000033" title=" " alt="" coords="1522,1105,1369,1076,1370,1071,1523,1100"/>
-<area shape="rect" id="Node000046" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#a6d073afa10796a5f94987b4a7e1450a3" title="Build an array of unrecognized headers." alt="" coords="1168,1513,1435,1553"/>
-<area shape="poly" id="edge41_Node000045_Node000046" title=" " alt="" coords="1523,1493,1408,1515,1407,1510,1522,1488"/>
-<area shape="rect" id="Node000047" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#a679f96add9815d14cf84b95d873b9198" title="Process a remote request and return the result." alt="" coords="917,1533,1112,1588"/>
-<area shape="poly" id="edge42_Node000046_Node000047" title=" " alt="" coords="1155,1550,1112,1554,1112,1548,1154,1544"/>
-<area shape="rect" id="Node000048" href="$d1/d28/Compa_2src_2genlib_2net_2http_2webserver_8cpp.html#abb77fc2cfdf0dfbd97e5b3880c4b18d1" title="Main entry point into web server." alt="" coords="687,1548,846,1573"/>
-<area shape="poly" id="edge43_Node000047_Node000048" title=" " alt="" coords="903,1563,846,1563,846,1558,903,1558"/>
-<area shape="poly" id="edge45_Node000051_Node000046" title=" " alt="" coords="1491,1535,1435,1535,1435,1530,1491,1530"/>
-<area shape="poly" id="edge47_Node000052_Node000047" title=" " alt="" coords="1196,1582,1112,1573,1113,1568,1197,1577"/>
+<area shape="rect" id="Node000001" title="Sets the string from a pointer to char using a maximum of N chars." alt="" coords="1653,1162,1816,1187"/>
+<area shape="rect" id="Node000002" href="$d6/dd1/namespaceanonymous__namespace_02gena__ctrlpt_8cpp_03.html#aab6385b3da2410ba5921c203635b7e28" title="Subscribes or renew subscription." alt="" coords="1413,169,1575,223"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1731,1148,1727,968,1721,838,1710,696,1695,553,1672,421,1658,363,1642,312,1624,270,1603,238,1590,225,1574,216,1577,211,1593,221,1607,234,1628,268,1647,311,1663,362,1677,420,1700,552,1716,695,1726,838,1732,968,1736,1148"/>
+<area shape="rect" id="Node000016" href="$dc/d2f/GenlibClientSubscription_8cpp.html#a480a2a51159d6aa40b7af16bcae9da39" title=" " alt="" coords="1411,248,1577,288"/>
+<area shape="poly" id="edge14_Node000001_Node000016" title=" " alt="" coords="1731,1149,1726,979,1720,857,1709,725,1693,592,1671,470,1641,370,1623,331,1603,302,1591,291,1576,282,1578,278,1594,286,1607,298,1628,328,1646,368,1676,469,1698,591,1714,724,1725,857,1731,979,1736,1149"/>
+<area shape="rect" id="Node000017" href="$dc/d2f/GenlibClientSubscription_8cpp.html#a3000c7fd54df3bd6b33c10ff589baf57" title=" " alt="" coords="1411,312,1577,352"/>
+<area shape="poly" id="edge15_Node000001_Node000017" title=" " alt="" coords="1730,1148,1724,990,1705,754,1689,632,1667,520,1639,428,1622,393,1603,366,1591,355,1575,346,1578,342,1594,350,1607,362,1627,390,1644,426,1672,519,1694,632,1710,754,1729,989,1736,1148"/>
+<area shape="rect" id="Node000018" href="$dc/d2f/GenlibClientSubscription_8cpp.html#a0d90930b22cedd0f0916817002f43143" title=" " alt="" coords="1411,376,1577,416"/>
+<area shape="poly" id="edge16_Node000001_Node000018" title=" " alt="" coords="1730,1148,1722,1001,1701,785,1685,673,1663,571,1636,487,1621,454,1603,430,1591,419,1576,411,1578,406,1594,415,1607,426,1625,452,1641,485,1669,569,1690,672,1707,784,1727,1000,1735,1148"/>
+<area shape="rect" id="Node000019" href="$d4/d18/UpnpActionComplete_8cpp.html#a7abba7f983c311e7a1bc776e3c7a880f" title=" " alt="" coords="1421,440,1567,480"/>
+<area shape="poly" id="edge17_Node000001_Node000019" title=" " alt="" coords="1729,1148,1720,1012,1697,815,1681,714,1660,621,1634,545,1619,516,1603,494,1587,480,1566,471,1569,466,1589,476,1607,490,1624,513,1639,543,1665,620,1686,713,1703,815,1725,1012,1735,1148"/>
+<area shape="rect" id="Node000020" href="$d4/d6b/UpnpActionRequest_8cpp.html#adc208b1c12d5f9783b1ec6a162e5dea9" title=" " alt="" coords="1399,504,1589,544"/>
+<area shape="poly" id="edge18_Node000001_Node000020" title=" " alt="" coords="1729,1149,1717,1024,1694,846,1677,755,1656,672,1632,604,1618,578,1603,558,1587,545,1591,541,1607,554,1622,575,1636,602,1661,670,1682,754,1699,845,1723,1023,1734,1148"/>
+<area shape="rect" id="Node000021" href="$d4/d6b/UpnpActionRequest_8cpp.html#a30d1e590ca82d775320ead67eae8a15c" title=" " alt="" coords="1399,568,1589,608"/>
+<area shape="poly" id="edge19_Node000001_Node000021" title=" " alt="" coords="1728,1148,1715,1035,1689,876,1672,796,1652,722,1629,662,1603,622,1587,609,1591,605,1607,618,1634,660,1657,721,1678,795,1695,876,1720,1034,1733,1148"/>
+<area shape="rect" id="Node000022" href="$d4/d6b/UpnpActionRequest_8cpp.html#a7c3f869972fc0c189c82bb0f355ddf1a" title=" " alt="" coords="1399,632,1589,672"/>
+<area shape="poly" id="edge20_Node000001_Node000022" title=" " alt="" coords="1727,1149,1712,1047,1685,908,1668,837,1649,773,1627,721,1603,686,1587,673,1591,669,1607,682,1632,719,1654,772,1673,836,1690,907,1717,1046,1733,1148"/>
+<area shape="rect" id="Node000023" href="$d4/d6b/UpnpActionRequest_8cpp.html#a595b92bb888f5663f043405c11b8136a" title=" " alt="" coords="1387,697,1601,722"/>
+<area shape="poly" id="edge21_Node000001_Node000023" title=" " alt="" coords="1732,1148,1729,1068,1723,1015,1713,957,1697,897,1674,838,1644,784,1604,737,1585,724,1589,720,1607,733,1648,781,1679,836,1702,895,1718,955,1728,1014,1734,1068,1737,1148"/>
+<area shape="rect" id="Node000028" href="$d4/d6b/UpnpActionRequest_8cpp.html#a640ffacfe5b4849204d2b5e6df838ffb" title=" " alt="" coords="1399,747,1589,787"/>
+<area shape="poly" id="edge24_Node000001_Node000028" title=" " alt="" coords="1730,1149,1723,1079,1703,986,1687,935,1666,886,1638,841,1604,801,1587,789,1591,784,1607,797,1642,838,1670,884,1692,934,1708,984,1728,1078,1735,1148"/>
+<area shape="rect" id="Node000029" href="$d8/db8/UpnpDiscovery_8cpp.html#a75b1640dd97f15d956e0e6bf0acac05a" title=" " alt="" coords="1395,811,1593,837"/>
+<area shape="poly" id="edge25_Node000001_Node000029" title=" " alt="" coords="1728,1149,1719,1087,1698,1006,1682,964,1661,923,1635,884,1604,851,1584,839,1587,835,1607,847,1639,881,1666,920,1687,962,1703,1005,1724,1086,1734,1148"/>
+<area shape="rect" id="Node000030" href="$d8/db8/UpnpDiscovery_8cpp.html#a487984f8fe37859c54542c7b238454f2" title=" " alt="" coords="1413,861,1575,901"/>
+<area shape="poly" id="edge26_Node000001_Node000030" title=" " alt="" coords="1725,1149,1712,1099,1688,1036,1652,971,1630,941,1604,916,1574,898,1577,894,1607,911,1634,938,1657,968,1693,1034,1717,1097,1730,1148"/>
+<area shape="rect" id="Node000031" href="$d8/db8/UpnpDiscovery_8cpp.html#ab724f7b445fc7eb1f98b9d2e55e241a1" title=" " alt="" coords="1413,925,1575,965"/>
+<area shape="poly" id="edge27_Node000001_Node000031" title=" " alt="" coords="1721,1150,1704,1112,1679,1066,1645,1019,1604,980,1574,964,1577,959,1607,975,1649,1016,1683,1063,1709,1110,1726,1148"/>
+<area shape="rect" id="Node000032" href="$d8/db8/UpnpDiscovery_8cpp.html#a9664ff1acca2c5974f51374791e4fcb8" title=" " alt="" coords="1399,990,1589,1015"/>
+<area shape="poly" id="edge28_Node000001_Node000032" title=" " alt="" coords="1717,1152,1671,1090,1640,1057,1604,1030,1576,1018,1579,1013,1607,1026,1643,1053,1675,1086,1721,1148"/>
+<area shape="rect" id="Node000038" href="$d8/db8/UpnpDiscovery_8cpp.html#a999784a89cf00994e04cd74eb1b3c668" title=" " alt="" coords="1413,1040,1575,1080"/>
+<area shape="poly" id="edge31_Node000001_Node000038" title=" " alt="" coords="1705,1156,1659,1125,1604,1094,1574,1083,1576,1078,1606,1090,1662,1120,1708,1152"/>
+<area shape="rect" id="Node000039" href="$d8/db8/UpnpDiscovery_8cpp.html#a0c411cf401940584ce04b130b76fd7ad" title=" " alt="" coords="1401,1105,1587,1130"/>
+<area shape="poly" id="edge33_Node000001_Node000039" title=" " alt="" coords="1670,1161,1605,1145,1551,1133,1552,1127,1606,1140,1671,1156"/>
+<area shape="rect" id="Node000040" href="$d8/db8/UpnpDiscovery_8cpp.html#a814c08b25d4ceb9ec7cfba162161ce3d" title=" " alt="" coords="1413,1155,1575,1195"/>
+<area shape="poly" id="edge35_Node000001_Node000040" title=" " alt="" coords="1639,1177,1575,1177,1575,1172,1639,1172"/>
+<area shape="rect" id="Node000041" href="$d8/db8/UpnpDiscovery_8cpp.html#aee020a365d5107b39a519191844a6205" title=" " alt="" coords="1413,1219,1575,1259"/>
+<area shape="poly" id="edge36_Node000001_Node000041" title=" " alt="" coords="1674,1194,1571,1221,1569,1216,1672,1188"/>
+<area shape="rect" id="Node000042" href="$d6/daa/UpnpEvent_8cpp.html#a20d4ddf9661ff92d883e29c14b31cf9f" title=" " alt="" coords="1411,1283,1577,1309"/>
+<area shape="poly" id="edge37_Node000001_Node000042" title=" " alt="" coords="1712,1199,1666,1237,1606,1273,1571,1286,1569,1281,1604,1268,1662,1233,1709,1195"/>
+<area shape="rect" id="Node000043" href="$de/df3/UpnpEventSubscribe_8cpp.html#a75258fd3c7e17c36efe1f9ef04193f61" title=" " alt="" coords="1419,1333,1569,1373"/>
+<area shape="poly" id="edge38_Node000001_Node000043" title=" " alt="" coords="1720,1201,1674,1262,1643,1294,1607,1322,1571,1340,1568,1335,1604,1318,1639,1290,1670,1258,1716,1198"/>
+<area shape="rect" id="Node000044" href="$de/df3/UpnpEventSubscribe_8cpp.html#a0896dfcca40971edd916e3760b4f1b65" title=" " alt="" coords="1421,1397,1567,1437"/>
+<area shape="poly" id="edge39_Node000001_Node000044" title=" " alt="" coords="1727,1202,1711,1243,1685,1293,1651,1344,1607,1388,1568,1407,1566,1402,1604,1383,1647,1340,1681,1290,1706,1240,1722,1200"/>
+<area shape="rect" id="Node000045" href="$d7/d3a/UpnpExtraHeaders_8cpp.html#af73e2e53973503fa1a9bbda322d609f9" title=" " alt="" coords="1383,1462,1605,1487"/>
+<area shape="poly" id="edge40_Node000001_Node000045" title=" " alt="" coords="1732,1201,1719,1254,1696,1322,1680,1358,1660,1392,1635,1424,1607,1452,1586,1464,1583,1460,1604,1447,1631,1420,1655,1389,1675,1355,1691,1320,1714,1253,1726,1200"/>
+<area shape="rect" id="Node000051" href="$d7/d3a/UpnpExtraHeaders_8cpp.html#abce00101ec59dcd7c90497c2e7233119" title=" " alt="" coords="1403,1512,1585,1552"/>
+<area shape="poly" id="edge44_Node000001_Node000051" title=" " alt="" coords="1733,1201,1723,1262,1701,1343,1685,1385,1664,1427,1638,1466,1607,1501,1587,1515,1584,1510,1604,1497,1634,1463,1659,1425,1680,1383,1696,1341,1718,1261,1728,1200"/>
+<area shape="rect" id="Node000052" href="$dd/da6/UpnpFileInfo_8cpp.html#ad1d64a519a9f3aea2d75610ebd755a0b" title=" " alt="" coords="1128,1577,1299,1602"/>
+<area shape="poly" id="edge46_Node000001_Node000052" title=" " alt="" coords="1737,1201,1733,1276,1727,1324,1716,1376,1700,1429,1677,1481,1646,1527,1607,1566,1584,1578,1553,1587,1473,1597,1383,1599,1299,1597,1299,1592,1383,1594,1472,1592,1552,1582,1582,1573,1604,1562,1642,1524,1672,1478,1695,1428,1711,1375,1721,1324,1727,1276,1731,1201"/>
+<area shape="rect" id="Node000053" href="$d2/dc8/UpnpStateVarComplete_8cpp.html#a632151713225be67da32220727c847c3" title=" " alt="" coords="1415,1627,1573,1667"/>
+<area shape="poly" id="edge48_Node000001_Node000053" title=" " alt="" coords="1736,1202,1731,1280,1714,1389,1698,1448,1675,1506,1645,1561,1607,1610,1592,1623,1575,1632,1572,1627,1589,1618,1603,1606,1641,1558,1670,1504,1693,1446,1709,1388,1726,1280,1731,1201"/>
+<area shape="rect" id="Node000054" href="$d2/dc8/UpnpStateVarComplete_8cpp.html#a4aa0d911195e37eda3da8680fb112e64" title=" " alt="" coords="1412,1691,1576,1731"/>
+<area shape="poly" id="edge49_Node000001_Node000054" title=" " alt="" coords="1733,1201,1718,1305,1691,1449,1674,1522,1654,1588,1632,1643,1607,1681,1577,1700,1575,1696,1603,1677,1627,1640,1649,1586,1669,1520,1686,1448,1713,1304,1727,1200"/>
+<area shape="rect" id="Node000055" href="$d3/d7b/UpnpStateVarRequest_8cpp.html#a0127417343a27be7b309908574690f9b" title=" " alt="" coords="1418,1755,1570,1795"/>
+<area shape="poly" id="edge50_Node000001_Node000055" title=" " alt="" coords="1734,1201,1721,1317,1696,1480,1679,1563,1658,1639,1635,1702,1607,1744,1590,1758,1571,1767,1569,1762,1588,1753,1603,1741,1630,1699,1653,1637,1673,1562,1690,1479,1715,1316,1728,1201"/>
+<area shape="rect" id="Node000056" href="$d3/d7b/UpnpStateVarRequest_8cpp.html#a06239aaafb1a65667872f4ecdd6c11fb" title=" " alt="" coords="1418,1819,1570,1859"/>
+<area shape="poly" id="edge51_Node000001_Node000056" title=" " alt="" coords="1734,1202,1723,1330,1700,1511,1683,1604,1662,1690,1637,1760,1623,1788,1607,1809,1591,1822,1571,1831,1569,1826,1588,1818,1603,1805,1618,1785,1632,1758,1657,1688,1677,1603,1694,1510,1718,1329,1729,1201"/>
+<area shape="rect" id="Node000057" href="$d3/d7b/UpnpStateVarRequest_8cpp.html#a8fda2b48cfeac57d9a2bd91a892efc37" title=" " alt="" coords="1418,1883,1570,1923"/>
+<area shape="poly" id="edge52_Node000001_Node000057" title=" " alt="" coords="1735,1201,1725,1340,1704,1541,1687,1645,1666,1740,1639,1818,1624,1849,1607,1873,1591,1886,1572,1895,1569,1891,1588,1882,1603,1869,1620,1846,1634,1816,1661,1739,1682,1644,1698,1540,1720,1339,1729,1201"/>
+<area shape="rect" id="Node000058" href="$d3/d7b/UpnpStateVarRequest_8cpp.html#af4b93d17f4ad794e1becde982c2b28f5" title=" " alt="" coords="1412,1947,1576,1987"/>
+<area shape="poly" id="edge53_Node000001_Node000058" title=" " alt="" coords="1735,1201,1728,1351,1707,1571,1691,1686,1669,1790,1642,1877,1625,1911,1607,1937,1593,1949,1577,1957,1575,1952,1590,1944,1603,1933,1621,1908,1637,1875,1664,1789,1686,1685,1702,1571,1722,1351,1730,1201"/>
+<area shape="rect" id="Node000059" href="$d4/d6b/UpnpSubscriptionRequest_8cpp.html#a28fd6b0c793737b9bcda8f001126fdfc" title=" " alt="" coords="1407,2011,1581,2051"/>
+<area shape="poly" id="edge54_Node000001_Node000059" title=" " alt="" coords="1736,1201,1730,1362,1711,1602,1695,1726,1673,1841,1644,1935,1627,1972,1607,2001,1583,2019,1580,2014,1603,1997,1622,1970,1639,1933,1668,1840,1690,1726,1706,1601,1724,1362,1730,1201"/>
+<area shape="rect" id="Node000060" href="$d4/d6b/UpnpSubscriptionRequest_8cpp.html#abcce55521671ff16a630dd0b4f41101b" title=" " alt="" coords="1407,2075,1581,2115"/>
+<area shape="poly" id="edge55_Node000001_Node000060" title=" " alt="" coords="1736,1201,1732,1373,1726,1497,1715,1632,1699,1767,1677,1891,1663,1946,1647,1994,1628,2034,1607,2065,1583,2083,1580,2078,1603,2061,1624,2031,1642,1992,1658,1944,1671,1890,1694,1766,1710,1632,1720,1497,1726,1373,1731,1201"/>
+<area shape="rect" id="Node000061" href="$d4/d6b/UpnpSubscriptionRequest_8cpp.html#aeff1820041f282ab4007805b138a05f3" title=" " alt="" coords="1407,2139,1581,2179"/>
+<area shape="poly" id="edge56_Node000001_Node000061" title=" " alt="" coords="1736,1201,1734,1384,1729,1517,1719,1662,1703,1808,1680,1941,1666,2000,1649,2052,1630,2095,1607,2129,1583,2147,1580,2142,1603,2125,1625,2093,1644,2050,1661,1999,1675,1940,1698,1807,1713,1662,1723,1517,1728,1384,1731,1201"/>
+<area shape="rect" id="Node000003" href="$d6/de3/gena__ctrlpt_8cpp.html#ac18ff86dd814e974314f13e3f4b12316" title="Renews a SID." alt="" coords="1132,133,1295,158"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1399,182,1284,161,1285,155,1400,176"/>
+<area shape="rect" id="Node000006" href="$d6/de3/gena__ctrlpt_8cpp.html#a8fa71879823e3dc936bac4847ca1fcc5" title="This function subscribes to a PublisherURL (also mentioned as EventURL in some places)." alt="" coords="472,118,580,143"/>
+<area shape="poly" id="edge13_Node000002_Node000006" title=" " alt="" coords="1399,207,1249,214,1056,216,950,212,842,204,733,191,627,172,588,160,553,146,555,141,589,155,629,167,734,186,842,198,951,206,1056,210,1249,209,1399,201"/>
+<area shape="rect" id="Node000004" href="$d6/dd1/namespaceanonymous__namespace_02gena__ctrlpt_8cpp_03.html#a6d433d434965ae0ed59a09f3c38bf03a" title="This is a thread function to send the renewal just before the subscription times out." alt="" coords="851,54,1044,109"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="1146,132,1044,107,1045,102,1147,127"/>
+<area shape="rect" id="Node000008" href="$d4/d99/upnpapi_8cpp.html#a282c8419fef146b7170ee266159029e6" title="Schedule async functions in threadpool." alt="" coords="265,37,424,62"/>
+<area shape="poly" id="edge12_Node000003_Node000008" title=" " alt="" coords="1186,126,1124,81,1085,60,1043,44,957,24,867,13,777,9,689,9,530,22,411,39,410,34,530,16,689,4,777,3,868,8,958,19,1045,39,1087,55,1127,77,1189,122"/>
+<area shape="rect" id="Node000015" href="$d4/d99/upnpapi_8cpp.html#a35ef4435d66e949e612a9ca4f17c48f8" title="Renews a subscription that is about to expire." alt="" coords="864,133,1031,158"/>
+<area shape="poly" id="edge11_Node000003_Node000015" title=" " alt="" coords="1119,148,1031,148,1031,143,1119,143"/>
+<area shape="rect" id="Node000005" href="$d6/dd1/namespaceanonymous__namespace_02gena__ctrlpt_8cpp_03.html#a997a87554e5a4d733d3cc13bcb1c1dd8" title="Schedules a job to renew the subscription just before time out." alt="" coords="628,103,803,158"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="837,107,803,115,802,110,836,102"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="812,159,851,167,929,173,1008,171,1082,164,1144,155,1145,161,1083,170,1009,176,929,178,850,172,811,164"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="614,133,580,133,580,128,614,128"/>
+<area shape="rect" id="Node000007" href="$d4/d99/upnpapi_8cpp.html#a0777bb16dfc74c68a8202e2d9169ebe5" title="Registers a control point to receive event notifications from another device." alt="" coords="289,118,400,143"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="458,133,400,133,400,128,458,128"/>
+<area shape="poly" id="edge8_Node000006_Node000008" title=" " alt="" coords="483,115,373,65,375,60,485,110"/>
+<area shape="rect" id="Node000009" href="$d4/d99/upnpapi_8cpp.html#a8cd338e66ebab077fa1f0d9bb0bec183" title="Queries the state of a variable of a service, generating a callback when the operation is complete." alt="" coords="5,13,217,38"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="251,43,217,39,218,34,252,37"/>
+<area shape="rect" id="Node000010" href="$d4/d99/upnpapi_8cpp.html#a69d01558a5fdec26320b6ea9683f9d70" title="Renews a subscription that is about to expire, generating a callback when the operation is complete." alt="" coords="10,62,213,87"/>
+<area shape="poly" id="edge10_Node000008_Node000010" title=" " alt="" coords="252,62,213,66,212,61,251,57"/>
+<area shape="rect" id="Node000024" href="$d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#aef9e66b433f64923b1142779a4cdced6" title="Handles the SOAP action request." alt="" coords="1132,682,1295,737"/>
+<area shape="poly" id="edge22_Node000023_Node000024" title=" " alt="" coords="1374,712,1295,712,1295,707,1374,707"/>
+<area shape="rect" id="Node000025" href="$d6/d92/soap__device_8cpp.html#a4b5104845d73b836d6365a306fba1679" title="This is a callback called by minisever." alt="" coords="872,697,1023,722"/>
+<area shape="poly" id="edge23_Node000024_Node000025" title=" " alt="" coords="1118,712,1023,712,1023,707,1118,707"/>
+<area shape="rect" id="Node000033" href="$d7/d5e/group__SSDP-ctrlpt__functions.html#ga07ee8d9e5104cbeb9949ec23e0d4113b" title="This function handles the ssdp messages from the devices." alt="" coords="1132,1047,1295,1073"/>
+<area shape="poly" id="edge29_Node000032_Node000033" title=" " alt="" coords="1418,1021,1277,1050,1276,1045,1417,1016"/>
+<area shape="rect" id="Node000034" href="$db/daf/namespaceanonymous__namespace_02ssdp__common_8cpp_03.html#a73ff71f907e2bf442c51b304f877d07a" title="This function is a thread that handles SSDP requests." alt="" coords="857,1033,1038,1087"/>
+<area shape="poly" id="edge30_Node000033_Node000034" title=" " alt="" coords="1118,1063,1038,1063,1038,1057,1118,1057"/>
+<area shape="poly" id="edge32_Node000038_Node000033" title=" " alt="" coords="1399,1063,1295,1063,1295,1057,1399,1057"/>
+<area shape="poly" id="edge34_Node000039_Node000033" title=" " alt="" coords="1417,1105,1276,1075,1277,1070,1418,1099"/>
+<area shape="rect" id="Node000046" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#a6d073afa10796a5f94987b4a7e1450a3" title="Build an array of unrecognized headers." alt="" coords="1092,1512,1335,1552"/>
+<area shape="poly" id="edge41_Node000045_Node000046" title=" " alt="" coords="1418,1493,1312,1515,1311,1509,1417,1488"/>
+<area shape="rect" id="Node000047" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#a679f96add9815d14cf84b95d873b9198" title="Process a remote request and return the result." alt="" coords="861,1533,1034,1587"/>
+<area shape="poly" id="edge42_Node000046_Node000047" title=" " alt="" coords="1079,1549,1034,1554,1034,1548,1078,1544"/>
+<area shape="rect" id="Node000048" href="$d1/d28/Compa_2src_2genlib_2net_2http_2webserver_8cpp.html#abb77fc2cfdf0dfbd97e5b3880c4b18d1" title="Main entry point into web server." alt="" coords="643,1547,787,1573"/>
+<area shape="poly" id="edge43_Node000047_Node000048" title=" " alt="" coords="847,1563,788,1563,788,1557,847,1557"/>
+<area shape="poly" id="edge45_Node000051_Node000046" title=" " alt="" coords="1389,1535,1335,1535,1335,1529,1389,1529"/>
+<area shape="poly" id="edge47_Node000052_Node000047" title=" " alt="" coords="1114,1581,1034,1572,1034,1567,1115,1576"/>
 </map>

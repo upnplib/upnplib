@@ -1,9 +1,9 @@
 <map id="membuffer_attach" name="membuffer_attach">
-<area shape="rect" id="Node000001" title="Free existing memory in membuffer and assign the new buffer in its place." alt="" coords="5,20,148,45"/>
-<area shape="rect" id="Node000002" href="$da/dd9/membuffer_8cpp.html#a132a367b6d8baf0d9de4b6e1f0fffe14" title="Free&#39;s memory allocated for membuffer* m." alt="" coords="196,20,347,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,30,182,30,182,35,148,35"/>
-<area shape="rect" id="Node000003" href="$da/dd9/membuffer_8cpp.html#a53d54a6586b380b385d18ae7dcd37e80" title="Wrapper to membuffer_initialize()." alt="" coords="395,20,517,45"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="347,30,381,30,381,35,347,35"/>
-<area shape="rect" id="Node000004" href="$d8/d45/namespaceanonymous__namespace_02membuffer_8cpp_03.html#aa81aeb90fb3c8389c7eb0a77b847101e" title="Initialize the buffer." alt="" coords="565,5,787,60"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="518,30,551,30,551,35,518,35"/>
+<area shape="rect" id="Node000001" title="Free existing memory in membuffer and assign the new buffer in its place." alt="" coords="5,20,132,45"/>
+<area shape="rect" id="Node000002" href="$da/dd9/membuffer_8cpp.html#a132a367b6d8baf0d9de4b6e1f0fffe14" title="Free&#39;s memory allocated for membuffer* m." alt="" coords="180,20,313,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,30,166,30,166,35,132,35"/>
+<area shape="rect" id="Node000003" href="$da/dd9/membuffer_8cpp.html#a53d54a6586b380b385d18ae7dcd37e80" title="Wrapper to membuffer_initialize()." alt="" coords="361,20,468,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="313,30,348,30,348,35,313,35"/>
+<area shape="rect" id="Node000004" href="$d8/d45/namespaceanonymous__namespace_02membuffer_8cpp_03.html#aa81aeb90fb3c8389c7eb0a77b847101e" title="Initialize the buffer." alt="" coords="516,5,705,60"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="468,30,503,30,503,35,468,35"/>
 </map>

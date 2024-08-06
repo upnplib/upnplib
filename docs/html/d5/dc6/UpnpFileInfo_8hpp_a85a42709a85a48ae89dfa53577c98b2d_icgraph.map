@@ -1,20 +1,20 @@
 <map id="UpnpFileInfo_get_IsReadable" name="UpnpFileInfo_get_IsReadable">
-<area shape="rect" id="Node000001" title=" " alt="" coords="1239,85,1449,111"/>
-<area shape="rect" id="Node000002" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#abfbf5675a51b2132037f22ca881c6aed" title="Get file information." alt="" coords="1011,5,1191,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1282,84,1190,59,1191,54,1283,79"/>
-<area shape="rect" id="Node000003" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#a679f96add9815d14cf84b95d873b9198" title="Process a remote request and return the result." alt="" coords="768,32,963,87"/>
-<area shape="poly" id="edge7_Node000001_Node000003" title=" " alt="" coords="1225,91,1010,74,962,70,963,65,1011,69,1225,86"/>
-<area shape="rect" id="Node000008" href="$dd/da6/UpnpFileInfo_8cpp.html#a7e57716a3a0a99ca764cb794e7bc9225" title=" " alt="" coords="1024,136,1177,161"/>
-<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="1269,116,1163,139,1162,133,1268,111"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="997,47,963,51,962,46,996,42"/>
-<area shape="rect" id="Node000004" href="$d1/d28/Compa_2src_2genlib_2net_2http_2webserver_8cpp.html#abb77fc2cfdf0dfbd97e5b3880c4b18d1" title="Main entry point into web server." alt="" coords="561,47,720,72"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="754,62,720,62,720,57,754,57"/>
-<area shape="rect" id="Node000005" href="$d4/d99/upnpapi_8cpp.html#a3c6309a98eb5281fbbfa45644c06fc34" title="Enables or disables the webserver." alt="" coords="344,47,513,72"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="547,62,514,62,514,57,547,57"/>
-<area shape="rect" id="Node000006" href="$d4/d99/upnpapi_8cpp.html#a679257c76bd4ebdd2aa3fa2bb470dadd" title="Finishes initializing the UPnP SDK." alt="" coords="139,47,296,72"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="330,62,296,62,296,57,330,57"/>
-<area shape="rect" id="Node000007" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="5,47,91,72"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="125,62,91,62,91,57,125,57"/>
-<area shape="rect" id="Node000009" href="$dd/da6/UpnpFileInfo_8cpp.html#a0b4a987bcc4ad2e19fe5ce934a01098f" title=" " alt="" coords="798,136,933,161"/>
-<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="1010,151,933,151,933,146,1010,146"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="1151,85,1345,111"/>
+<area shape="rect" id="Node000002" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#abfbf5675a51b2132037f22ca881c6aed" title="Get file information." alt="" coords="940,5,1103,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1189,84,1102,59,1104,54,1191,79"/>
+<area shape="rect" id="Node000003" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#a679f96add9815d14cf84b95d873b9198" title="Process a remote request and return the result." alt="" coords="719,32,892,87"/>
+<area shape="poly" id="edge7_Node000001_Node000003" title=" " alt="" coords="1137,91,940,74,892,70,892,64,940,69,1137,86"/>
+<area shape="rect" id="Node000008" href="$dd/da6/UpnpFileInfo_8cpp.html#a7e57716a3a0a99ca764cb794e7bc9225" title=" " alt="" coords="951,136,1092,161"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="1178,116,1079,139,1078,133,1176,111"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="927,47,892,51,892,46,926,42"/>
+<area shape="rect" id="Node000004" href="$d1/d28/Compa_2src_2genlib_2net_2http_2webserver_8cpp.html#abb77fc2cfdf0dfbd97e5b3880c4b18d1" title="Main entry point into web server." alt="" coords="527,47,671,72"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="704,62,671,62,671,57,704,57"/>
+<area shape="rect" id="Node000005" href="$d4/d99/upnpapi_8cpp.html#a3c6309a98eb5281fbbfa45644c06fc34" title="Enables or disables the webserver." alt="" coords="324,47,479,72"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="513,62,479,62,479,57,513,57"/>
+<area shape="rect" id="Node000006" href="$d4/d99/upnpapi_8cpp.html#a679257c76bd4ebdd2aa3fa2bb470dadd" title="Finishes initializing the UPnP SDK." alt="" coords="132,47,276,72"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="310,62,276,62,276,57,310,57"/>
+<area shape="rect" id="Node000007" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="5,47,84,72"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="118,62,84,62,84,57,118,57"/>
+<area shape="rect" id="Node000009" href="$dd/da6/UpnpFileInfo_8cpp.html#a0b4a987bcc4ad2e19fe5ce934a01098f" title=" " alt="" coords="743,136,867,161"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="937,151,867,151,867,146,937,146"/>
 </map>

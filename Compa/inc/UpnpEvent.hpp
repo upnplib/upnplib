@@ -1,7 +1,7 @@
 #ifndef COMPA_UPNPEVENT_HPP
 #define COMPA_UPNPEVENT_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-28
+// Redistribution only with this Copyright remark. Last modified: 2024-08-13
 // Also Copyright by other contributor as noted below.
 /*!
  * \file
@@ -16,6 +16,10 @@
  * UpnpEvent
  */
 typedef struct s_UpnpEvent UpnpEvent;
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 /*! Constructor */
 UPNPLIB_API UpnpEvent* UpnpEvent_new();
@@ -50,5 +54,9 @@ UPNPLIB_API int UpnpEvent_strcpy_SID(UpnpEvent* p, const char* s);
 UPNPLIB_API int UpnpEvent_strncpy_SID(UpnpEvent* p, const char* s, size_t n);
 /*! UpnpEvent_clear_SID */
 UPNPLIB_API void UpnpEvent_clear_SID(UpnpEvent* p);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* COMPA_UPNPEVENT_HPP */

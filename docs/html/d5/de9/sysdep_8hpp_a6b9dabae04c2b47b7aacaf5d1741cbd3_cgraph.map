@@ -1,5 +1,5 @@
 <map id="get_system_time" name="get_system_time">
-<area shape="rect" id="Node000001" title="System dependent call to get the current system time." alt="" coords="5,5,140,31"/>
-<area shape="rect" id="Node000002" href="$d5/d91/ThreadPool_8hpp.html#aaf2d0a99430a6d5253b8c395c30ca7e3" title="Get time of day." alt="" coords="188,5,299,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,15,175,15,175,21,140,21"/>
+<area shape="rect" id="Node000001" title="System dependent call to get the current system time." alt="" coords="5,5,128,31"/>
+<area shape="rect" id="Node000002" href="$d5/d91/ThreadPool_8hpp.html#aaf2d0a99430a6d5253b8c395c30ca7e3" title="Get time of day." alt="" coords="176,5,273,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,15,162,15,162,21,128,21"/>
 </map>

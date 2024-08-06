@@ -1,5 +1,5 @@
 <map id="anonymous_namespace{miniserver::cpp}::receive_from_stopSock" name="anonymous_namespace{miniserver::cpp}::receive_from_stopSock">
-<area shape="rect" id="Node000001" title="Check if we have received a packet that shall stop the miniserver." alt="" coords="253,5,448,60"/>
-<area shape="rect" id="Node000002" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a29857662f54c55aa7e6023b37b08af76" title="Run the miniserver." alt="" coords="5,5,205,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="239,35,206,35,206,30,239,30"/>
+<area shape="rect" id="Node000001" title="Check if we have received a packet that shall stop the miniserver." alt="" coords="228,5,397,60"/>
+<area shape="rect" id="Node000002" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a29857662f54c55aa7e6023b37b08af76" title="Run the miniserver." alt="" coords="5,5,180,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="215,35,180,35,180,30,215,30"/>
 </map>

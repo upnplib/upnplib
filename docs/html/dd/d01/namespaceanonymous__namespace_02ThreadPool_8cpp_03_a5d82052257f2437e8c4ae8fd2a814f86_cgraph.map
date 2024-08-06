@@ -1,5 +1,5 @@
 <map id="anonymous_namespace{ThreadPool::cpp}::StatsTime" name="anonymous_namespace{ThreadPool::cpp}::StatsTime">
-<area shape="rect" id="Node000001" title="StatsTime." alt="" coords="5,5,221,45"/>
-<area shape="rect" id="Node000002" href="$d5/d91/ThreadPool_8hpp.html#aaf2d0a99430a6d5253b8c395c30ca7e3" title="Get time of day." alt="" coords="269,13,380,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="221,23,255,23,255,28,221,28"/>
+<area shape="rect" id="Node000001" title="StatsTime." alt="" coords="5,5,199,45"/>
+<area shape="rect" id="Node000002" href="$d5/d91/ThreadPool_8hpp.html#aaf2d0a99430a6d5253b8c395c30ca7e3" title="Get time of day." alt="" coords="247,13,344,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="199,23,233,23,233,28,199,28"/>
 </map>

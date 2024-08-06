@@ -1,7 +1,7 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-05-17
+# Redistribution only with this Copyright remark. Last modified: 2024-08-15
 
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.23) # for FILE_SET
 include(../cmake/project-header.cmake)
 
 project(UPNPLIB VERSION 0012
@@ -24,6 +24,11 @@ set(UPNPLIB_SOURCE_FILES
     src/net/http/httpreadwrite.cpp
 )
 
+set(UPNPLIB_PUBLIC_HEADERS
+    include/upnplib/port_sock.hpp
+    include/upnplib/visibility.hpp
+)
+
 set(UPNPLIB_INCLUDE_DIRECTORIES
     PUBLIC include
 )
@@ -39,6 +44,9 @@ if(NOT WIN32)
     add_library(upnplib_shared SHARED
             ${UPNPLIB_SOURCE_FILES}
     )
+    set_target_properties(upnplib_shared PROPERTIES
+            OUTPUT_NAME upnpsdk
+    )
     target_include_directories(upnplib_shared
             ${UPNPLIB_INCLUDE_DIRECTORIES}
     )
@@ -51,11 +59,23 @@ if(NOT WIN32)
         PUBLIC umock_shared
         INTERFACE ixml_shared
     )
+    target_sources(upnplib_shared
+        INTERFACE FILE_SET upnplib_public_headers TYPE HEADERS
+                  BASE_DIRS include
+                  FILES ${UPNPLIB_PUBLIC_HEADERS}
+    )
+    install(TARGETS upnplib_shared
+        FILE_SET upnplib_public_headers
+        DESTINATION include/upnp
+    )
 
     # Upnplib STatic library: suffix -ust
     #------------------------------------
     add_library(upnplib_static STATIC
             ${UPNPLIB_SOURCE_FILES}
+    )
+    set_target_properties(upnplib_static PROPERTIES
+            OUTPUT_NAME upnpsdk
     )
     target_include_directories(upnplib_static
             ${UPNPLIB_INCLUDE_DIRECTORIES}
@@ -69,6 +89,8 @@ if(NOT WIN32)
         INTERFACE ixml_static
     )
 
+    install(TARGETS upnplib_shared upnplib_static)
+
 else() # WIN32
 
     # WIN32 upnplib libraries
@@ -78,6 +100,9 @@ else() # WIN32
     #------------------------------------------
     add_library(upnplib_shared SHARED
             ${UPNPLIB_SOURCE_FILES}
+    )
+    set_target_properties(upnplib_shared PROPERTIES
+            OUTPUT_NAME upnpsdk
     )
     target_include_directories(upnplib_shared
         ${UPNPLIB_INCLUDE_DIRECTORIES}
@@ -96,6 +121,9 @@ else() # WIN32
     add_library(upnplib_static STATIC
             ${UPNPLIB_SOURCE_FILES}
     )
+    set_target_properties(upnplib_static PROPERTIES
+            OUTPUT_NAME upnpsdk-static
+    )
     target_include_directories(upnplib_static
         ${UPNPLIB_INCLUDE_DIRECTORIES}
     )
@@ -106,5 +134,8 @@ else() # WIN32
     target_link_libraries(upnplib_static
         PUBLIC umock_static
     )
+
+    install(TARGETS upnplib_shared upnplib_static)
+
 
 endif() # WIN32

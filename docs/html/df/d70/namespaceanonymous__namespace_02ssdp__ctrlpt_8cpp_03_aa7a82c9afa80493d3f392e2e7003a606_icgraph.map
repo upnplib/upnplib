@@ -1,7 +1,7 @@
 <map id="anonymous_namespace{ssdp_ctrlpt::cpp}::CreateClientRequestPacket" name="anonymous_namespace{ssdp_ctrlpt::cpp}::CreateClientRequestPacket">
-<area shape="rect" id="Node000001" title="Creates a HTTP search request packet depending on the input parameter." alt="" coords="363,5,561,60"/>
-<area shape="rect" id="Node000002" href="$d4/d99/ssdp__ctrlpt_8cpp.html#a0466b3099133c9b31f308b7839f8b12b" title="Creates and send the search request for a specific URL." alt="" coords="192,20,315,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="349,35,315,35,315,30,349,30"/>
-<area shape="rect" id="Node000003" href="$d9/d54/group__compaAPI.html#ga810abb461cd6402c903fac8976b9ff54" title="Searches for devices matching the given search target." alt="" coords="5,20,144,45"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="178,35,144,35,144,30,178,30"/>
+<area shape="rect" id="Node000001" title="Creates a HTTP search request packet depending on the input parameter." alt="" coords="347,5,532,60"/>
+<area shape="rect" id="Node000002" href="$d4/d99/ssdp__ctrlpt_8cpp.html#a0466b3099133c9b31f308b7839f8b12b" title="Creates and send the search request for a specific URL." alt="" coords="184,20,299,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="333,35,299,35,299,30,333,30"/>
+<area shape="rect" id="Node000003" href="$d9/d54/group__compaAPI.html#ga810abb461cd6402c903fac8976b9ff54" title="Searches for devices matching the given search target." alt="" coords="5,20,136,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="170,35,136,35,136,30,170,30"/>
 </map>

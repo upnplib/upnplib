@@ -1,13 +1,13 @@
 <map id="Compa/src/threadutil/ThreadPool.hpp" name="Compa/src/threadutil/ThreadPool.hpp">
-<area shape="rect" id="Node000001" title="Manage a threadpool (for internal use only)." alt="" coords="65,5,223,45"/>
-<area shape="rect" id="Node000002" href="$de/dd1/LinkedList_8hpp.html" title="Manage a linked list (for internal use only)." alt="" coords="5,93,120,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,47,87,85,83,82,122,44"/>
-<area shape="rect" id="Node000006" href="$d8/d43/port__sock_8hpp.html" title="Specifications to be portable with sockets between different platforms." alt="" coords="144,93,309,119"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="166,44,206,82,203,86,162,47"/>
-<area shape="rect" id="Node000003" href="$d8/d1c/FreeList_8hpp.html" title="Manage a free list (for internal use only)." alt="" coords="12,167,113,192"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="65,119,65,153,60,153,60,119"/>
-<area shape="rect" id="Node000004" href="$d4/d0f/ithread_8hpp.html" title="Deprecated ithread functions redirected to pthread. Internal use Only." alt="" coords="15,240,111,265"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="65,192,65,226,60,226,60,192"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="21,313,105,339"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="65,266,65,300,60,300,60,266"/>
+<area shape="rect" id="Node000001" title="Manage a threadpool (for internal use only)." alt="" coords="63,5,206,45"/>
+<area shape="rect" id="Node000002" href="$de/dd1/LinkedList_8hpp.html" title="Manage a linked list (for internal use only)." alt="" coords="5,93,112,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,47,82,85,78,81,114,44"/>
+<area shape="rect" id="Node000006" href="$d8/d43/port__sock_8hpp.html" title="Specifications to be portable with sockets between different platforms." alt="" coords="136,93,285,119"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="155,44,192,81,188,85,151,47"/>
+<area shape="rect" id="Node000003" href="$d8/d1c/FreeList_8hpp.html" title="Manage a free list (for internal use only)." alt="" coords="11,167,106,192"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="61,119,61,153,56,153,56,119"/>
+<area shape="rect" id="Node000004" href="$d4/d0f/ithread_8hpp.html" title="Deprecated ithread functions redirected to pthread. Internal use Only." alt="" coords="15,240,102,265"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="61,192,61,226,56,226,56,192"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="21,313,97,339"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="61,266,61,300,56,300,56,266"/>
 </map>

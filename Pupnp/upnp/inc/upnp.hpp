@@ -1,13 +1,12 @@
 #ifndef PUPNP_UPNP_HPP
 #define PUPNP_UPNP_HPP
-
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-02-13
+ * Redistribution only with this Copyright remark. Last modified: 2024-08-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,7 +33,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-// Last compare with pupnp original source file on 2023-02-03, ver 1.14.15
+// Last compare with pupnp original source file on 2024-08-13, ver 1.14.19
 
 /*!
  * \defgroup UPnPAPI UPnP API
@@ -406,8 +405,8 @@
 #include "UpnpEventSubscribe.hpp"
 #include "UpnpFileInfo.hpp"
 #include "UpnpStateVarComplete.hpp"
-// #include "UpnpStateVarRequest.h"
-// #include "UpnpSubscriptionRequest.h"
+#include "UpnpStateVarRequest.hpp"
+#include "UpnpSubscriptionRequest.hpp"
 
 /*!
  * \name Constants and Types
@@ -495,6 +494,10 @@ typedef enum Upnp_DescType_e Upnp_DescType;
 #include "Callback.hpp"
 
 /* @} Constants and Types */
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 /*!
  * \name Initialization and Registration
@@ -2832,6 +2835,10 @@ EXPORT_SPEC int UpnpRemoveVirtualDir(
 EXPORT_SPEC void UpnpRemoveAllVirtualDirs(void);
 
 /* @} Web Server API */
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 /* @} UPnPAPI UPnP API */
 

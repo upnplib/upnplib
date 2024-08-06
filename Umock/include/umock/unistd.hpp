@@ -1,7 +1,7 @@
 #ifndef UMOCK_UNISTD_HPP
 #define UMOCK_UNISTD_HPP
 // Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-12-26
+// Redistribution only with this Copyright remark. Last modified: 2024-08-13
 
 #include <upnplib/port_sock.hpp>
 #include <upnplib/visibility.hpp>
@@ -65,7 +65,13 @@ class UPNPLIB_API Unistd {
 };
 
 
+#ifdef __cplusplus
+extern "C" {
 UPNPLIB_EXTERN Unistd unistd_h;
+}
+#else
+UPNPLIB_EXTERN Unistd unistd_h;
+#endif /* __cplusplus */
 
 } // namespace umock
 

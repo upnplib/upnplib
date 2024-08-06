@@ -1,7 +1,7 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-08-05
+# Redistribution only with this Copyright remark. Last modified: 2024-08-15
 
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.23) # for FILE_SET
 include(../../cmake/project-header.cmake)
 
 project(PUPNP_UPNP VERSION 0030
@@ -144,12 +144,12 @@ set(PUPNP_SOURCE_FILES
     $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_GENA}>>:src/api/UpnpSubscriptionRequest.cpp>
     $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_GENA}>>:src/api/UpnpEventSubscribe.cpp>
     $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_GENA}>>:src/api/UpnpEvent.cpp>
-    $<$<CONFIG:Debug>:src/api/upnpdebug.cpp>
+    src/api/upnpdebug.cpp
 
     $<$<AND:$<BOOL:${PUPNP_DEF_DEVICE}>,$<BOOL:${PUPNP_DEF_WEBSERVER}>>:src/urlconfig/urlconfig.cpp>
 
     ${UMOCK_SOURCE_DIR}/src/pupnp_sock.cpp
-    ${UPNPLIB_PROJECT_SOURCE_DIR}/Interface/src/pupnp-sock.cpp
+    ${CMAKE_SOURCE_DIR}/Interface/src/pupnp-sock.cpp
 
     # Helper classes added but not original old pupnp code. To separate them,
     # they are in a parent directory of the original code. They only
@@ -160,12 +160,42 @@ set(PUPNP_SOURCE_FILES
     ../src/threadpool_init.cpp
 )
 
+set(PUPNP_PUBLIC_HEADERS
+    inc/Callback.hpp
+    inc/list.hpp
+    inc/upnp.h
+    inc/upnp.hpp
+    inc/UpnpActionComplete.hpp
+    inc/UpnpActionRequest.hpp
+    inc/UpnpDiscovery.hpp
+    inc/UpnpEvent.hpp
+    inc/UpnpEventSubscribe.hpp
+    inc/UpnpExtraHeaders.hpp
+    inc/UpnpFileInfo.hpp
+    inc/UpnpGlobal.hpp
+    inc/UpnpInet.hpp
+    inc/UpnpIntTypes.hpp
+    inc/UpnpStateVarComplete.hpp
+    inc/UpnpStateVarRequest.hpp
+    inc/UpnpStdInt.hpp
+    inc/UpnpString.hpp
+    inc/UpnpSubscriptionRequest.hpp
+    inc/UpnpUniStd.hpp
+    inc/upnptools.h
+    inc/upnptools.hpp
+    inc/ithread.h
+    inc/ithread.hpp
+    inc/upnpdebug.h
+    inc/upnpdebug.hpp
+    ${CMAKE_BINARY_DIR}/include/cmake_vars.hpp
+)
+
 set(PUPNP_INCLUDE_DIRECTORIES
     PUBLIC inc
     PUBLIC src/inc
     PUBLIC src/threadutil
     PUBLIC ${PUPNP_SOURCE_DIR}/include
-    PUBLIC ${UPNPLIB_PROJECT_SOURCE_DIR}/Interface/include
+    PUBLIC ${CMAKE_SOURCE_DIR}/Interface/include
     PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
 )
 
@@ -195,6 +225,9 @@ if(NOT WIN32)
     add_library(pupnp_shared SHARED
             ${PUPNP_SOURCE_FILES}
     )
+    set_target_properties(pupnp_shared PROPERTIES
+            OUTPUT_NAME upnpsdk-pupnp
+    )
     target_include_directories(pupnp_shared
         ${PUPNP_INCLUDE_DIRECTORIES}
         PUBLIC
@@ -212,11 +245,24 @@ if(NOT WIN32)
             umock_shared
             ixml_shared
     )
+    target_sources(pupnp_shared
+        INTERFACE FILE_SET pupnp_public_headers TYPE HEADERS
+                  BASE_DIRS inc
+                            ${CMAKE_BINARY_DIR}/include
+                  FILES ${PUPNP_PUBLIC_HEADERS}
+    )
+    install(TARGETS pupnp_shared
+        FILE_SET pupnp_public_headers
+        DESTINATION include/upnp
+    )
 
     # Pupnp STatic library: suffix -pst
     #----------------------------------
     add_library(pupnp_static STATIC
             ${PUPNP_SOURCE_FILES}
+    )
+    set_target_properties(pupnp_static PROPERTIES
+            OUTPUT_NAME upnpsdk-pupnp
     )
     target_include_directories(pupnp_static
         ${PUPNP_INCLUDE_DIRECTORIES}
@@ -232,7 +278,9 @@ if(NOT WIN32)
     target_link_libraries(pupnp_static
         PUBLIC umock_static
         INTERFACE ixml_static
-)
+    )
+
+    install(TARGETS pupnp_static)
 
 else() # WIN32
 
@@ -245,6 +293,9 @@ else() # WIN32
     #---------------------------------
     add_library(pupnp_shared SHARED
             ${PUPNP_SOURCE_FILES}
+    )
+    set_target_properties(pupnp_shared PROPERTIES
+            OUTPUT_NAME upnpsdk-pupnp
     )
     target_include_directories(pupnp_shared
         ${PUPNP_INCLUDE_DIRECTORIES}
@@ -267,6 +318,9 @@ else() # WIN32
     add_library(pupnp_static STATIC
             ${PUPNP_SOURCE_FILES}
     )
+    set_target_properties(pupnp_static PROPERTIES
+            OUTPUT_NAME upnpsdk-pupnp-static
+    )
     target_include_directories(pupnp_static
         ${PUPNP_INCLUDE_DIRECTORIES}
     )
@@ -280,6 +334,8 @@ else() # WIN32
         PUBLIC umock_static
         INTERFACE ixml_static
     )
+
+    install(TARGETS pupnp_shared pupnp_static)
 
 endif() # WIN32
 

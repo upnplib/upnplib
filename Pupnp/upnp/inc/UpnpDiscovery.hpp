@@ -1,15 +1,14 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-17
-
 #ifndef UPNPLIB_UPNPDISCOVERY_HPP
 #define UPNPLIB_UPNPDISCOVERY_HPP
+// Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-08-13
+// Also Copyright by other contributor as noted below.
 
 /*!
  * \file
  *
  * \brief Header file for UpnpDiscovery methods.
- *
- * \author Marcelo Roberto Jimenez
+ * \authors Marcelo Roberto Jimenez, Ingo Höft
  */
 #include <stdlib.h> /* for size_t */
 
@@ -17,6 +16,10 @@
 
 #include "UpnpString.hpp"
 #include "UpnpInet.hpp"
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 /*!
  * UpnpDiscovery
@@ -194,5 +197,9 @@ EXPORT_SPEC int UpnpDiscovery_set_DestAddr(UpnpDiscovery* p,
                                            const struct sockaddr_storage* buf);
 /*! UpnpDiscovery_get_DestAddr */
 EXPORT_SPEC void UpnpDiscovery_clear_DestAddr(UpnpDiscovery* p);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* UPNPLIB_UPNPDISCOVERY_HPP */

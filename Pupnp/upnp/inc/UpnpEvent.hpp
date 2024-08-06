@@ -1,15 +1,14 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-20
-// Also Copyright by other contributor as noted below.
-
 #ifndef UPNPLIB_UPNPEVENT_HPP
 #define UPNPLIB_UPNPEVENT_HPP
+// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-08-13
+// Also Copyright by other contributor as noted below.
 
 /*!
  * \file
  *
  * \brief Header file for UpnpEvent methods.
- * \author Marcelo Roberto Jimenez
+ * \authors Marcelo Roberto Jimenez, Ingo Höft
  */
 #include <stdlib.h> /* for size_t */
 
@@ -17,6 +16,10 @@
 
 #include "ixml.hpp"
 #include "UpnpString.hpp"
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 /*!
  * UpnpEvent
@@ -56,5 +59,9 @@ EXPORT_SPEC int UpnpEvent_strcpy_SID(UpnpEvent* p, const char* s);
 EXPORT_SPEC int UpnpEvent_strncpy_SID(UpnpEvent* p, const char* s, size_t n);
 /*! UpnpEvent_clear_SID */
 EXPORT_SPEC void UpnpEvent_clear_SID(UpnpEvent* p);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* UPNPLIB_UPNPEVENT_HPP */

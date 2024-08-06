@@ -1,11 +1,11 @@
 <map id="anonymous_namespace{webserver::cpp}::CreateHTTPRangeResponseHeader" name="anonymous_namespace{webserver::cpp}::CreateHTTPRangeResponseHeader">
-<area shape="rect" id="Node000001" title="Fills in the Offset, read size and contents to send out as an HTTP Range Response." alt="" coords="5,30,268,85"/>
-<area shape="rect" id="Node000002" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#a70ef6483629de40c88badaf038215769" title="Returns a range of integers from a string." alt="" coords="316,5,556,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="268,41,302,37,303,42,268,46"/>
-<area shape="rect" id="Node000004" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#ae8f4aa63ba4d6124a696e6f0b9e668a8" title="Finds a substring from a string in a case insensitive way." alt="" coords="345,69,527,109"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="268,69,332,76,332,81,268,74"/>
-<area shape="rect" id="Node000003" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#af4e671076beebc6b93701a786027262d" title="Finds next token in a string." alt="" coords="627,5,812,45"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="556,23,613,23,613,28,556,28"/>
-<area shape="rect" id="Node000005" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#abc82d4f31ef6ee9ca86d91f92a80222e" title="Converts C string in place to upper case." alt="" coords="604,69,835,109"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="527,87,590,87,590,92,527,92"/>
+<area shape="rect" id="Node000001" title="Fills in the Offset, read size and contents to send out as an HTTP Range Response." alt="" coords="5,30,244,85"/>
+<area shape="rect" id="Node000002" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#a70ef6483629de40c88badaf038215769" title="Returns a range of integers from a string." alt="" coords="292,5,507,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="244,41,278,37,279,42,244,46"/>
+<area shape="rect" id="Node000004" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#ae8f4aa63ba4d6124a696e6f0b9e668a8" title="Finds a substring from a string in a case insensitive way." alt="" coords="318,69,481,109"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="244,69,305,76,304,81,244,74"/>
+<area shape="rect" id="Node000003" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#af4e671076beebc6b93701a786027262d" title="Finds next token in a string." alt="" coords="575,5,741,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="507,23,562,23,562,28,507,28"/>
+<area shape="rect" id="Node000005" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#abc82d4f31ef6ee9ca86d91f92a80222e" title="Converts C string in place to upper case." alt="" coords="555,69,761,109"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="481,87,541,87,541,92,481,92"/>
 </map>

@@ -1,5 +1,5 @@
 <map id="anonymous_namespace{soap_device::cpp}::check_soap_request" name="anonymous_namespace{soap_device::cpp}::check_soap_request">
-<area shape="rect" id="Node000001" title="Check validity of the SOAP request per UPnP specification." alt="" coords="5,5,185,60"/>
-<area shape="rect" id="Node000002" href="$da/dd9/membuffer_8cpp.html#a0ebdc3494e3cb774b96ee021f7ae6c3b" title="Compares characters of strings passed for number of bytes. If equal for the number of bytes,..." alt="" coords="233,20,343,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,30,219,30,219,35,186,35"/>
+<area shape="rect" id="Node000001" title="Check validity of the SOAP request per UPnP specification." alt="" coords="5,5,168,60"/>
+<area shape="rect" id="Node000002" href="$da/dd9/membuffer_8cpp.html#a0ebdc3494e3cb774b96ee021f7ae6c3b" title="Compares characters of strings passed for number of bytes. If equal for the number of bytes,..." alt="" coords="216,20,315,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,30,202,30,202,35,168,35"/>
 </map>

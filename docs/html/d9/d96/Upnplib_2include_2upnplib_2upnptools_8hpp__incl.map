@@ -1,7 +1,7 @@
 <map id="Upnplib/include/upnplib/upnptools.hpp" name="Upnplib/include/upnplib/upnptools.hpp">
-<area shape="rect" id="Node000001" title="General usable free function tools and helper." alt="" coords="61,5,236,45"/>
-<area shape="rect" id="Node000002" href="$d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="5,93,161,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="135,47,104,84,100,81,131,44"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="186,93,245,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="167,44,199,81,195,84,163,47"/>
+<area shape="rect" id="Node000001" title="General usable free function tools and helper." alt="" coords="57,5,213,45"/>
+<area shape="rect" id="Node000002" href="$d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="5,93,144,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,47,94,84,90,81,118,44"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="169,93,223,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="152,44,181,81,176,84,147,47"/>
 </map>

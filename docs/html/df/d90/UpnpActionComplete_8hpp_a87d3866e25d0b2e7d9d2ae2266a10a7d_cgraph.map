@@ -1,7 +1,7 @@
 <map id="UpnpActionComplete_get_CtrlUrl_cstr" name="UpnpActionComplete_get_CtrlUrl_cstr">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,35,165,75"/>
-<area shape="rect" id="Node000002" href="$d4/d18/UpnpActionComplete_8cpp.html#a551f64715996ef2b1d2881203d25a7a1" title=" " alt="" coords="217,5,377,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,41,203,36,203,41,166,46"/>
-<area shape="rect" id="Node000003" href="$d1/d03/group__UpnpString.html#ga52a429bf778bf8c0a44a779d9446116c" title="Returns the pointer to char." alt="" coords="213,70,380,95"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="166,63,200,67,199,72,165,68"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,35,152,75"/>
+<area shape="rect" id="Node000002" href="$d4/d18/UpnpActionComplete_8cpp.html#a551f64715996ef2b1d2881203d25a7a1" title=" " alt="" coords="203,5,350,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,41,189,36,190,41,153,46"/>
+<area shape="rect" id="Node000003" href="$d1/d03/group__UpnpString.html#ga52a429bf778bf8c0a44a779d9446116c" title="Returns the pointer to char." alt="" coords="200,70,353,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="153,62,187,67,186,73,152,68"/>
 </map>

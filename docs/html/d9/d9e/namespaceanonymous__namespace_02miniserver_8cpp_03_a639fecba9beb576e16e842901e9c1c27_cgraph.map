@@ -1,5 +1,5 @@
 <map id="anonymous_namespace{miniserver::cpp}::free_handle_request_arg" name="anonymous_namespace{miniserver::cpp}::free_handle_request_arg">
-<area shape="rect" id="Node000001" title="Free memory assigned for handling request and unitialize socket functionality." alt="" coords="5,5,185,60"/>
-<area shape="rect" id="Node000002" href="$d6/df0/sock_8hpp.html#a703577f3b40fc1c9e865b798beab18e5" title="Closes the socket if it is different from &#45;1." alt="" coords="233,20,327,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,30,220,30,220,35,186,35"/>
+<area shape="rect" id="Node000001" title="Free memory assigned for handling request and unitialize socket functionality." alt="" coords="5,5,168,60"/>
+<area shape="rect" id="Node000002" href="$d6/df0/sock_8hpp.html#a703577f3b40fc1c9e865b798beab18e5" title="Closes the socket if it is different from &#45;1." alt="" coords="216,20,304,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,30,203,30,203,35,168,35"/>
 </map>

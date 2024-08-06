@@ -1,5 +1,5 @@
 <map id="genaInitNotify" name="genaInitNotify">
-<area shape="rect" id="Node000001" title="Sends the intial state table dump to newly subscribed control point." alt="" coords="233,5,348,31"/>
-<area shape="rect" id="Node000002" href="$d9/d54/group__compaAPI.html#ga19f65dc15aaf56d2f9390c4d3b13a5c8" title="Accepts a subscription request and sends out the current state of the eventable variables for a servi..." alt="" coords="5,5,185,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="219,21,186,21,186,15,219,15"/>
+<area shape="rect" id="Node000001" title="Sends the intial state table dump to newly subscribed control point." alt="" coords="220,5,323,31"/>
+<area shape="rect" id="Node000002" href="$d9/d54/group__compaAPI.html#ga19f65dc15aaf56d2f9390c4d3b13a5c8" title="Accepts a subscription request and sends out the current state of the eventable variables for a servi..." alt="" coords="5,5,172,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="206,21,172,21,172,15,206,15"/>
 </map>

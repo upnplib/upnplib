@@ -1,5 +1,5 @@
 <map id="UpnpActionComplete_strncpy_CtrlUrl" name="UpnpActionComplete_strncpy_CtrlUrl">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,165,45"/>
-<area shape="rect" id="Node000002" href="$d1/d03/group__UpnpString.html#ga06963479e44d90a5de680861e2180e0b" title="Sets the string from a pointer to char using a maximum of N chars." alt="" coords="213,13,389,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,23,200,23,200,28,165,28"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,152,45"/>
+<area shape="rect" id="Node000002" href="$d1/d03/group__UpnpString.html#ga06963479e44d90a5de680861e2180e0b" title="Sets the string from a pointer to char using a maximum of N chars." alt="" coords="200,13,363,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,23,186,23,186,28,152,28"/>
 </map>

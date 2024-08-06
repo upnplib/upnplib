@@ -1,11 +1,11 @@
 <map id="UpnpGetIfInfo" name="UpnpGetIfInfo">
-<area shape="rect" id="Node000001" title="Retrieve interface information and keep it in global variables. If NULL, we&#39;ll find the first suitabl..." alt="" coords="5,31,119,56"/>
-<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a2722e4ec9ac52e4572c134313a3239dd" title="Computes prefix length from IPv6 netmask." alt="" coords="167,5,391,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,34,156,30,157,35,119,39"/>
-<area shape="rect" id="Node000003" href="$d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement." alt="" coords="233,55,324,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="119,47,220,58,219,64,119,52"/>
-<area shape="rect" id="Node000004" href="$d5/dfa/upnpdebug_8cpp.html#adee8b149b1dca33417740b21a862ad00" title="Check Debug level." alt="" coords="459,29,599,55"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="324,60,445,48,445,53,324,65"/>
-<area shape="rect" id="Node000005" href="$d5/dfa/upnpdebug_8cpp.html#a4190a252f156f35bad0781b542cea98d" title="Display File and Line." alt="" coords="439,79,619,104"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="324,69,425,79,425,84,324,74"/>
+<area shape="rect" id="Node000001" title="Retrieve interface information and keep it in global variables. If NULL, we&#39;ll find the first suitabl..." alt="" coords="5,31,109,56"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a2722e4ec9ac52e4572c134313a3239dd" title="Computes prefix length from IPv6 netmask." alt="" coords="157,5,361,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,34,144,30,145,35,110,40"/>
+<area shape="rect" id="Node000003" href="$d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement." alt="" coords="217,55,301,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="110,47,204,58,204,63,109,52"/>
+<area shape="rect" id="Node000004" href="$d5/dfa/upnpdebug_8cpp.html#adee8b149b1dca33417740b21a862ad00" title="Check Debug level." alt="" coords="427,29,557,55"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="301,60,413,48,414,53,302,65"/>
+<area shape="rect" id="Node000005" href="$d5/dfa/upnpdebug_8cpp.html#a4190a252f156f35bad0781b542cea98d" title="Display File and Line." alt="" coords="409,79,575,104"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="302,69,396,79,395,84,302,74"/>
 </map>

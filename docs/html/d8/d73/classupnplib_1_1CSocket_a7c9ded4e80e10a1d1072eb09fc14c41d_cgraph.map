@@ -1,7 +1,7 @@
 <map id="upnplib::CSocket::load" name="upnplib::CSocket::load">
-<area shape="rect" id="Node000001" title="Initialize the object with the hints given by the constructor." alt="" coords="5,45,172,70"/>
-<area shape="rect" id="Node000002" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catch error for later use." alt="" coords="220,5,368,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="170,42,206,36,207,42,171,47"/>
-<area shape="rect" id="Node000003" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4" title="Get human readable error description of the catched error." alt="" coords="220,69,368,109"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="171,67,207,73,206,78,170,73"/>
+<area shape="rect" id="Node000001" title="Initialize the object with the hints given by the constructor." alt="" coords="5,45,160,70"/>
+<area shape="rect" id="Node000002" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catch error for later use." alt="" coords="208,5,347,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,42,194,36,195,42,161,47"/>
+<area shape="rect" id="Node000003" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4" title="Get human readable error description of the catched error." alt="" coords="208,69,347,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="161,67,195,73,194,78,160,73"/>
 </map>

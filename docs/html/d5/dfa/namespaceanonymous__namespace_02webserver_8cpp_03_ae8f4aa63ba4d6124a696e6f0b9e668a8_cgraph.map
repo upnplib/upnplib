@@ -1,5 +1,5 @@
 <map id="anonymous_namespace{webserver::cpp}::StrStr" name="anonymous_namespace{webserver::cpp}::StrStr">
-<area shape="rect" id="Node000001" title="Finds a substring from a string in a case insensitive way." alt="" coords="5,5,187,45"/>
-<area shape="rect" id="Node000002" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#abc82d4f31ef6ee9ca86d91f92a80222e" title="Converts C string in place to upper case." alt="" coords="235,5,465,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,23,221,23,221,28,187,28"/>
+<area shape="rect" id="Node000001" title="Finds a substring from a string in a case insensitive way." alt="" coords="5,5,168,45"/>
+<area shape="rect" id="Node000002" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#abc82d4f31ef6ee9ca86d91f92a80222e" title="Converts C string in place to upper case." alt="" coords="216,5,423,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,23,202,23,202,28,168,28"/>
 </map>

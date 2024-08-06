@@ -1,24 +1,24 @@
 <map id="http_message_t" name="http_message_t">
-<area shape="rect" id="Node000001" title="Structure of an HTTP message." alt="" coords="189,317,316,343"/>
-<area shape="rect" id="Node000002" href="$de/dd0/Compa_2src_2inc_2uri_8hpp.html#d4/d48/structuri__type" title="Represents a URI used in parse_uri and elsewhere." alt="" coords="51,215,126,240"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,247,139,270,170,291,220,315,218,320,167,296,136,274,109,252"/>
-<area shape="rect" id="Node000003" href="$de/dd0/Compa_2src_2inc_2uri_8hpp.html#d4/df4/structtoken" title="Buffer used in parsinghttp messages, urls, etc. Generally this simply holds a pointer into a larger a..." alt="" coords="16,5,75,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="32,44,12,88,8,112,12,136,24,160,41,181,74,212,71,216,37,184,20,163,7,138,3,112,7,86,27,42"/>
-<area shape="rect" id="Node000004" href="$de/dd0/Compa_2src_2inc_2uri_8hpp.html#db/d73/structhostport__type" title="Represents a host port, e.g. &quot;127.127.0.1:80&quot;." alt="" coords="88,103,200,128"/>
-<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="70,39,134,100,130,104,66,42"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="135,142,97,216,92,213,130,139"/>
-<area shape="rect" id="Node000005" href="$d1/d10/membuffer_8hpp.html#d8/d52/structmembuffer" title="Maintains a block of dynamically allocated memory." alt="" coords="150,215,245,240"/>
-<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="198,253,199,273,205,292,216,305,230,315,226,319,212,309,201,295,194,274,192,254"/>
-<area shape="rect" id="Node000006" href="$de/dd1/LinkedList_8hpp.html#de/d4b/structLinkedList" title="Linked list (no protection)." alt="" coords="269,215,356,240"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="304,254,281,295,264,319,260,316,277,292,299,251"/>
-<area shape="rect" id="Node000007" href="$de/dd1/LinkedList_8hpp.html#dd/d2d/structListNode" title="Linked list node. Stores generic item and pointers to next and prev." alt="" coords="234,103,313,128"/>
-<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="275,142,277,166,284,190,301,213,297,216,279,192,272,167,270,142"/>
-<area shape="poly" id="edge8_Node000007_Node000007" title=" " alt="" coords="328,104,336,108,340,116,331,125,314,128,313,123,329,120,334,115,332,112,325,109"/>
-<area shape="rect" id="Node000008" href="$d8/d1c/FreeList_8hpp.html#d4/da5/structFreeList" title="Stores head and size of free list, as well as mutex for protection." alt="" coords="394,103,468,128"/>
-<area shape="poly" id="edge9_Node000006_Node000008" title=" " alt="" coords="410,140,327,216,323,212,406,136"/>
-<area shape="rect" id="Node000009" href="$d8/d1c/FreeList_8hpp.html#d4/d35/structFreeListNode" title="Free list node. points to next free item." alt="" coords="378,5,484,31"/>
-<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="434,44,434,102,428,102,428,44"/>
-<area shape="poly" id="edge11_Node000009_Node000009" title=" " alt="" coords="499,9,511,18,503,26,485,29,484,23,500,21,506,18,497,14"/>
-<area shape="rect" id="Node000010" href="$d1/d10/membuffer_8hpp.html#d4/d89/structmemptr" title="pointer to a chunk of memory." alt="" coords="380,215,455,240"/>
-<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="403,253,383,275,358,296,331,310,302,320,301,315,328,305,355,291,379,271,399,249"/>
+<area shape="rect" id="Node000001" title="Structure of an HTTP message." alt="" coords="173,317,288,343"/>
+<area shape="rect" id="Node000002" href="$de/dd0/Compa_2src_2inc_2uri_8hpp.html#d4/d48/structuri__type" title="Represents a URI used in parse_uri and elsewhere." alt="" coords="45,215,113,240"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,248,125,270,153,291,201,315,198,320,150,296,122,274,97,252"/>
+<area shape="rect" id="Node000003" href="$de/dd0/Compa_2src_2inc_2uri_8hpp.html#d4/df4/structtoken" title="Buffer used in parsinghttp messages, urls, etc. Generally this simply holds a pointer into a larger a..." alt="" coords="14,5,69,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="29,44,11,88,8,112,12,137,23,159,37,180,67,213,63,216,33,184,18,162,7,138,3,112,6,86,24,42"/>
+<area shape="rect" id="Node000004" href="$de/dd0/Compa_2src_2inc_2uri_8hpp.html#db/d73/structhostport__type" title="Represents a host port, e.g. &quot;127.127.0.1:80&quot;." alt="" coords="79,103,180,128"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="63,39,120,100,116,104,60,43"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="120,142,86,216,82,213,116,140"/>
+<area shape="rect" id="Node000005" href="$d1/d10/membuffer_8hpp.html#d8/d52/structmembuffer" title="Maintains a block of dynamically allocated memory." alt="" coords="137,215,220,240"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="179,254,180,273,186,292,197,305,210,315,206,319,193,309,182,295,175,275,173,254"/>
+<area shape="rect" id="Node000006" href="$de/dd1/LinkedList_8hpp.html#de/d4b/structLinkedList" title="Linked list (no protection)." alt="" coords="245,215,326,240"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="276,254,256,295,241,318,236,316,251,292,272,252"/>
+<area shape="rect" id="Node000007" href="$de/dd1/LinkedList_8hpp.html#dd/d2d/structListNode" title="Linked list node. Stores generic item and pointers to next and prev." alt="" coords="212,103,287,128"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="251,142,252,166,258,190,274,213,270,216,253,192,247,166,245,142"/>
+<area shape="poly" id="edge8_Node000007_Node000007" title=" " alt="" coords="302,104,310,108,313,116,305,125,287,128,287,123,302,121,308,115,306,112,300,109"/>
+<area shape="rect" id="Node000008" href="$d8/d1c/FreeList_8hpp.html#d4/da5/structFreeList" title="Stores head and size of free list, as well as mutex for protection." alt="" coords="364,103,433,128"/>
+<area shape="poly" id="edge9_Node000006_Node000008" title=" " alt="" coords="378,140,299,216,295,212,375,136"/>
+<area shape="rect" id="Node000009" href="$d8/d1c/FreeList_8hpp.html#d4/d35/structFreeListNode" title="Free list node. points to next free item." alt="" coords="349,5,449,31"/>
+<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="401,44,401,102,396,102,396,44"/>
+<area shape="poly" id="edge11_Node000009_Node000009" title=" " alt="" coords="464,9,475,18,467,26,449,29,448,23,465,21,470,18,461,14"/>
+<area shape="rect" id="Node000010" href="$d1/d10/membuffer_8hpp.html#d4/d89/structmemptr" title="pointer to a chunk of memory." alt="" coords="351,215,417,240"/>
+<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="369,253,350,275,325,296,300,309,274,320,272,315,298,305,322,291,346,271,365,249"/>
 </map>

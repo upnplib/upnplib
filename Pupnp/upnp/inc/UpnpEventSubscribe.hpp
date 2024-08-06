@@ -1,20 +1,24 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-20
-
 #ifndef UPNPLIB_UPNPEVENTSUBSCRIBE_HPP
 #define UPNPLIB_UPNPEVENTSUBSCRIBE_HPP
+// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-08-13
+// Also Copyright by other contributor as noted below.
 
 /*!
  * \file
  *
  * \brief Header file for UpnpEventSubscribe methods.
- * \author Marcelo Roberto Jimenez
+ * \authors Marcelo Roberto Jimenez, Ingo Höft
  */
 #include <stdlib.h> /* for size_t */
 
 #include "UpnpGlobal.hpp" /* for EXPORT_SPEC */
 
 #include "UpnpString.hpp"
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 /*!
  * UpnpEventSubscribe
@@ -84,5 +88,9 @@ EXPORT_SPEC int UpnpEventSubscribe_strncpy_PublisherUrl(UpnpEventSubscribe* p,
                                                         size_t n);
 /*! UpnpEventSubscribe_clear_PublisherUrl */
 EXPORT_SPEC void UpnpEventSubscribe_clear_PublisherUrl(UpnpEventSubscribe* p);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* UPNPEVENTSUBSCRIBE_H */

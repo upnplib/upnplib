@@ -1,7 +1,7 @@
 <map id="get_server_addr6" name="get_server_addr6">
-<area shape="rect" id="Node000001" title="Fill the sockadr with IPv6 miniserver information." alt="" coords="489,5,624,31"/>
-<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a9300edc4f96f8f3e563bcaf49bffd514" title="Fills the sockadr_in with miniserver information." alt="" coords="247,5,441,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="475,21,442,21,442,15,475,15"/>
-<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers one root&#45; or logical&#45;device object with the UPnP Library with additional description and ge..." alt="" coords="5,5,199,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="233,21,199,21,199,15,233,15"/>
+<area shape="rect" id="Node000001" title="Fill the sockadr with IPv6 miniserver information." alt="" coords="464,5,587,31"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a9300edc4f96f8f3e563bcaf49bffd514" title="Fills the sockadr_in with miniserver information." alt="" coords="232,5,416,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="450,21,416,21,416,15,450,15"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers one root&#45; or logical&#45;device object with the UPnP Library with additional description and ge..." alt="" coords="5,5,184,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="218,21,184,21,184,15,218,15"/>
 </map>

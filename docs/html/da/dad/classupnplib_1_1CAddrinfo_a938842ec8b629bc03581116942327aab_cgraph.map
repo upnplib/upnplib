@@ -1,6 +1,6 @@
 <map id="upnplib::CAddrinfo::netaddr" name="upnplib::CAddrinfo::netaddr">
-<area shape="rect" id="Node000001" title="Get the assosiated netaddress." alt="" coords="5,29,148,69"/>
-<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="39,30,37,20,43,11,56,5,77,3,100,6,113,13,110,18,98,11,77,8,58,10,47,15,42,21,45,28"/>
-<area shape="rect" id="Node000002" href="$d0/dd8/group__upnplib-addrmodul.html#gafd74ac6303ebfad050c64d52458125a8" title="Get the netaddress with port from a sockaddr structure." alt="" coords="196,37,352,62"/>
-<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="148,47,183,47,183,52,148,52"/>
+<area shape="rect" id="Node000001" title="Get the assosiated netaddress." alt="" coords="5,29,135,69"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="36,30,34,20,39,11,51,5,70,3,91,6,103,13,100,17,90,11,70,8,53,10,43,15,39,21,41,28"/>
+<area shape="rect" id="Node000002" href="$d0/dd8/group__upnplib-addrmodul.html#gafd74ac6303ebfad050c64d52458125a8" title="Get the netaddress with port from a sockaddr structure." alt="" coords="183,37,321,62"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="135,47,169,47,169,52,135,52"/>
 </map>

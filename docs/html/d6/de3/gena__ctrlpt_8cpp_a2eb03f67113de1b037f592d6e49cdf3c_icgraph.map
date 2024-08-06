@@ -1,9 +1,9 @@
 <map id="gena_process_notification_event" name="gena_process_notification_event">
-<area shape="rect" id="Node000001" title="This function processes NOTIFY events that are sent by devices." alt="" coords="484,5,675,45"/>
-<area shape="rect" id="Node000002" href="$dc/d02/gena__callback2_8cpp.html#a6f658b4eab5786398a00a53b87e7c622" title="This is the callback function called by the miniserver to handle incoming GENA requests." alt="" coords="325,13,436,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="470,28,436,28,436,23,470,23"/>
-<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="139,13,277,38"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="312,28,277,28,277,23,312,23"/>
-<area shape="rect" id="Node000004" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="5,13,91,38"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="125,28,91,28,91,23,125,23"/>
+<area shape="rect" id="Node000001" title="This function processes NOTIFY events that are sent by devices." alt="" coords="456,5,629,45"/>
+<area shape="rect" id="Node000002" href="$dc/d02/gena__callback2_8cpp.html#a6f658b4eab5786398a00a53b87e7c622" title="This is the callback function called by the miniserver to handle incoming GENA requests." alt="" coords="307,13,408,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="442,28,408,28,408,23,442,23"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="132,13,259,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="293,28,259,28,259,23,293,23"/>
+<area shape="rect" id="Node000004" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="5,13,84,38"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="118,28,84,28,84,23,118,23"/>
 </map>

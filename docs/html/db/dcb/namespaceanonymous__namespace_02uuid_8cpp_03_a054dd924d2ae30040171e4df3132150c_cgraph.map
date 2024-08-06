@@ -1,7 +1,7 @@
 <map id="anonymous_namespace{uuid::cpp}::get_current_time" name="anonymous_namespace{uuid::cpp}::get_current_time">
-<area shape="rect" id="Node000001" title="Get time as 60 bit 100ns ticks since whenever." alt="" coords="5,5,221,45"/>
-<area shape="rect" id="Node000002" href="$d6/d4b/sysdep_8cpp.html#a6b9dabae04c2b47b7aacaf5d1741cbd3" title="System dependent call to get the current system time." alt="" coords="269,13,404,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="222,23,255,23,255,28,222,28"/>
-<area shape="rect" id="Node000003" href="$d5/d91/ThreadPool_8hpp.html#aaf2d0a99430a6d5253b8c395c30ca7e3" title="Get time of day." alt="" coords="452,13,563,38"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="404,23,439,23,439,28,404,28"/>
+<area shape="rect" id="Node000001" title="Get time as 60 bit 100ns ticks since whenever." alt="" coords="5,5,193,45"/>
+<area shape="rect" id="Node000002" href="$d6/d4b/sysdep_8cpp.html#a6b9dabae04c2b47b7aacaf5d1741cbd3" title="System dependent call to get the current system time." alt="" coords="241,13,364,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="193,23,228,23,228,28,193,28"/>
+<area shape="rect" id="Node000003" href="$d5/d91/ThreadPool_8hpp.html#aaf2d0a99430a6d5253b8c395c30ca7e3" title="Get time of day." alt="" coords="412,13,509,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="364,23,398,23,398,28,364,28"/>
 </map>

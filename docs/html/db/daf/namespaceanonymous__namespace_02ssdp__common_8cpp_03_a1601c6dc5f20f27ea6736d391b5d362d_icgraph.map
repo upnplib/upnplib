@@ -1,5 +1,5 @@
 <map id="anonymous_namespace{ssdp_common::cpp}::create_ssdp_sock_v6" name="anonymous_namespace{ssdp_common::cpp}::create_ssdp_sock_v6">
-<area shape="rect" id="Node000001" title="Create an SSDP IPv6 socket." alt="" coords="189,5,369,60"/>
-<area shape="rect" id="Node000002" href="$df/d13/ssdp__common_8cpp.html#a60739b2f340e6bdeedcf8f282d9578c8" title="Creates the IPv4 and IPv6 ssdp sockets required by the control point and device operation." alt="" coords="5,20,141,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="175,35,142,35,142,30,175,30"/>
+<area shape="rect" id="Node000001" title="Create an SSDP IPv6 socket." alt="" coords="181,5,344,60"/>
+<area shape="rect" id="Node000002" href="$df/d13/ssdp__common_8cpp.html#a60739b2f340e6bdeedcf8f282d9578c8" title="Creates the IPv4 and IPv6 ssdp sockets required by the control point and device operation." alt="" coords="5,20,133,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,35,134,35,134,30,168,30"/>
 </map>

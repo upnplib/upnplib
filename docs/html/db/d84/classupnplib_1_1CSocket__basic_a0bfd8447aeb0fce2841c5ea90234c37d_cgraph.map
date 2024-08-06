@@ -1,13 +1,13 @@
 <map id="upnplib::CSocket_basic::is_bound" name="upnplib::CSocket_basic::is_bound">
-<area shape="rect" id="Node000001" title="Get status if socket is bound to a local netaddress." alt="" coords="5,37,176,77"/>
-<area shape="rect" id="Node000002" href="$db/d84/classupnplib_1_1CSocket__basic.html#a9e771b73cb9373e1b1f09ffca79dc9b3" title="Get netaddress without port." alt="" coords="224,5,395,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,42,210,37,211,42,177,48"/>
-<area shape="rect" id="Node000004" href="$db/d84/classupnplib_1_1CSocket__basic.html#a24406f0340da2352557ad1ea301410c5" title="Get netaddress with port." alt="" coords="224,69,395,109"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="177,67,211,72,210,78,176,72"/>
-<area shape="rect" id="Node000003" href="$d1/dc2/structupnplib_1_1SSockaddr.html#a7177ca7af8e89e62f3a9ace32d429a0b" title="Get the assosiated netaddress without port." alt="" coords="443,5,588,45"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="395,23,429,23,429,28,395,28"/>
-<area shape="rect" id="Node000005" href="$d1/dc2/structupnplib_1_1SSockaddr.html#aa4e5becb3ad27b69d81d517cc66cc3e8" title="Get the assosiated netaddress with port." alt="" coords="443,69,588,109"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="395,87,429,87,429,92,395,92"/>
-<area shape="rect" id="Node000006" href="$d0/dd8/group__upnplib-addrmodul.html#gafd74ac6303ebfad050c64d52458125a8" title="Get the netaddress with port from a sockaddr structure." alt="" coords="636,77,792,102"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="589,87,622,87,622,92,589,92"/>
+<area shape="rect" id="Node000001" title="Get status if socket is bound to a local netaddress." alt="" coords="5,37,165,77"/>
+<area shape="rect" id="Node000002" href="$db/d84/classupnplib_1_1CSocket__basic.html#a9e771b73cb9373e1b1f09ffca79dc9b3" title="Get netaddress without port." alt="" coords="213,5,373,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,42,199,37,200,42,166,48"/>
+<area shape="rect" id="Node000004" href="$db/d84/classupnplib_1_1CSocket__basic.html#a24406f0340da2352557ad1ea301410c5" title="Get netaddress with port." alt="" coords="213,69,373,109"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="166,67,200,72,199,78,165,72"/>
+<area shape="rect" id="Node000003" href="$d1/dc2/structupnplib_1_1SSockaddr.html#a7177ca7af8e89e62f3a9ace32d429a0b" title="Get the assosiated netaddress without port." alt="" coords="421,5,556,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="374,23,408,23,408,28,374,28"/>
+<area shape="rect" id="Node000005" href="$d1/dc2/structupnplib_1_1SSockaddr.html#aa4e5becb3ad27b69d81d517cc66cc3e8" title="Get the assosiated netaddress with port." alt="" coords="421,69,556,109"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="374,87,408,87,408,92,374,92"/>
+<area shape="rect" id="Node000006" href="$d0/dd8/group__upnplib-addrmodul.html#gafd74ac6303ebfad050c64d52458125a8" title="Get the netaddress with port from a sockaddr structure." alt="" coords="604,77,743,102"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="556,87,590,87,590,92,556,92"/>
 </map>

@@ -52,6 +52,10 @@ jobs:
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
 
+      - name: Install
+        run: sudo cmake --install build
+
+      # I do not use static Googletest libraries by default.
       #- if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON -D UPNPLIB_WITH_OPENSSL=OFF')
       #  name: Check gtest library files, static
       #  run: |
@@ -70,25 +74,31 @@ jobs:
 
       - if: matrix.buildtype != 'Debug'
         name: Verify if NO Debug info
-        # These two libraries are always built
         run: |
-          objdump -g ./build/lib/libpupnp_shared.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
-          objdump -g ./build/lib/libcompa_shared.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
-          objdump -g ./build/lib/libupnplib_shared.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
-          ls ./build/lib/libpupnp_static.a
-          ls ./build/lib/libcompa_static.a
-          ls ./build/lib/libupnplib_static.a
+          objdump -g /usr/local/lib/libixml.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
+          objdump -g /usr/local/lib/libupnpsdk-compa.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
+          objdump -g /usr/local/lib/libupnpsdk-mock.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
+          objdump -g /usr/local/lib/libupnpsdk-pupnp.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
+          objdump -g /usr/local/lib/libupnpsdk.so | grep --ignore-case --max-count=1 --invert-match "Contents of the .debug_info section"
+          ls /usr/local/lib/libixml.a
+          ls /usr/local/lib/libupnpsdk-compa.a
+          ls /usr/local/lib/libupnpsdk-mock.a
+          ls /usr/local/lib/libupnpsdk-pupnp.a
+          ls /usr/local/lib/libupnpsdk.a
 
       - if: matrix.buildtype == 'Debug'
         name: Verify if Debug info
-        # These two libraries are always built
         run: |
-          objdump -g ./build/lib/libpupnp_shared.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
-          objdump -g ./build/lib/libcompa_shared.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
-          objdump -g ./build/lib/libupnplib_shared.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
-          ls ./build/lib/libpupnp_static.a
-          ls ./build/lib/libcompa_static.a
-          ls ./build/lib/libupnplib_static.a
+          objdump -g /usr/local/lib/libixml.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
+          objdump -g /usr/local/lib/libupnpsdk-compa.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
+          objdump -g /usr/local/lib/libupnpsdk-mock.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
+          objdump -g /usr/local/lib/libupnpsdk-pupnp.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
+          objdump -g /usr/local/lib/libupnpsdk.so | grep --ignore-case --max-count=1 "Contents of the .debug_info section"
+          ls /usr/local/lib/libixml.a
+          ls /usr/local/lib/libupnpsdk-compa.a
+          ls /usr/local/lib/libupnpsdk-mock.a
+          ls /usr/local/lib/libupnpsdk-pupnp.a
+          ls /usr/local/lib/libupnpsdk.a
 
      #- name: Run upnplib info programs
      #  # This program is always built
@@ -135,6 +145,10 @@ jobs:
       - name: Build
         run: cmake --build build --config ${{matrix.buildtype}}
 
+      - name: Install
+        run: cmake --install build
+
+      # I do not use static Googletest libraries by default.
       #- if: (matrix.googletest == '-D UPNPLIB_WITH_GOOGLETEST=ON -D UPNPLIB_WITH_OPENSSL=OFF')
       #  name: Check gtest library files, static
       #  run: |
@@ -151,27 +165,18 @@ jobs:
           ls ./build/lib/libgtest_main.dylib
           ls ./build/lib/libgmock_main.dylib
 
-      - if: matrix.buildtype != 'Debug'
-        name: Verify if NO Debug info
-        # These two libraries are always built
+      - name: Verify if libraries available
         run: |
-          ls ./build/lib/libpupnp_shared.dylib
-          ls ./build/lib/libcompa_shared.dylib
-          ls ./build/lib/libupnplib_shared.dylib
-          ls ./build/lib/libpupnp_static.a
-          ls ./build/lib/libcompa_static.a
-          ls ./build/lib/libupnplib_static.a
-
-      - if: matrix.buildtype == 'Debug'
-        name: Verify if Debug info
-        # These two libraries are always built
-        run: |
-          ls ./build/lib/libpupnp_shared.dylib
-          ls ./build/lib/libcompa_shared.dylib
-          ls ./build/lib/libupnplib_shared.dylib
-          ls ./build/lib/libpupnp_static.a
-          ls ./build/lib/libcompa_static.a
-          ls ./build/lib/libupnplib_static.a
+          ls /usr/local/lib/libixml.dylib
+          ls /usr/local/lib/libupnpsdk-compa.dylib
+          ls /usr/local/lib/libupnpsdk-mock.dylib
+          ls /usr/local/lib/libupnpsdk-pupnp.dylib
+          ls /usr/local/lib/libupnpsdk.dylib
+          ls /usr/local/lib/libixml.a
+          ls /usr/local/lib/libupnpsdk-compa.a
+          ls /usr/local/lib/libupnpsdk-mock.a
+          ls /usr/local/lib/libupnpsdk-pupnp.a
+          ls /usr/local/lib/libupnpsdk.a
 
      #- name: Run upnplib info programs
      #  # This program is always built
@@ -283,7 +288,7 @@ jobs:
   # Job: Configure, build and test with NMake
   #------------------------------------------
   Build_with_NMake:
-    if: false
+    if: true
     name: Test w/ NMake
     needs: [ Build_Ubuntu, Build_MacOS ]
     runs-on: ${{ matrix.os }}
@@ -379,8 +384,8 @@ jobs:
   build_tests:
     if: true
     name: "build tests"
-    #needs: [ Build_with_Visual_Studio, Build_with_NMake ]
-    needs: [ Build_Ubuntu, Build_MacOS, Build_with_Visual_Studio ]
+    needs: [ Build_with_Visual_Studio, Build_with_NMake ]
+    #naeeds: [ Build_Ubuntu, Build_MacOS, Build_with_Visual_Studio ]
     runs-on: ${{ matrix.os }}
 
     strategy:

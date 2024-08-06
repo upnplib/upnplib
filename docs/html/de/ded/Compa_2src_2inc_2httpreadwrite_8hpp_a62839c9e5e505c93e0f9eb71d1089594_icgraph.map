@@ -1,126 +1,126 @@
 <map id="http_gmtime_r" name="http_gmtime_r">
-<area shape="rect" id="Node000001" title="Portable gmtime_r for Microsoft Windows." alt="" coords="1219,755,1337,780"/>
-<area shape="rect" id="Node000002" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#abfbf5675a51b2132037f22ca881c6aed" title="Get file information." alt="" coords="991,387,1171,441"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1261,744,1095,443,1099,440,1265,741"/>
-<area shape="rect" id="Node000008" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#af5981cc2f7cc76c3e6b6700c5f27c472" title="Generate an HTTP message based on the format that is specified in the input parameters." alt="" coords="1007,799,1155,824"/>
-<area shape="poly" id="edge5_Node000001_Node000008" title=" " alt="" coords="1208,786,1139,801,1138,796,1207,780"/>
-<area shape="rect" id="Node000003" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#a679f96add9815d14cf84b95d873b9198" title="Process a remote request and return the result." alt="" coords="748,77,943,132"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1066,374,1049,323,1023,262,987,200,965,171,941,145,926,134,929,130,944,141,969,168,992,197,1028,259,1054,321,1071,373"/>
-<area shape="rect" id="Node000004" href="$d1/d28/Compa_2src_2genlib_2net_2http_2webserver_8cpp.html#abb77fc2cfdf0dfbd97e5b3880c4b18d1" title="Main entry point into web server." alt="" coords="525,55,684,80"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="734,90,684,82,685,77,735,85"/>
-<area shape="rect" id="Node000005" href="$d4/d99/upnpapi_8cpp.html#a3c6309a98eb5281fbbfa45644c06fc34" title="Enables or disables the webserver." alt="" coords="271,55,441,80"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="512,70,441,70,441,65,512,65"/>
-<area shape="poly" id="edge52_Node000008_Node000003" title=" " alt="" coords="1070,786,1032,645,988,453,982,405,981,362,986,288,986,253,980,219,966,184,941,145,930,134,933,130,945,142,971,181,985,218,991,253,991,288,986,362,987,404,993,452,1037,644,1075,785"/>
-<area shape="poly" id="edge74_Node000008_Node000004" title=" " alt="" coords="1070,786,997,492,940,275,918,258,894,250,871,248,847,249,822,251,797,249,772,241,746,224,732,208,725,190,721,157,718,124,711,109,698,93,682,82,685,78,702,89,716,106,723,123,727,156,730,189,737,205,750,220,774,237,798,244,822,246,846,244,871,243,896,245,920,254,945,273,1002,490,1075,784"/>
-<area shape="poly" id="edge35_Node000008_Node000008" title=" " alt="" coords="1116,789,1106,780,1081,777,1060,779,1049,784,1046,790,1052,797,1048,800,1041,790,1045,780,1058,774,1081,772,1108,776,1119,784"/>
-<area shape="rect" id="Node000009" href="$d3/d1d/namespaceanonymous__namespace_02ssdp__device_8cpp_03.html#aadadf0015deb15dbbefd082436ff5b75" title="Creates a HTTP request packet." alt="" coords="755,287,935,341"/>
-<area shape="poly" id="edge6_Node000008_Node000009" title=" " alt="" coords="1068,787,1018,651,982,561,940,473,901,402,863,343,868,340,905,399,945,470,986,559,1023,649,1073,785"/>
-<area shape="rect" id="Node000032" href="$d6/dd1/namespaceanonymous__namespace_02gena__ctrlpt_8cpp_03.html#aab6385b3da2410ba5921c203635b7e28" title="Subscribes or renew subscription." alt="" coords="755,484,935,539"/>
-<area shape="poly" id="edge21_Node000008_Node000032" title=" " alt="" coords="1067,787,1049,742,1021,686,985,626,941,572,901,541,904,537,945,568,989,623,1026,684,1054,740,1072,784"/>
-<area shape="rect" id="Node000046" href="$d6/dd1/namespaceanonymous__namespace_02gena__ctrlpt_8cpp_03.html#af298d2d7e5a94605b0b284718e20cdc9" title="Sends the UNSUBCRIBE gena request and recieves the response from the device and returns it as a param..." alt="" coords="755,583,935,637"/>
-<area shape="poly" id="edge27_Node000008_Node000046" title=" " alt="" coords="1054,791,941,687,882,640,885,636,944,683,1058,787"/>
-<area shape="rect" id="Node000051" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#a951778f34697a8cc0a0e9dd7da2b66ca" title="Function to Notify a particular subscription of a particular event." alt="" coords="515,899,695,953"/>
-<area shape="poly" id="edge31_Node000008_Node000051" title=" " alt="" coords="1008,830,749,890,696,904,694,899,747,885,1007,824"/>
-<area shape="rect" id="Node000063" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#a4c4ffc89743a422ff2ad243e9ab14892" title="Download the document message and extract the document from the message." alt="" coords="785,1208,905,1233"/>
-<area shape="poly" id="edge33_Node000008_Node000063" title=" " alt="" coords="1080,838,1071,907,1049,1002,1031,1052,1009,1102,980,1149,944,1191,927,1204,907,1213,905,1208,924,1199,941,1187,976,1146,1004,1100,1026,1050,1044,1000,1066,906,1075,837"/>
-<area shape="rect" id="Node000070" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#a992c9ac44a3720d238e012d0fe0a0707" title="Generate a response message for the status query and send the status response." alt="" coords="750,979,941,1004"/>
-<area shape="poly" id="edge36_Node000008_Node000070" title=" " alt="" coords="1067,837,1018,903,983,938,944,968,916,981,914,976,941,964,980,934,1014,899,1062,834"/>
-<area shape="rect" id="Node000077" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#a11f6b8370b141ab90b844dbf1092265c" title="Returns OK message in the case of a subscription request." alt="" coords="266,1028,446,1083"/>
-<area shape="poly" id="edge53_Node000008_Node000077" title=" " alt="" coords="1071,838,1053,877,1025,926,989,975,944,1017,889,1056,837,1083,789,1101,741,1111,691,1114,637,1111,509,1097,446,1085,447,1079,510,1091,637,1106,691,1108,740,1105,787,1096,835,1078,886,1051,941,1013,985,971,1021,923,1048,875,1067,836"/>
-<area shape="rect" id="Node000082" href="$d6/d58/namespaceanonymous__namespace_02httpreadwrite_8cpp_03.html#a70af1088e67f7621d3f1c3f9b7015634" title="Make a generic message, what ever this mean." alt="" coords="755,1467,935,1521"/>
-<area shape="poly" id="edge46_Node000008_Node000082" title=" " alt="" coords="1080,838,1066,967,1039,1151,1021,1247,999,1334,974,1406,960,1435,945,1457,933,1468,929,1465,941,1454,955,1432,969,1404,994,1332,1016,1245,1034,1151,1061,966,1074,838"/>
-<area shape="rect" id="Node000088" href="$d6/d58/namespaceanonymous__namespace_02httpreadwrite_8cpp_03.html#a0fd8d138b06bd4bdd56f19c8f86ceff6" title="Make extended GetMessage." alt="" coords="755,156,935,211"/>
-<area shape="poly" id="edge48_Node000008_Node000088" title=" " alt="" coords="1070,786,988,453,980,388,979,334,977,310,971,285,959,260,941,232,920,213,923,209,945,228,964,257,976,284,982,309,984,334,985,387,993,452,1075,785"/>
-<area shape="rect" id="Node000091" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#ae1781a5b638d50bd7626b3ea925492cb" title="Sends the notify message and returns a reply." alt="" coords="755,900,935,955"/>
-<area shape="poly" id="edge50_Node000008_Node000091" title=" " alt="" coords="1043,833,944,883,905,902,902,897,941,878,1041,828"/>
-<area shape="rect" id="Node000092" href="$d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#a06c8e12369d9db67a834d961dc914563" title="Sends the SOAP action response." alt="" coords="515,1257,695,1312"/>
-<area shape="poly" id="edge54_Node000008_Node000092" title=" " alt="" coords="1083,838,1080,920,1073,974,1062,1032,1045,1092,1021,1150,987,1203,944,1248,926,1259,901,1267,838,1279,765,1285,695,1288,695,1282,765,1280,837,1274,900,1262,924,1254,941,1244,983,1200,1016,1147,1040,1090,1057,1031,1068,973,1074,919,1077,838"/>
-<area shape="rect" id="Node000094" href="$d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#af2aff493a97adf72193dc9ff26413171" title="Sends SOAP error response." alt="" coords="755,1309,935,1364"/>
-<area shape="poly" id="edge57_Node000008_Node000094" title=" " alt="" coords="1082,838,1076,922,1057,1041,1039,1107,1016,1172,984,1235,945,1292,922,1311,919,1307,941,1288,980,1232,1011,1170,1034,1105,1051,1040,1071,921,1076,837"/>
-<area shape="rect" id="Node000096" href="$d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#ac97fc275f79e926d35c691d839489b07" title="Sends response of get var status." alt="" coords="750,1388,941,1443"/>
-<area shape="poly" id="edge62_Node000008_Node000096" title=" " alt="" coords="1079,838,1063,953,1034,1114,1016,1196,995,1272,971,1335,945,1378,932,1390,929,1386,941,1375,966,1332,990,1270,1011,1195,1029,1113,1058,952,1074,837"/>
-<area shape="rect" id="Node000097" href="$d9/dd1/soap__ctrlpt_8cpp.html#a05e899b6e0c3bc1b2964ac01c37c15d7" title="This function creates a status variable query message send it to the specified URL...." alt="" coords="752,697,939,723"/>
-<area shape="poly" id="edge64_Node000008_Node000097" title=" " alt="" coords="1043,794,942,744,888,725,890,720,944,740,1046,790"/>
-<area shape="rect" id="Node000099" href="$d9/dd1/soap__ctrlpt_8cpp.html#a98ef5ed7d4950c8d6c2624271efb36bc" title="This function is called by UPnP API to send the SOAP action request." alt="" coords="782,799,909,824"/>
-<area shape="poly" id="edge67_Node000008_Node000099" title=" " alt="" coords="993,814,909,814,909,809,993,809"/>
-<area shape="rect" id="Node000102" href="$d9/dd1/soap__ctrlpt_8cpp.html#a03f9e29e2408fb92bc48b9b93c4c9841" title="This extended function is called by UPnP API to send the SOAP action request." alt="" coords="533,748,676,773"/>
-<area shape="poly" id="edge71_Node000008_Node000102" title=" " alt="" coords="1005,799,942,789,801,774,676,766,677,761,801,769,943,783,1005,793"/>
-<area shape="rect" id="Node000010" href="$db/db9/ssdp__device_8cpp.html#a359289d0987b2a9aede8d3a426480986" title="Creates the device advertisement request." alt="" coords="523,400,686,425"/>
-<area shape="poly" id="edge7_Node000009_Node000010" title=" " alt="" coords="786,350,701,390,662,402,660,397,699,385,783,345"/>
-<area shape="rect" id="Node000026" href="$db/db9/ssdp__device_8cpp.html#a082e945c4fe977cff7c19a7e1ac8da99" title="Creates the reply packet and send it to the Control Point address." alt="" coords="553,104,657,129"/>
-<area shape="poly" id="edge9_Node000009_Node000026" title=" " alt="" coords="759,281,746,269,734,252,727,235,723,203,718,172,711,157,698,143,679,130,656,123,658,118,681,126,702,139,716,154,723,170,728,202,732,234,738,249,750,266,762,277"/>
-<area shape="rect" id="Node000027" href="$db/db9/ssdp__device_8cpp.html#a65d1171e5dcab19e9b7848773650eaf7" title="Creates a HTTP device shutdown request packet and send it to the multicast channel through RequestHan..." alt="" coords="539,153,670,179"/>
-<area shape="poly" id="edge11_Node000009_Node000027" title=" " alt="" coords="762,282,746,269,730,248,722,228,715,210,698,192,669,178,671,173,702,188,719,207,727,226,735,246,750,265,765,277"/>
-<area shape="rect" id="Node000028" href="$db/db9/ssdp__device_8cpp.html#ada63c5136ba9b3c63e949e2db2f55d67" title="Creates the reply packet and send it to the Control Point addesss." alt="" coords="559,203,650,228"/>
-<area shape="poly" id="edge13_Node000009_Node000028" title=" " alt="" coords="772,283,747,270,723,255,699,242,650,227,651,221,701,237,726,250,749,265,775,278"/>
-<area shape="rect" id="Node000029" href="$db/db9/ssdp__device_8cpp.html#ac90369e3ec78ce279fd45dfeb3f0f33f" title="Creates the advertisement packet and send it to the multicast channel." alt="" coords="521,252,688,277"/>
-<area shape="poly" id="edge15_Node000009_Node000029" title=" " alt="" coords="741,295,667,280,668,275,742,290"/>
-<area shape="rect" id="Node000030" href="$db/db9/ssdp__device_8cpp.html#ae54b8393bd5d949c0859f443dc48e4c1" title="Creates the advertisement packet and send it to the multicast channel." alt="" coords="551,301,658,327"/>
-<area shape="poly" id="edge17_Node000009_Node000030" title=" " alt="" coords="742,317,658,317,658,311,742,311"/>
-<area shape="rect" id="Node000031" href="$db/db9/ssdp__device_8cpp.html#ac92b2e78ce280abc5041ce0eda84bf2a" title="Creates a HTTP service shutdown request packet and sends it to the multicast channel through RequestH..." alt="" coords="537,351,672,376"/>
-<area shape="poly" id="edge19_Node000009_Node000031" title=" " alt="" coords="742,338,668,353,667,348,741,333"/>
-<area shape="rect" id="Node000011" href="$d0/dc4/group__SSDP-device__functions.html#gaa9d18b0afb046c657893b11e88eb857b" title="Sends SSDP advertisements, replies and shutdown messages." alt="" coords="283,252,429,277"/>
-<area shape="poly" id="edge8_Node000010_Node000011" title=" " alt="" coords="527,398,508,390,465,363,425,333,368,279,371,276,428,329,468,359,511,385,530,393"/>
-<area shape="poly" id="edge10_Node000026_Node000011" title=" " alt="" coords="541,131,511,143,467,169,428,200,371,254,367,250,424,196,464,165,508,138,539,126"/>
-<area shape="poly" id="edge12_Node000027_Node000011" title=" " alt="" coords="533,185,510,192,439,224,381,254,379,249,436,219,508,188,532,180"/>
-<area shape="poly" id="edge14_Node000028_Node000011" title=" " alt="" coords="546,230,421,255,420,249,545,224"/>
-<area shape="poly" id="edge16_Node000029_Node000011" title=" " alt="" coords="508,267,430,267,430,262,508,262"/>
-<area shape="poly" id="edge18_Node000030_Node000011" title=" " alt="" coords="537,303,420,280,421,275,538,298"/>
-<area shape="poly" id="edge20_Node000031_Node000011" title=" " alt="" coords="535,349,508,340,437,310,379,280,382,275,439,305,510,336,537,344"/>
-<area shape="rect" id="Node000033" href="$d6/de3/gena__ctrlpt_8cpp.html#ac18ff86dd814e974314f13e3f4b12316" title="Renews a SID." alt="" coords="515,449,694,475"/>
-<area shape="poly" id="edge22_Node000032_Node000033" title=" " alt="" coords="741,493,667,477,668,472,742,488"/>
-<area shape="rect" id="Node000036" href="$d6/de3/gena__ctrlpt_8cpp.html#a8fa71879823e3dc936bac4847ca1fcc5" title="This function subscribes to a PublisherURL (also mentioned as EventURL in some places)." alt="" coords="546,499,663,524"/>
-<area shape="poly" id="edge25_Node000032_Node000036" title=" " alt="" coords="742,514,663,514,663,509,742,509"/>
-<area shape="rect" id="Node000034" href="$d6/dd1/namespaceanonymous__namespace_02gena__ctrlpt_8cpp_03.html#a6d433d434965ae0ed59a09f3c38bf03a" title="This is a thread function to send the renewal just before the subscription times out." alt="" coords="251,435,461,489"/>
-<area shape="poly" id="edge23_Node000033_Node000034" title=" " alt="" coords="502,465,462,465,462,459,502,459"/>
-<area shape="rect" id="Node000038" href="$d4/d99/upnpapi_8cpp.html#a282c8419fef146b7170ee266159029e6" title="Schedule async functions in threadpool." alt="" coords="267,648,445,673"/>
-<area shape="poly" id="edge24_Node000033_Node000038" title=" " alt="" coords="522,482,511,488,462,527,420,573,388,616,367,649,362,646,383,613,416,569,458,523,508,484,520,477"/>
-<area shape="poly" id="edge26_Node000036_Node000038" title=" " alt="" coords="534,528,511,538,467,564,428,595,371,650,367,646,424,591,464,560,508,533,532,523"/>
-<area shape="rect" id="Node000047" href="$d6/de3/gena__ctrlpt_8cpp.html#a1061c296a8e1902dfa6e17e105d46121" title="Unsubcribes all the outstanding subscriptions and cleans the subscription list." alt="" coords="525,548,685,573"/>
-<area shape="poly" id="edge28_Node000046_Node000047" title=" " alt="" coords="741,591,667,576,668,571,742,586"/>
-<area shape="rect" id="Node000049" href="$d6/de3/gena__ctrlpt_8cpp.html#a4dba8a0501a7a608f03e9d92555c98b1" title="Unsubscribes a SID." alt="" coords="537,597,672,623"/>
-<area shape="poly" id="edge29_Node000046_Node000049" title=" " alt="" coords="741,613,672,613,672,607,741,607"/>
-<area shape="poly" id="edge30_Node000049_Node000038" title=" " alt="" coords="529,628,420,651,418,645,528,623"/>
-<area shape="rect" id="Node000052" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#ae2ea03f611c00f8ca5691e59f7e988c6" title="Thread job to Notify a control point." alt="" coords="266,847,446,901"/>
-<area shape="poly" id="edge32_Node000051_Node000052" title=" " alt="" coords="501,907,445,895,447,890,502,902"/>
-<area shape="rect" id="Node000064" href="$d4/d99/upnpapi_8cpp.html#a475c51dac06a22d937da76a5dbde80c6" title="Downloads a file specified in a URL." alt="" coords="519,1208,690,1233"/>
-<area shape="poly" id="edge34_Node000063_Node000064" title=" " alt="" coords="772,1223,690,1223,690,1218,772,1218"/>
-<area shape="poly" id="edge45_Node000070_Node000004" title=" " alt="" coords="750,972,746,968,726,934,713,892,706,842,703,787,709,662,722,528,734,394,740,270,737,215,730,167,717,125,698,93,683,80,686,76,702,90,722,123,735,165,742,215,745,270,740,395,727,529,714,663,709,787,711,842,718,891,731,932,750,964,754,968"/>
-<area shape="rect" id="Node000071" href="$dc/d02/gena__callback2_8cpp.html#abb1570eae1e832145e2ae85cf1b5ad75" title="Sends an error message to the control point in the case of incorrect GENA requests." alt="" coords="549,977,661,1003"/>
-<area shape="poly" id="edge37_Node000070_Node000071" title=" " alt="" coords="736,993,661,993,661,988,736,988"/>
-<area shape="rect" id="Node000078" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a9b4b32cfbe825a3f7cc9906b33d50872" title="Receive the request and dispatch it for handling." alt="" coords="509,1027,700,1081"/>
-<area shape="poly" id="edge43_Node000070_Node000078" title=" " alt="" coords="783,1010,701,1032,700,1027,782,1005"/>
-<area shape="rect" id="Node000081" href="$d6/d92/soap__device_8cpp.html#a4b5104845d73b836d6365a306fba1679" title="This is a callback called by minisever." alt="" coords="22,1288,186,1313"/>
-<area shape="poly" id="edge44_Node000070_Node000081" title=" " alt="" coords="820,1015,767,1055,701,1096,588,1144,430,1200,148,1290,146,1285,429,1194,586,1139,699,1092,764,1051,817,1011"/>
-<area shape="rect" id="Node000074" href="$dd/de6/gena__device_8cpp.html#a6fd1575d4217390506014c896b22251e" title="Handles a subscription renewal request from a ctrl point. The connection is not destroyed on return." alt="" coords="5,933,203,973"/>
-<area shape="poly" id="edge38_Node000071_Node000074" title=" " alt="" coords="535,983,461,974,326,964,203,958,203,953,326,959,462,969,535,977"/>
-<area shape="rect" id="Node000075" href="$dd/de6/gena__device_8cpp.html#a25ad1852d4d32c6f34a87b92225202fd" title="Handles a subscription request from a ctrl point. The socket is not closed on return." alt="" coords="5,1022,203,1062"/>
-<area shape="poly" id="edge39_Node000071_Node000075" title=" " alt="" coords="535,995,403,1003,251,1018,203,1025,202,1020,250,1013,402,998,534,990"/>
-<area shape="poly" id="edge40_Node000071_Node000077" title=" " alt="" coords="541,1009,510,1017,447,1034,445,1028,509,1011,539,1003"/>
-<area shape="poly" id="edge41_Node000077_Node000074" title=" " alt="" coords="274,1025,153,975,155,970,276,1020"/>
-<area shape="poly" id="edge42_Node000077_Node000075" title=" " alt="" coords="252,1053,203,1050,203,1045,252,1047"/>
-<area shape="rect" id="Node000083" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#ab8610e8aea3346f682ca91fe37b21bf8" title="Makes a HTTP request using a connection previously created by UpnpOpenHttpConnection()." alt="" coords="519,1481,690,1507"/>
-<area shape="poly" id="edge47_Node000082_Node000083" title=" " alt="" coords="741,1497,690,1497,690,1491,741,1491"/>
-<area shape="rect" id="Node000089" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#aa6e8ca5e4a342e562769c5670475fe3f" title="Makes the HTTP GET message, connects to the peer, sends the HTTP GET request, gets the response and p..." alt="" coords="527,5,683,31"/>
-<area shape="poly" id="edge49_Node000088_Node000089" title=" " alt="" coords="751,150,746,145,735,132,728,118,722,92,716,67,709,56,698,44,680,33,683,29,702,40,714,52,721,65,727,91,733,117,739,129,750,141,755,146"/>
-<area shape="poly" id="edge51_Node000091_Node000051" title=" " alt="" coords="741,929,695,929,695,924,742,924"/>
-<area shape="rect" id="Node000093" href="$d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#aef9e66b433f64923b1142779a4cdced6" title="Handles the SOAP action request." alt="" coords="266,1273,446,1328"/>
-<area shape="poly" id="edge55_Node000092_Node000093" title=" " alt="" coords="501,1294,446,1298,446,1292,501,1289"/>
-<area shape="poly" id="edge56_Node000093_Node000081" title=" " alt="" coords="252,1303,186,1303,186,1298,252,1298"/>
-<area shape="poly" id="edge61_Node000094_Node000092" title=" " alt="" coords="741,1317,694,1307,695,1301,743,1312"/>
-<area shape="poly" id="edge58_Node000094_Node000093" title=" " alt="" coords="742,1339,630,1335,509,1327,446,1319,447,1314,510,1322,630,1330,742,1334"/>
-<area shape="rect" id="Node000095" href="$d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#ade7f137927ec56c6a4c47b57ac6fc3a5" title="Handles the SOAP requests to querry the state variables." alt="" coords="515,1388,695,1443"/>
-<area shape="poly" id="edge59_Node000094_Node000095" title=" " alt="" coords="749,1371,690,1390,688,1385,747,1366"/>
-<area shape="poly" id="edge60_Node000095_Node000081" title=" " alt="" coords="501,1398,250,1343,148,1316,150,1311,251,1338,502,1393"/>
-<area shape="poly" id="edge63_Node000096_Node000095" title=" " alt="" coords="737,1418,695,1418,695,1413,737,1413"/>
-<area shape="poly" id="edge66_Node000097_Node000038" title=" " alt="" coords="738,706,509,686,435,676,436,671,510,681,739,701"/>
-<area shape="rect" id="Node000098" href="$d9/d54/group__compaAPI.html#ga3433d9e5cfeaff0b318eef1f4f2e65ea" title="Queries the state of a state variable of a service on another device." alt="" coords="510,647,699,672"/>
-<area shape="poly" id="edge65_Node000097_Node000098" title=" " alt="" coords="770,697,665,675,666,669,771,692"/>
-<area shape="poly" id="edge70_Node000099_Node000038" title=" " alt="" coords="768,821,710,821,644,818,575,807,508,787,463,763,422,732,366,675,370,672,426,728,466,758,510,782,576,802,644,812,710,816,768,815"/>
-<area shape="rect" id="Node000100" href="$d4/d99/upnpapi_8cpp.html#aacef79c530ba5401c5946cd64939ef70" title="Sends a message to change a state variable in a service." alt="" coords="540,849,669,875"/>
-<area shape="poly" id="edge68_Node000099_Node000100" title=" " alt="" coords="771,830,666,852,665,847,770,824"/>
-<area shape="rect" id="Node000101" href="$d4/d99/upnpapi_8cpp.html#ae3bc939c3883bda96689903791b2c360" title="Sends a message to change a state variable in a service." alt="" coords="283,772,429,797"/>
-<area shape="poly" id="edge69_Node000100_Node000101" title=" " alt="" coords="549,848,397,800,399,795,551,843"/>
-<area shape="poly" id="edge73_Node000102_Node000038" title=" " alt="" coords="549,746,508,731,383,676,385,671,510,726,551,741"/>
-<area shape="poly" id="edge72_Node000102_Node000101" title=" " alt="" coords="520,771,429,780,428,775,519,766"/>
+<area shape="rect" id="Node000001" title="Portable gmtime_r for Microsoft Windows." alt="" coords="1135,755,1240,780"/>
+<area shape="rect" id="Node000002" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#abfbf5675a51b2132037f22ca881c6aed" title="Get file information." alt="" coords="924,387,1087,441"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1171,744,1018,443,1023,440,1176,741"/>
+<area shape="rect" id="Node000008" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#af5981cc2f7cc76c3e6b6700c5f27c472" title="Generate an HTTP message based on the format that is specified in the input parameters." alt="" coords="937,799,1073,824"/>
+<area shape="poly" id="edge5_Node000001_Node000008" title=" " alt="" coords="1122,786,1059,801,1058,796,1121,781"/>
+<area shape="rect" id="Node000003" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#a679f96add9815d14cf84b95d873b9198" title="Process a remote request and return the result." alt="" coords="700,77,873,132"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="992,374,976,323,952,262,918,200,898,171,874,145,860,134,864,130,878,141,902,168,923,197,957,260,981,321,997,373"/>
+<area shape="rect" id="Node000004" href="$d1/d28/Compa_2src_2genlib_2net_2http_2webserver_8cpp.html#abb77fc2cfdf0dfbd97e5b3880c4b18d1" title="Main entry point into web server." alt="" coords="490,55,634,80"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="686,91,634,82,635,77,687,85"/>
+<area shape="rect" id="Node000005" href="$d4/d99/upnpapi_8cpp.html#a3c6309a98eb5281fbbfa45644c06fc34" title="Enables or disables the webserver." alt="" coords="253,55,407,80"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="476,70,407,70,407,65,476,65"/>
+<area shape="poly" id="edge52_Node000008_Node000003" title=" " alt="" coords="995,786,962,645,921,453,915,405,915,362,919,288,919,254,913,220,899,184,874,145,863,134,867,130,878,142,904,181,918,218,924,253,925,288,920,362,921,404,927,452,967,643,1000,785"/>
+<area shape="poly" id="edge74_Node000008_Node000004" title=" " alt="" coords="995,785,929,493,893,343,874,275,853,259,832,251,788,249,742,248,719,240,696,224,682,207,675,190,671,157,667,124,660,109,648,93,631,82,634,78,651,89,665,106,672,123,676,156,680,189,686,205,699,220,721,236,743,243,788,244,833,246,856,255,878,273,898,342,934,492,1001,784"/>
+<area shape="poly" id="edge35_Node000008_Node000008" title=" " alt="" coords="1037,788,1028,780,1005,777,986,779,976,784,974,790,980,797,975,800,969,790,972,781,985,774,1005,772,1030,776,1041,784"/>
+<area shape="rect" id="Node000009" href="$d3/d1d/namespaceanonymous__namespace_02ssdp__device_8cpp_03.html#aadadf0015deb15dbbefd082436ff5b75" title="Creates a HTTP request packet." alt="" coords="705,287,868,341"/>
+<area shape="poly" id="edge6_Node000008_Node000009" title=" " alt="" coords="993,786,946,650,912,561,874,472,837,402,803,343,808,340,842,399,878,470,917,559,951,648,998,784"/>
+<area shape="rect" id="Node000032" href="$d6/dd1/namespaceanonymous__namespace_02gena__ctrlpt_8cpp_03.html#aab6385b3da2410ba5921c203635b7e28" title="Subscribes or renew subscription." alt="" coords="705,484,868,539"/>
+<area shape="poly" id="edge21_Node000008_Node000032" title=" " alt="" coords="993,787,976,743,950,687,916,627,874,572,837,541,840,537,878,568,920,624,954,684,980,741,998,785"/>
+<area shape="rect" id="Node000046" href="$d6/dd1/namespaceanonymous__namespace_02gena__ctrlpt_8cpp_03.html#af298d2d7e5a94605b0b284718e20cdc9" title="Sends the UNSUBCRIBE gena request and recieves the response from the device and returns it as a param..." alt="" coords="705,583,868,637"/>
+<area shape="poly" id="edge27_Node000008_Node000046" title=" " alt="" coords="980,791,874,687,820,639,823,635,878,683,984,787"/>
+<area shape="rect" id="Node000051" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#a951778f34697a8cc0a0e9dd7da2b66ca" title="Function to Notify a particular subscription of a particular event." alt="" coords="481,899,643,953"/>
+<area shape="poly" id="edge31_Node000008_Node000051" title=" " alt="" coords="938,830,698,890,644,905,643,900,697,885,936,825"/>
+<area shape="rect" id="Node000063" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#a4c4ffc89743a422ff2ad243e9ab14892" title="Download the document message and extract the document from the message." alt="" coords="732,1208,841,1233"/>
+<area shape="poly" id="edge33_Node000008_Node000063" title=" " alt="" coords="1005,838,997,907,977,1001,961,1052,939,1102,912,1149,878,1191,861,1203,843,1212,841,1207,859,1199,874,1187,908,1146,935,1099,956,1050,972,1000,992,906,1000,837"/>
+<area shape="rect" id="Node000070" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#a992c9ac44a3720d238e012d0fe0a0707" title="Generate a response message for the status query and send the status response." alt="" coords="697,979,876,1004"/>
+<area shape="poly" id="edge36_Node000008_Node000070" title=" " alt="" coords="992,838,947,903,915,938,877,968,851,981,849,976,875,964,911,934,943,899,988,835"/>
+<area shape="rect" id="Node000077" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#a11f6b8370b141ab90b844dbf1092265c" title="Returns OK message in the case of a subscription request." alt="" coords="249,1028,411,1083"/>
+<area shape="poly" id="edge53_Node000008_Node000077" title=" " alt="" coords="997,838,980,878,954,926,920,975,878,1017,827,1054,780,1081,735,1099,690,1109,643,1112,593,1110,474,1097,411,1084,412,1078,475,1091,594,1105,643,1107,689,1103,733,1094,777,1076,824,1050,874,1013,916,971,949,923,975,875,992,836"/>
+<area shape="rect" id="Node000082" href="$d6/d58/namespaceanonymous__namespace_02httpreadwrite_8cpp_03.html#a70af1088e67f7621d3f1c3f9b7015634" title="Make a generic message, what ever this mean." alt="" coords="705,1467,868,1521"/>
+<area shape="poly" id="edge46_Node000008_Node000082" title=" " alt="" coords="1005,838,992,966,968,1151,951,1246,930,1333,906,1406,893,1435,878,1457,866,1468,863,1465,874,1454,888,1432,901,1404,925,1332,946,1245,963,1150,987,966,999,838"/>
+<area shape="rect" id="Node000088" href="$d6/d58/namespaceanonymous__namespace_02httpreadwrite_8cpp_03.html#a0fd8d138b06bd4bdd56f19c8f86ceff6" title="Make extended GetMessage." alt="" coords="705,156,868,211"/>
+<area shape="poly" id="edge48_Node000008_Node000088" title=" " alt="" coords="996,786,921,453,913,388,912,335,910,310,904,286,892,260,874,232,854,213,857,209,878,228,897,257,909,284,915,309,917,334,919,387,927,452,1001,785"/>
+<area shape="rect" id="Node000091" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#ae1781a5b638d50bd7626b3ea925492cb" title="Sends the notify message and returns a reply." alt="" coords="705,900,868,955"/>
+<area shape="poly" id="edge50_Node000008_Node000091" title=" " alt="" coords="970,833,877,883,841,902,839,897,875,878,967,828"/>
+<area shape="rect" id="Node000092" href="$d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#a06c8e12369d9db67a834d961dc914563" title="Sends the SOAP action response." alt="" coords="481,1257,643,1312"/>
+<area shape="poly" id="edge54_Node000008_Node000092" title=" " alt="" coords="1003,838,987,930,960,1054,943,1116,923,1172,902,1218,878,1248,861,1258,837,1266,778,1278,709,1284,644,1287,644,1282,709,1279,777,1273,836,1261,858,1253,874,1244,897,1215,918,1170,937,1114,955,1053,982,929,997,837"/>
+<area shape="rect" id="Node000094" href="$d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#af2aff493a97adf72193dc9ff26413171" title="Sends SOAP error response." alt="" coords="705,1309,868,1364"/>
+<area shape="poly" id="edge57_Node000008_Node000094" title=" " alt="" coords="1007,838,1002,921,984,1040,968,1106,946,1171,916,1234,878,1292,856,1311,853,1307,874,1288,912,1232,941,1169,963,1104,979,1039,997,921,1001,837"/>
+<area shape="rect" id="Node000096" href="$d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#ac97fc275f79e926d35c691d839489b07" title="Sends response of get var status." alt="" coords="699,1388,874,1443"/>
+<area shape="poly" id="edge62_Node000008_Node000096" title=" " alt="" coords="1004,838,989,952,963,1113,946,1196,926,1271,903,1334,878,1378,866,1390,863,1386,874,1375,899,1332,921,1270,941,1194,958,1112,984,952,999,837"/>
+<area shape="rect" id="Node000097" href="$d9/dd1/soap__ctrlpt_8cpp.html#a05e899b6e0c3bc1b2964ac01c37c15d7" title="This function creates a status variable query message send it to the specified URL...." alt="" coords="699,697,874,723"/>
+<area shape="poly" id="edge64_Node000008_Node000097" title=" " alt="" coords="970,794,875,744,826,725,828,720,877,740,972,789"/>
+<area shape="rect" id="Node000099" href="$d9/dd1/soap__ctrlpt_8cpp.html#a98ef5ed7d4950c8d6c2624271efb36bc" title="This function is called by UPnP API to send the SOAP action request." alt="" coords="727,799,846,824"/>
+<area shape="poly" id="edge67_Node000008_Node000099" title=" " alt="" coords="923,814,846,814,846,809,923,809"/>
+<area shape="rect" id="Node000102" href="$d9/dd1/soap__ctrlpt_8cpp.html#a03f9e29e2408fb92bc48b9b93c4c9841" title="This extended function is called by UPnP API to send the SOAP action request." alt="" coords="495,748,629,773"/>
+<area shape="poly" id="edge71_Node000008_Node000102" title=" " alt="" coords="933,799,876,789,745,774,629,766,630,761,745,769,876,783,934,793"/>
+<area shape="rect" id="Node000010" href="$db/db9/ssdp__device_8cpp.html#a359289d0987b2a9aede8d3a426480986" title="Creates the device advertisement request." alt="" coords="489,400,635,425"/>
+<area shape="poly" id="edge7_Node000009_Node000010" title=" " alt="" coords="729,351,650,390,614,402,612,397,648,385,727,346"/>
+<area shape="rect" id="Node000026" href="$db/db9/ssdp__device_8cpp.html#a082e945c4fe977cff7c19a7e1ac8da99" title="Creates the reply packet and send it to the Control Point address." alt="" coords="513,104,611,129"/>
+<area shape="poly" id="edge9_Node000009_Node000026" title=" " alt="" coords="707,281,695,269,683,252,677,235,672,203,667,172,660,157,648,143,630,131,610,124,612,119,633,127,651,139,665,154,673,170,678,202,682,234,688,249,699,266,711,277"/>
+<area shape="rect" id="Node000027" href="$db/db9/ssdp__device_8cpp.html#a65d1171e5dcab19e9b7848773650eaf7" title="Creates a HTTP device shutdown request packet and send it to the multicast channel through RequestHan..." alt="" coords="501,153,623,179"/>
+<area shape="poly" id="edge11_Node000009_Node000027" title=" " alt="" coords="710,281,695,269,680,248,672,228,664,210,648,192,622,179,624,174,651,188,669,207,677,226,684,246,699,265,713,277"/>
+<area shape="rect" id="Node000028" href="$db/db9/ssdp__device_8cpp.html#ada63c5136ba9b3c63e949e2db2f55d67" title="Creates the reply packet and send it to the Control Point addesss." alt="" coords="519,203,605,228"/>
+<area shape="poly" id="edge13_Node000009_Node000028" title=" " alt="" coords="719,282,696,270,672,255,648,242,605,227,606,222,650,237,675,250,699,265,722,278"/>
+<area shape="rect" id="Node000029" href="$db/db9/ssdp__device_8cpp.html#ac90369e3ec78ce279fd45dfeb3f0f33f" title="Creates the advertisement packet and send it to the multicast channel." alt="" coords="487,252,637,277"/>
+<area shape="poly" id="edge15_Node000009_Node000029" title=" " alt="" coords="691,296,620,280,621,275,692,291"/>
+<area shape="rect" id="Node000030" href="$db/db9/ssdp__device_8cpp.html#ae54b8393bd5d949c0859f443dc48e4c1" title="Creates the advertisement packet and send it to the multicast channel." alt="" coords="512,301,612,327"/>
+<area shape="poly" id="edge17_Node000009_Node000030" title=" " alt="" coords="692,317,612,317,612,311,692,311"/>
+<area shape="rect" id="Node000031" href="$db/db9/ssdp__device_8cpp.html#ac92b2e78ce280abc5041ce0eda84bf2a" title="Creates a HTTP service shutdown request packet and sends it to the multicast channel through RequestH..." alt="" coords="500,351,624,376"/>
+<area shape="poly" id="edge19_Node000009_Node000031" title=" " alt="" coords="692,337,621,353,620,348,691,332"/>
+<area shape="rect" id="Node000011" href="$d0/dc4/group__SSDP-device__functions.html#gaa9d18b0afb046c657893b11e88eb857b" title="Sends SSDP advertisements, replies and shutdown messages." alt="" coords="263,252,397,277"/>
+<area shape="poly" id="edge8_Node000010_Node000011" title=" " alt="" coords="491,398,473,390,432,363,394,332,341,279,345,276,398,328,435,359,476,385,493,393"/>
+<area shape="poly" id="edge10_Node000026_Node000011" title=" " alt="" coords="501,132,476,143,435,169,398,200,344,254,341,250,394,196,432,165,473,138,499,127"/>
+<area shape="poly" id="edge12_Node000027_Node000011" title=" " alt="" coords="496,185,476,192,408,224,354,254,351,250,406,219,474,188,494,180"/>
+<area shape="poly" id="edge14_Node000028_Node000011" title=" " alt="" coords="506,230,391,255,390,249,505,225"/>
+<area shape="poly" id="edge16_Node000029_Node000011" title=" " alt="" coords="473,267,398,267,398,262,473,262"/>
+<area shape="poly" id="edge18_Node000030_Node000011" title=" " alt="" coords="498,303,390,280,391,275,499,298"/>
+<area shape="poly" id="edge20_Node000031_Node000011" title=" " alt="" coords="498,349,474,340,406,309,352,280,354,275,409,305,476,336,500,344"/>
+<area shape="rect" id="Node000033" href="$d6/de3/gena__ctrlpt_8cpp.html#ac18ff86dd814e974314f13e3f4b12316" title="Renews a SID." alt="" coords="481,449,643,475"/>
+<area shape="poly" id="edge22_Node000032_Node000033" title=" " alt="" coords="691,493,620,477,621,472,692,488"/>
+<area shape="rect" id="Node000036" href="$d6/de3/gena__ctrlpt_8cpp.html#a8fa71879823e3dc936bac4847ca1fcc5" title="This function subscribes to a PublisherURL (also mentioned as EventURL in some places)." alt="" coords="508,499,616,524"/>
+<area shape="poly" id="edge25_Node000032_Node000036" title=" " alt="" coords="692,514,616,514,616,509,692,509"/>
+<area shape="rect" id="Node000034" href="$d6/dd1/namespaceanonymous__namespace_02gena__ctrlpt_8cpp_03.html#a6d433d434965ae0ed59a09f3c38bf03a" title="This is a thread function to send the renewal just before the subscription times out." alt="" coords="233,435,427,489"/>
+<area shape="poly" id="edge23_Node000033_Node000034" title=" " alt="" coords="467,465,427,465,427,459,467,459"/>
+<area shape="rect" id="Node000038" href="$d4/d99/upnpapi_8cpp.html#a282c8419fef146b7170ee266159029e6" title="Schedule async functions in threadpool." alt="" coords="251,648,409,673"/>
+<area shape="poly" id="edge24_Node000033_Node000038" title=" " alt="" coords="486,482,476,488,429,527,390,573,360,617,340,649,336,647,355,614,386,570,426,523,473,484,484,478"/>
+<area shape="poly" id="edge26_Node000036_Node000038" title=" " alt="" coords="496,529,476,538,435,564,397,596,344,650,340,646,394,592,432,560,473,533,494,524"/>
+<area shape="rect" id="Node000047" href="$d6/de3/gena__ctrlpt_8cpp.html#a1061c296a8e1902dfa6e17e105d46121" title="Unsubcribes all the outstanding subscriptions and cleans the subscription list." alt="" coords="490,548,634,573"/>
+<area shape="poly" id="edge28_Node000046_Node000047" title=" " alt="" coords="691,592,620,576,621,571,692,587"/>
+<area shape="rect" id="Node000049" href="$d6/de3/gena__ctrlpt_8cpp.html#a4dba8a0501a7a608f03e9d92555c98b1" title="Unsubscribes a SID." alt="" coords="499,597,625,623"/>
+<area shape="poly" id="edge29_Node000046_Node000049" title=" " alt="" coords="691,613,625,613,625,607,691,607"/>
+<area shape="poly" id="edge30_Node000049_Node000038" title=" " alt="" coords="490,628,389,651,388,645,489,623"/>
+<area shape="rect" id="Node000052" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#ae2ea03f611c00f8ca5691e59f7e988c6" title="Thread job to Notify a control point." alt="" coords="249,847,411,901"/>
+<area shape="poly" id="edge32_Node000051_Node000052" title=" " alt="" coords="467,907,411,895,412,890,468,902"/>
+<area shape="rect" id="Node000064" href="$d4/d99/upnpapi_8cpp.html#a475c51dac06a22d937da76a5dbde80c6" title="Downloads a file specified in a URL." alt="" coords="485,1208,639,1233"/>
+<area shape="poly" id="edge34_Node000063_Node000064" title=" " alt="" coords="718,1223,640,1223,640,1218,718,1218"/>
+<area shape="poly" id="edge45_Node000070_Node000004" title=" " alt="" coords="699,972,695,968,676,934,663,892,656,842,653,786,658,662,671,528,683,394,689,271,686,216,679,167,666,126,647,93,632,81,636,77,651,90,671,123,684,166,691,215,694,271,689,395,676,529,664,663,658,786,661,841,668,890,681,932,699,964,703,968"/>
+<area shape="rect" id="Node000071" href="$dc/d02/gena__callback2_8cpp.html#abb1570eae1e832145e2ae85cf1b5ad75" title="Sends an error message to the control point in the case of incorrect GENA requests." alt="" coords="511,977,613,1003"/>
+<area shape="poly" id="edge37_Node000070_Node000071" title=" " alt="" coords="683,993,613,993,613,988,683,988"/>
+<area shape="rect" id="Node000078" href="$d9/d9e/namespaceanonymous__namespace_02miniserver_8cpp_03.html#a9b4b32cfbe825a3f7cc9906b33d50872" title="Receive the request and dispatch it for handling." alt="" coords="479,1027,645,1081"/>
+<area shape="poly" id="edge43_Node000070_Node000078" title=" " alt="" coords="728,1010,646,1034,644,1028,727,1005"/>
+<area shape="rect" id="Node000081" href="$d6/d92/soap__device_8cpp.html#a4b5104845d73b836d6365a306fba1679" title="This is a callback called by minisever." alt="" coords="20,1288,171,1313"/>
+<area shape="poly" id="edge44_Node000070_Node000081" title=" " alt="" coords="763,1015,713,1055,651,1096,511,1164,368,1220,241,1262,145,1291,143,1285,239,1257,367,1215,509,1159,648,1092,710,1051,759,1011"/>
+<area shape="rect" id="Node000074" href="$dd/de6/gena__device_8cpp.html#a6fd1575d4217390506014c896b22251e" title="Handles a subscription renewal request from a ctrl point. The connection is not destroyed on return." alt="" coords="5,933,185,973"/>
+<area shape="poly" id="edge38_Node000071_Node000074" title=" " alt="" coords="497,983,426,974,300,964,185,958,186,953,301,959,427,969,498,977"/>
+<area shape="rect" id="Node000075" href="$dd/de6/gena__device_8cpp.html#a25ad1852d4d32c6f34a87b92225202fd" title="Handles a subscription request from a ctrl point. The socket is not closed on return." alt="" coords="5,1022,185,1062"/>
+<area shape="poly" id="edge39_Node000071_Node000075" title=" " alt="" coords="498,995,375,1003,234,1018,186,1026,185,1021,233,1013,375,998,497,990"/>
+<area shape="poly" id="edge40_Node000071_Node000077" title=" " alt="" coords="502,1009,475,1017,412,1035,411,1029,474,1011,501,1004"/>
+<area shape="poly" id="edge41_Node000077_Node000074" title=" " alt="" coords="253,1025,141,975,143,970,255,1020"/>
+<area shape="poly" id="edge42_Node000077_Node000075" title=" " alt="" coords="235,1053,185,1050,185,1044,235,1047"/>
+<area shape="rect" id="Node000083" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#ab8610e8aea3346f682ca91fe37b21bf8" title="Makes a HTTP request using a connection previously created by UpnpOpenHttpConnection()." alt="" coords="483,1481,641,1507"/>
+<area shape="poly" id="edge47_Node000082_Node000083" title=" " alt="" coords="692,1497,641,1497,641,1491,692,1491"/>
+<area shape="rect" id="Node000089" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#aa6e8ca5e4a342e562769c5670475fe3f" title="Makes the HTTP GET message, connects to the peer, sends the HTTP GET request, gets the response and p..." alt="" coords="490,5,634,31"/>
+<area shape="poly" id="edge49_Node000088_Node000089" title=" " alt="" coords="700,149,695,145,678,118,672,92,665,67,659,56,648,44,630,33,632,28,651,40,663,53,670,65,677,91,683,116,699,142,704,146"/>
+<area shape="poly" id="edge51_Node000091_Node000051" title=" " alt="" coords="692,929,643,929,643,924,692,924"/>
+<area shape="rect" id="Node000093" href="$d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#aef9e66b433f64923b1142779a4cdced6" title="Handles the SOAP action request." alt="" coords="249,1273,411,1328"/>
+<area shape="poly" id="edge55_Node000092_Node000093" title=" " alt="" coords="467,1294,412,1298,411,1292,466,1289"/>
+<area shape="poly" id="edge56_Node000093_Node000081" title=" " alt="" coords="234,1303,171,1303,171,1298,234,1298"/>
+<area shape="poly" id="edge61_Node000094_Node000092" title=" " alt="" coords="691,1317,643,1306,644,1301,692,1312"/>
+<area shape="poly" id="edge58_Node000094_Node000093" title=" " alt="" coords="692,1339,587,1335,474,1327,411,1319,412,1313,475,1322,587,1330,692,1333"/>
+<area shape="rect" id="Node000095" href="$d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#ade7f137927ec56c6a4c47b57ac6fc3a5" title="Handles the SOAP requests to querry the state variables." alt="" coords="481,1388,643,1443"/>
+<area shape="poly" id="edge59_Node000094_Node000095" title=" " alt="" coords="696,1371,641,1390,640,1385,694,1366"/>
+<area shape="poly" id="edge60_Node000095_Node000081" title=" " alt="" coords="467,1398,233,1343,137,1316,138,1311,234,1338,468,1393"/>
+<area shape="poly" id="edge63_Node000096_Node000095" title=" " alt="" coords="685,1418,643,1418,643,1413,685,1413"/>
+<area shape="poly" id="edge66_Node000097_Node000038" title=" " alt="" coords="685,706,474,686,405,676,406,671,475,681,686,701"/>
+<area shape="rect" id="Node000098" href="$d9/d54/group__compaAPI.html#ga3433d9e5cfeaff0b318eef1f4f2e65ea" title="Queries the state of a state variable of a service on another device." alt="" coords="475,647,649,672"/>
+<area shape="poly" id="edge65_Node000097_Node000098" title=" " alt="" coords="716,697,618,675,620,669,717,692"/>
+<area shape="poly" id="edge70_Node000099_Node000038" title=" " alt="" coords="714,820,660,821,599,817,535,806,474,787,430,763,392,731,339,675,343,672,395,727,433,758,476,782,536,801,599,812,660,815,714,815"/>
+<area shape="rect" id="Node000100" href="$d4/d99/upnpapi_8cpp.html#aacef79c530ba5401c5946cd64939ef70" title="Sends a message to change a state variable in a service." alt="" coords="502,849,622,875"/>
+<area shape="poly" id="edge68_Node000099_Node000100" title=" " alt="" coords="717,830,620,852,618,847,716,824"/>
+<area shape="rect" id="Node000101" href="$d4/d99/upnpapi_8cpp.html#ae3bc939c3883bda96689903791b2c360" title="Sends a message to change a state variable in a service." alt="" coords="262,772,398,797"/>
+<area shape="poly" id="edge69_Node000100_Node000101" title=" " alt="" coords="509,847,368,800,370,795,511,842"/>
+<area shape="poly" id="edge73_Node000102_Node000038" title=" " alt="" coords="511,746,474,731,355,676,358,671,476,726,513,741"/>
+<area shape="poly" id="edge72_Node000102_Node000101" title=" " alt="" coords="481,772,399,780,398,775,481,766"/>
 </map>

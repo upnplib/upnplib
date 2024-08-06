@@ -1,7 +1,7 @@
 #ifndef COMPA_UPNPEVENTSUBSCRIBE_HPP
 #define COMPA_UPNPEVENTSUBSCRIBE_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-28
+// Redistribution only with this Copyright remark. Last modified: 2024-08-13
 /*!
  * \file
  * \brief Header file for UpnpEventSubscribe methods.
@@ -14,6 +14,10 @@
  * UpnpEventSubscribe
  */
 typedef struct s_UpnpEventSubscribe UpnpEventSubscribe;
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 /*! Constructor */
 UPNPLIB_API UpnpEventSubscribe* UpnpEventSubscribe_new();
@@ -78,5 +82,9 @@ UPNPLIB_API int UpnpEventSubscribe_strncpy_PublisherUrl(UpnpEventSubscribe* p,
                                                         size_t n);
 /*! UpnpEventSubscribe_clear_PublisherUrl */
 UPNPLIB_API void UpnpEventSubscribe_clear_PublisherUrl(UpnpEventSubscribe* p);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* COMPA_UPNPEVENTSUBSCRIBE_HPP*/

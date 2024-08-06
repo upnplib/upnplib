@@ -1,5 +1,5 @@
 <map id="anonymous_namespace{ssdp_device::cpp}::isUrlV6UlaGua" name="anonymous_namespace{ssdp_device::cpp}::isUrlV6UlaGua">
-<area shape="rect" id="Node000001" title="Test if a Url contains an ULA or GUA IPv6 address." alt="" coords="5,5,185,60"/>
-<area shape="rect" id="Node000002" href="$d3/d1d/namespaceanonymous__namespace_02ssdp__device_8cpp_03.html#a544bef3ce1cf26739e5bc6b45bf608a7" title="Extract IPv6 address." alt="" coords="233,5,413,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,30,220,30,220,35,186,35"/>
+<area shape="rect" id="Node000001" title="Test if a Url contains an ULA or GUA IPv6 address." alt="" coords="5,5,168,60"/>
+<area shape="rect" id="Node000002" href="$d3/d1d/namespaceanonymous__namespace_02ssdp__device_8cpp_03.html#a544bef3ce1cf26739e5bc6b45bf608a7" title="Extract IPv6 address." alt="" coords="216,5,379,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,30,202,30,202,35,168,35"/>
 </map>

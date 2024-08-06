@@ -5,7 +5,7 @@
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022+ GPL 3 and higher by Ingo Höft,  Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2023-07-24
+ * Redistribution only with this Copyright remark. Last modified: 2024-08-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -50,6 +50,10 @@
 
 #include <ixml.hpp> /* for IXML_Document */
 // #include "upnpconfig.h" /* for UPNP_HAVE_TOOLS */
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 /*!
  * \brief Converts an SDK error code into a string error message suitable for
@@ -255,6 +259,10 @@ UPNPLIB_API int UpnpAddToPropertySet(
     const char* ArgName,
     /*! [in] The status variable value. */
     const char* ArgVal);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 /*! @} */
 

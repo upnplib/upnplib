@@ -1,7 +1,7 @@
 <map id="Compa/src/inc/soap_device.hpp" name="Compa/src/inc/soap_device.hpp">
-<area shape="rect" id="Node000001" title="SOAP declarations for UPnP Devices using SOAP." alt="" coords="131,5,281,45"/>
-<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html" title="Inititalize the compatible library before it can be used." alt="" coords="5,101,204,126"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="175,56,120,102,117,98,171,52"/>
-<area shape="rect" id="Node000003" href="$d6/d92/soap__device_8cpp.html" title="Items for UPnP devices to manage UPnP Control." alt="" coords="228,93,389,133"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="241,52,288,91,284,95,238,56"/>
+<area shape="rect" id="Node000001" title="SOAP declarations for UPnP Devices using SOAP." alt="" coords="121,5,260,45"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html" title="Inititalize the compatible library before it can be used." alt="" coords="5,101,187,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,57,111,102,107,98,158,53"/>
+<area shape="rect" id="Node000003" href="$d6/d92/soap__device_8cpp.html" title="Items for UPnP devices to manage UPnP Control." alt="" coords="211,93,362,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="224,53,267,91,264,95,221,57"/>
 </map>

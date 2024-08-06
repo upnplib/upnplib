@@ -1,8 +1,8 @@
 <map id="s_UpnpExtraHeaders" name="s_UpnpExtraHeaders">
-<area shape="rect" id="Node000001" title="s_UpnpExtraHeaders" alt="" coords="127,112,285,137"/>
-<area shape="rect" id="Node000002" href="$dc/d1d/list_8hpp.html#d0/d92/structUpnpListHead" title="List anchor structure." alt="" coords="5,7,119,33"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,39,191,110,188,114,88,43"/>
-<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="133,10,142,13,145,20,137,29,119,32,118,27,135,24,140,20,138,17,131,15"/>
-<area shape="rect" id="Node000003" href="$d1/d03/group__UpnpString.html#d8/dbb/structs__UpnpString" title="Internal implementation of the class UpnpString." alt="" coords="200,7,308,33"/>
-<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="245,46,214,113,209,111,240,44"/>
+<area shape="rect" id="Node000001" title="s_UpnpExtraHeaders" alt="" coords="75,112,222,137"/>
+<area shape="rect" id="Node000002" href="$dc/d1d/list_8hpp.html#d0/d92/structUpnpListHead" title="List anchor structure." alt="" coords="5,7,111,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="80,42,140,110,136,114,76,45"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="125,9,134,13,137,20,129,29,111,33,110,27,127,25,132,20,130,17,123,14"/>
+<area shape="rect" id="Node000003" href="$d1/d03/group__UpnpString.html#d8/dbb/structs__UpnpString" title="Internal implementation of the class UpnpString." alt="" coords="189,7,290,33"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="222,45,161,114,157,110,218,42"/>
 </map>

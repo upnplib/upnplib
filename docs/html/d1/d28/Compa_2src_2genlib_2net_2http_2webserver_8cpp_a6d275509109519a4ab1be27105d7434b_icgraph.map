@@ -1,5 +1,5 @@
 <map id="web_server_set_root_dir" name="web_server_set_root_dir">
-<area shape="rect" id="Node000001" title="Assign the path to the global Document root directory." alt="" coords="249,5,431,31"/>
-<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a85b808931b0ed4d1d37da686c031f9b3" title="Sets the document root directory for the internal web server." alt="" coords="5,5,201,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="236,21,201,21,201,15,236,15"/>
+<area shape="rect" id="Node000001" title="Assign the path to the global Document root directory." alt="" coords="236,5,400,31"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a85b808931b0ed4d1d37da686c031f9b3" title="Sets the document root directory for the internal web server." alt="" coords="5,5,188,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="222,21,188,21,188,15,222,15"/>
 </map>

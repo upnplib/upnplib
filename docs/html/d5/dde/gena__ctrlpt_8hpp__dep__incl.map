@@ -1,5 +1,5 @@
 <map id="Compa/src/inc/gena_ctrlpt.hpp" name="Compa/src/inc/gena_ctrlpt.hpp">
-<area shape="rect" id="Node000001" title="Processes NOTIFY events that are sent by devices." alt="" coords="11,5,162,45"/>
-<area shape="rect" id="Node000002" href="$dc/d02/gena__callback2_8cpp.html" title="Callback function to handle incoming GENA requests." alt="" coords="5,93,168,133"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,59,89,93,84,93,84,59"/>
+<area shape="rect" id="Node000001" title="Processes NOTIFY events that are sent by devices." alt="" coords="11,5,150,45"/>
+<area shape="rect" id="Node000002" href="$dc/d02/gena__callback2_8cpp.html" title="Callback function to handle incoming GENA requests." alt="" coords="5,93,156,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,59,83,93,78,93,78,59"/>
 </map>

@@ -1,14 +1,14 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-19
-
 #ifndef UPNPLIB_UPNPACTIONCOMPLETE_HPP
 #define UPNPLIB_UPNPACTIONCOMPLETE_HPP
+// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-08-13
+// Also Copyright by other contributor as noted below.
 
 /*!
  * \file
  *
  * \brief Header file for UpnpActionComplete methods.
- * \author Marcelo Roberto Jimenez
+ * \authors Marcelo Roberto Jimenez, Ingo Höft
  */
 #include <stdlib.h> /* for size_t */
 
@@ -16,6 +16,10 @@
 
 #include "UpnpString.hpp"
 #include "ixml.hpp"
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 /*!
  * UpnpActionComplete
@@ -72,4 +76,8 @@ UpnpActionComplete_get_ActionResult(const UpnpActionComplete* p);
 /*! UpnpActionComplete_set_ActionResult */
 EXPORT_SPEC int UpnpActionComplete_set_ActionResult(UpnpActionComplete* p,
                                                     IXML_Document* n);
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+
 #endif /* UPNPLIB_UPNPACTIONCOMPLETE_HPP */

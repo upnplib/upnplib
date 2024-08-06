@@ -1,9 +1,9 @@
 <map id="ListAddTail" name="ListAddTail">
-<area shape="rect" id="Node000001" title="Adds a node to the tail of the list. Node gets added immediately before list.tail." alt="" coords="5,13,97,38"/>
-<area shape="rect" id="Node000002" href="$df/db8/LinkedList_8cpp.html#a8099505e5bec8749a64a0f2b1d3179c7" title="Adds a node before the specified node. Node gets added immediately before anode." alt="" coords="145,13,259,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,23,132,23,132,28,97,28"/>
-<area shape="rect" id="Node000003" href="$d6/d93/namespaceanonymous__namespace_02LinkedList_8cpp_03.html#ad21845c4b35a0cd2530fea3c4b0b788f" title="Dynamically creates a list node." alt="" coords="307,5,549,45"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="259,23,293,23,293,28,259,28"/>
-<area shape="rect" id="Node000004" href="$d7/d20/FreeList_8cpp.html#a63cf965052240dbc6fec792326bf6719" title="Allocates chunk of set size." alt="" coords="597,13,703,38"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="550,23,583,23,583,28,550,28"/>
+<area shape="rect" id="Node000001" title="Adds a node to the tail of the list. Node gets added immediately before list.tail." alt="" coords="5,13,92,38"/>
+<area shape="rect" id="Node000002" href="$df/db8/LinkedList_8cpp.html#a8099505e5bec8749a64a0f2b1d3179c7" title="Adds a node before the specified node. Node gets added immediately before anode." alt="" coords="140,13,244,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,23,126,23,126,28,92,28"/>
+<area shape="rect" id="Node000003" href="$d6/d93/namespaceanonymous__namespace_02LinkedList_8cpp_03.html#ad21845c4b35a0cd2530fea3c4b0b788f" title="Dynamically creates a list node." alt="" coords="292,5,509,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="244,23,278,23,278,28,244,28"/>
+<area shape="rect" id="Node000004" href="$d7/d20/FreeList_8cpp.html#a63cf965052240dbc6fec792326bf6719" title="Allocates chunk of set size." alt="" coords="557,13,656,38"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="510,23,543,23,543,28,510,28"/>
 </map>

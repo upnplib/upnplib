@@ -1,16 +1,16 @@
 <map id="TimerThreadRemove" name="TimerThreadRemove">
-<area shape="rect" id="Node000001" title="Removes an event from the timer Q." alt="" coords="5,112,164,137"/>
-<area shape="rect" id="Node000002" href="$da/d04/namespaceanonymous__namespace_02TimerThread_8cpp_03.html#ab40f4f1217f62d380736126fec2ae82e" title="Deallocates a dynamically allocated TimerEvent." alt="" coords="384,5,564,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,110,158,91,211,73,292,55,370,42,371,47,293,60,213,78,160,96,114,114"/>
-<area shape="rect" id="Node000004" href="$df/db8/LinkedList_8cpp.html#a751d0c613a5c8d83b2675c5f4261e2d7" title="Removes a node from the list. The memory for the node is freed." alt="" coords="212,87,313,112"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="164,111,198,106,199,111,165,116"/>
-<area shape="rect" id="Node000006" href="$df/db8/LinkedList_8cpp.html#a898216a354e8dd7089db150630862376" title="Returns the head of the list." alt="" coords="223,136,302,161"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="165,133,210,139,209,144,164,138"/>
-<area shape="rect" id="Node000007" href="$df/db8/LinkedList_8cpp.html#a83123d7868ce3aba2cf9d5c066fb7eb4" title="Returns the next item in the list." alt="" coords="225,185,301,211"/>
-<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="118,135,219,177,217,182,116,140"/>
-<area shape="rect" id="Node000003" href="$d7/d20/FreeList_8cpp.html#a559c475ea4c5850cd427740512512df0" title="Returns an item to the Free List." alt="" coords="635,56,736,81"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="565,45,622,55,621,60,564,51"/>
-<area shape="rect" id="Node000005" href="$d6/d93/namespaceanonymous__namespace_02LinkedList_8cpp_03.html#a506e66beed0ac75aaee65b0b4d8a852a" title="Free list node." alt="" coords="361,85,587,125"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="314,98,347,99,347,104,313,103"/>
-<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="587,83,621,77,622,82,587,88"/>
+<area shape="rect" id="Node000001" title="Removes an event from the timer Q." alt="" coords="5,112,149,137"/>
+<area shape="rect" id="Node000002" href="$da/d04/namespaceanonymous__namespace_02TimerThread_8cpp_03.html#ab40f4f1217f62d380736126fec2ae82e" title="Deallocates a dynamically allocated TimerEvent." alt="" coords="359,5,521,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,109,147,91,197,73,271,55,344,42,345,47,273,60,198,78,149,95,106,114"/>
+<area shape="rect" id="Node000004" href="$df/db8/LinkedList_8cpp.html#a751d0c613a5c8d83b2675c5f4261e2d7" title="Removes a node from the list. The memory for the node is freed." alt="" coords="197,87,292,112"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="149,111,183,106,184,111,150,116"/>
+<area shape="rect" id="Node000006" href="$df/db8/LinkedList_8cpp.html#a898216a354e8dd7089db150630862376" title="Returns the head of the list." alt="" coords="207,136,282,161"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="150,132,194,139,193,144,149,138"/>
+<area shape="rect" id="Node000007" href="$df/db8/LinkedList_8cpp.html#a83123d7868ce3aba2cf9d5c066fb7eb4" title="Returns the next item in the list." alt="" coords="209,185,280,211"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="108,135,203,177,201,182,106,140"/>
+<area shape="rect" id="Node000003" href="$d7/d20/FreeList_8cpp.html#a559c475ea4c5850cd427740512512df0" title="Returns an item to the Free List." alt="" coords="588,56,683,81"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="522,45,574,55,574,60,521,50"/>
+<area shape="rect" id="Node000005" href="$d6/d93/namespaceanonymous__namespace_02LinkedList_8cpp_03.html#a506e66beed0ac75aaee65b0b4d8a852a" title="Free list node." alt="" coords="340,85,540,125"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="292,98,326,99,326,104,292,103"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="540,84,574,77,575,82,541,89"/>
 </map>

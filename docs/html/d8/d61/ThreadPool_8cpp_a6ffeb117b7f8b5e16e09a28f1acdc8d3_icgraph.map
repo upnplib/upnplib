@@ -1,9 +1,9 @@
 <map id="TPAttrSetMaxThreads" name="TPAttrSetMaxThreads">
-<area shape="rect" id="Node000001" title="Sets the max threads for the thread pool attributes." alt="" coords="531,5,693,31"/>
-<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#aabf66e54504de499079a21f1d01b91ca" title="Initializes the global threadm pools used by the UPnP SDK." alt="" coords="325,5,483,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="517,21,483,21,483,15,517,15"/>
-<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="139,5,277,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="312,21,278,21,278,15,312,15"/>
-<area shape="rect" id="Node000004" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="5,5,91,31"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="125,21,91,21,91,15,125,15"/>
+<area shape="rect" id="Node000001" title="Sets the max threads for the thread pool attributes." alt="" coords="499,5,649,31"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#aabf66e54504de499079a21f1d01b91ca" title="Initializes the global threadm pools used by the UPnP SDK." alt="" coords="307,5,451,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="485,21,451,21,451,15,485,15"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="132,5,259,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="293,21,259,21,259,15,293,15"/>
+<area shape="rect" id="Node000004" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="5,5,84,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="118,21,84,21,84,15,118,15"/>
 </map>

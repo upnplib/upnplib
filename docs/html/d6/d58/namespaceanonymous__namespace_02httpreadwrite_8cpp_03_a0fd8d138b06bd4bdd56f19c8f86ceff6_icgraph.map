@@ -1,7 +1,7 @@
 <map id="anonymous_namespace{httpreadwrite::cpp}::MakeGetMessageEx" name="anonymous_namespace{httpreadwrite::cpp}::MakeGetMessageEx">
-<area shape="rect" id="Node000001" title="Make extended GetMessage." alt="" coords="415,5,595,60"/>
-<area shape="rect" id="Node000002" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#aa6e8ca5e4a342e562769c5670475fe3f" title="Makes the HTTP GET message, connects to the peer, sends the HTTP GET request, gets the response and p..." alt="" coords="211,20,367,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="401,35,367,35,367,30,401,30"/>
-<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a68e366bcfaed3559025fa8ac04c2885c" title="Gets specified number of bytes from a file specified in the URL." alt="" coords="5,20,163,45"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="197,35,163,35,163,30,197,30"/>
+<area shape="rect" id="Node000001" title="Make extended GetMessage." alt="" coords="392,5,555,60"/>
+<area shape="rect" id="Node000002" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#aa6e8ca5e4a342e562769c5670475fe3f" title="Makes the HTTP GET message, connects to the peer, sends the HTTP GET request, gets the response and p..." alt="" coords="200,20,344,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="378,35,344,35,344,30,378,30"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a68e366bcfaed3559025fa8ac04c2885c" title="Gets specified number of bytes from a file specified in the URL." alt="" coords="5,20,152,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="186,35,152,35,152,30,186,30"/>
 </map>

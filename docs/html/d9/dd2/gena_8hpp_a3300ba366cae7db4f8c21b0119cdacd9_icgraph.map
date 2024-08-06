@@ -1,5 +1,5 @@
 <map id="genaNotifyAll" name="genaNotifyAll">
-<area shape="rect" id="Node000001" title="Sends a notification to all the subscribed control points." alt="" coords="148,5,259,31"/>
-<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a889522712799600d91e157c50e8bcd38" title="Sends out an event change notification to all control points subscribed to a particular service." alt="" coords="5,5,100,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,21,100,21,100,15,134,15"/>
+<area shape="rect" id="Node000001" title="Sends a notification to all the subscribed control points." alt="" coords="141,5,241,31"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a889522712799600d91e157c50e8bcd38" title="Sends out an event change notification to all control points subscribed to a particular service." alt="" coords="5,5,93,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,21,94,21,94,15,128,15"/>
 </map>

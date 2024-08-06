@@ -1,9 +1,9 @@
 <map id="anonymous_namespace{ssdp_common::cpp}::create_ssdp_sock_v6_ula_gua" name="anonymous_namespace{ssdp_common::cpp}::create_ssdp_sock_v6_ula_gua">
-<area shape="rect" id="Node000001" title="Create an SSDP IPv6 ULA_GUA socket." alt="" coords="5,16,224,71"/>
-<area shape="rect" id="Node000002" href="$d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement." alt="" coords="272,31,363,56"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="224,41,258,41,258,46,224,46"/>
-<area shape="rect" id="Node000003" href="$d5/dfa/upnpdebug_8cpp.html#adee8b149b1dca33417740b21a862ad00" title="Check Debug level." alt="" coords="431,5,571,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="362,34,417,27,417,32,363,40"/>
-<area shape="rect" id="Node000004" href="$d5/dfa/upnpdebug_8cpp.html#a4190a252f156f35bad0781b542cea98d" title="Display File and Line." alt="" coords="411,55,591,80"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="363,47,397,51,396,56,363,52"/>
+<area shape="rect" id="Node000001" title="Create an SSDP IPv6 ULA_GUA socket." alt="" coords="5,16,207,71"/>
+<area shape="rect" id="Node000002" href="$d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement." alt="" coords="255,31,339,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="207,41,241,41,241,46,207,46"/>
+<area shape="rect" id="Node000003" href="$d5/dfa/upnpdebug_8cpp.html#adee8b149b1dca33417740b21a862ad00" title="Check Debug level." alt="" coords="405,5,534,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="338,35,390,27,391,32,339,40"/>
+<area shape="rect" id="Node000004" href="$d5/dfa/upnpdebug_8cpp.html#a4190a252f156f35bad0781b542cea98d" title="Display File and Line." alt="" coords="387,55,552,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="339,46,374,51,373,57,338,52"/>
 </map>

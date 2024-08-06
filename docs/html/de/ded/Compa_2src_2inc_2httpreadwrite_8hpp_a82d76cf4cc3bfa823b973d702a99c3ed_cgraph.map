@@ -1,45 +1,45 @@
 <map id="http_OpenHttpConnection" name="http_OpenHttpConnection">
-<area shape="rect" id="Node000001" title="Opens a connection to the server." alt="" coords="5,194,196,219"/>
-<area shape="rect" id="Node000002" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#a2d33a2d2116d1de548e95d8d023548d9" title="Parses URL and then validates URL." alt="" coords="256,87,367,113"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,191,271,117,274,122,128,196"/>
-<area shape="rect" id="Node000004" href="$d8/dd2/uri_8cpp.html#a8f32e8ba916b944b37e9f23e1fc60ec9" title="Compares buffer in the token object with the buffer in in2 case insensitive." alt="" coords="685,9,852,34"/>
-<area shape="poly" id="edge23_Node000001_Node000004" title=" " alt="" coords="110,192,162,135,200,101,243,72,295,48,351,29,409,16,467,8,577,3,672,7,672,12,577,8,467,13,410,22,353,34,297,53,245,77,204,105,166,138,114,196"/>
-<area shape="rect" id="Node000013" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#a792af065e758a89de58061eadd9769ee" title="Initiate a connection on a socket." alt="" coords="248,218,375,243"/>
-<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="197,215,234,219,234,225,196,220"/>
-<area shape="rect" id="Node000017" href="$d5/d78/sock_8cpp.html#a90f3d17250e4a8df679a4b88a8abd4da" title="Shutsdown the socket using the ShutdownMethod to indicate whether sends and receives on the socket wi..." alt="" coords="257,169,365,194"/>
-<area shape="poly" id="edge17_Node000001_Node000017" title=" " alt="" coords="196,193,243,187,244,192,197,198"/>
-<area shape="rect" id="Node000019" href="$d5/d78/sock_8cpp.html#af13a5f56b9850283b5813dff5592149a" title="Assign the passed in socket descriptor to socket descriptor in the SOCKINFO structure." alt="" coords="271,267,351,293"/>
-<area shape="poly" id="edge21_Node000001_Node000019" title=" " alt="" coords="139,217,262,260,260,265,137,222"/>
-<area shape="rect" id="Node000020" href="$d5/d78/sock_8cpp.html#a1fef2439727a2dea9bdfec28d62e8a18" title="Associates an SSL object with the socket and begins the client&#45;side SSL/TLS handshake." alt="" coords="244,317,379,342"/>
-<area shape="poly" id="edge22_Node000001_Node000020" title=" " alt="" coords="119,218,173,258,245,303,258,309,256,314,243,308,170,263,116,222"/>
-<area shape="rect" id="Node000003" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#a502852e9caf9d74374e83f8e9bf42acb" title="Validates URL." alt="" coords="479,38,573,63"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="366,85,465,62,467,67,367,90"/>
-<area shape="rect" id="Node000005" href="$d8/dd2/uri_8cpp.html#ae59095a3e023c16f4dd68bc60e21f7c7" title="Parses a uri as defined in RFC 2396 (explaining URIs)." alt="" coords="485,87,567,113"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="367,97,471,97,471,103,367,103"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="573,42,671,30,672,36,573,48"/>
-<area shape="poly" id="edge12_Node000005_Node000004" title=" " alt="" coords="567,90,624,72,648,58,672,44,697,35,698,40,674,49,651,63,626,77,568,95"/>
-<area shape="rect" id="Node000006" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#afb6a0fce453e470360da2b0d0d5f8a8b" title="Parses a string with host and port and fills a hostport structure." alt="" coords="673,59,864,99"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="567,94,659,86,660,91,568,99"/>
-<area shape="rect" id="Node000007" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#ab8f57212a00e026034f1864f0239bad9" title="parses a uri scheme starting at in[0]." alt="" coords="675,123,863,163"/>
-<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="568,105,662,121,661,126,567,110"/>
-<area shape="rect" id="Node000008" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#ab0786f41a45f36864383bcca2f4f2658" title="Parses a string of uric characters starting at in[0]." alt="" coords="679,187,859,227"/>
-<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="568,102,598,109,627,122,642,134,652,147,661,160,675,173,685,178,682,183,672,177,657,164,647,150,639,138,624,126,596,114,567,107"/>
-<area shape="rect" id="Node000009" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a4666c8d916f7397270c5cc93734482d3" title="Check that a char[3] sequence is ESCAPED." alt="" coords="915,123,1095,163"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="842,184,917,164,918,169,844,189"/>
-<area shape="rect" id="Node000010" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a72aa299b86ca4486b62de1ac2e11b649" title="Check for a RESERVED character." alt="" coords="915,187,1095,227"/>
-<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="859,204,901,204,901,209,859,209"/>
-<area shape="rect" id="Node000011" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#abb4b2d5f48da8f6aaa405da333b3ab45" title="Check for an UNRESERVED character." alt="" coords="912,251,1097,291"/>
-<area shape="poly" id="edge10_Node000008_Node000011" title=" " alt="" coords="844,224,918,245,917,250,842,229"/>
-<area shape="rect" id="Node000012" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a1425dfc37b98f61a0b49a36ac07660d1" title="Check for a MARK character." alt="" coords="1145,251,1325,291"/>
-<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="1097,268,1132,268,1132,273,1097,273"/>
-<area shape="rect" id="Node000014" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catch error for later use." alt="" coords="452,251,600,291"/>
-<area shape="poly" id="edge14_Node000013_Node000014" title=" " alt="" coords="376,240,439,252,438,257,375,245"/>
-<area shape="rect" id="Node000015" href="$d6/d58/namespaceanonymous__namespace_02httpreadwrite_8cpp_03.html#a54d65a1040bec3ce5cd1653277714254" title="Checks socket connection and wait if it is not connected." alt="" coords="427,315,625,384"/>
-<area shape="poly" id="edge15_Node000013_Node000015" title=" " alt="" coords="355,241,380,254,395,266,405,277,428,301,436,305,433,310,425,305,401,281,391,270,377,258,353,246"/>
-<area shape="rect" id="Node000016" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4" title="Get human readable error description of the catched error." alt="" coords="452,187,600,227"/>
-<area shape="poly" id="edge16_Node000013_Node000016" title=" " alt="" coords="375,221,438,214,438,219,375,226"/>
-<area shape="poly" id="edge18_Node000017_Node000014" title=" " alt="" coords="354,192,380,203,404,220,428,236,443,243,441,248,425,241,401,224,377,208,352,197"/>
-<area shape="poly" id="edge19_Node000017_Node000016" title=" " alt="" coords="366,185,438,194,438,199,365,190"/>
-<area shape="rect" id="Node000018" href="$d6/df0/sock_8hpp.html#a703577f3b40fc1c9e865b798beab18e5" title="Closes the socket if it is different from &#45;1." alt="" coords="479,137,573,162"/>
-<area shape="poly" id="edge20_Node000017_Node000018" title=" " alt="" coords="365,171,465,156,466,161,366,176"/>
+<area shape="rect" id="Node000001" title="Opens a connection to the server." alt="" coords="5,193,179,218"/>
+<area shape="rect" id="Node000002" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#a2d33a2d2116d1de548e95d8d023548d9" title="Parses URL and then validates URL." alt="" coords="239,86,341,112"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,190,252,116,254,121,118,195"/>
+<area shape="rect" id="Node000004" href="$d8/dd2/uri_8cpp.html#a8f32e8ba916b944b37e9f23e1fc60ec9" title="Compares buffer in the token object with the buffer in in2 case insensitive." alt="" coords="643,8,796,33"/>
+<area shape="poly" id="edge23_Node000001_Node000004" title=" " alt="" coords="101,191,150,133,185,100,225,71,275,47,327,29,381,16,435,8,540,3,629,6,629,12,540,8,436,14,382,22,328,34,277,52,228,76,189,104,153,137,105,194"/>
+<area shape="rect" id="Node000013" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#a792af065e758a89de58061eadd9769ee" title="Initiate a connection on a socket." alt="" coords="233,217,347,242"/>
+<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="179,213,219,218,218,224,179,219"/>
+<area shape="rect" id="Node000017" href="$d5/d78/sock_8cpp.html#a90f3d17250e4a8df679a4b88a8abd4da" title="Shutsdown the socket using the ShutdownMethod to indicate whether sends and receives on the socket wi..." alt="" coords="240,168,340,193"/>
+<area shape="poly" id="edge17_Node000001_Node000017" title=" " alt="" coords="179,192,226,186,226,191,179,197"/>
+<area shape="rect" id="Node000019" href="$d5/d78/sock_8cpp.html#af13a5f56b9850283b5813dff5592149a" title="Assign the passed in socket descriptor to socket descriptor in the SOCKINFO structure." alt="" coords="253,266,327,292"/>
+<area shape="poly" id="edge21_Node000001_Node000019" title=" " alt="" coords="128,216,242,259,241,264,126,221"/>
+<area shape="rect" id="Node000020" href="$d5/d78/sock_8cpp.html#a1fef2439727a2dea9bdfec28d62e8a18" title="Associates an SSL object with the socket and begins the client&#45;side SSL/TLS handshake." alt="" coords="227,316,353,341"/>
+<area shape="poly" id="edge22_Node000001_Node000020" title=" " alt="" coords="110,216,160,257,228,302,239,308,237,312,225,307,157,262,106,221"/>
+<area shape="rect" id="Node000003" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html#a502852e9caf9d74374e83f8e9bf42acb" title="Validates URL." alt="" coords="451,37,538,62"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="341,84,437,61,438,66,342,89"/>
+<area shape="rect" id="Node000005" href="$d8/dd2/uri_8cpp.html#ae59095a3e023c16f4dd68bc60e21f7c7" title="Parses a uri as defined in RFC 2396 (explaining URIs)." alt="" coords="457,86,532,112"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="342,96,443,96,443,102,342,102"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="538,41,629,29,630,35,539,47"/>
+<area shape="poly" id="edge12_Node000005_Node000004" title=" " alt="" coords="531,89,587,71,611,57,635,43,656,35,658,40,637,48,613,62,589,76,533,94"/>
+<area shape="rect" id="Node000006" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#afb6a0fce453e470360da2b0d0d5f8a8b" title="Parses a string with host and port and fills a hostport structure." alt="" coords="636,58,803,98"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="532,93,622,84,622,89,532,98"/>
+<area shape="rect" id="Node000007" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#ab8f57212a00e026034f1864f0239bad9" title="parses a uri scheme starting at in[0]." alt="" coords="636,122,803,162"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="533,103,623,121,622,126,532,108"/>
+<area shape="rect" id="Node000008" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#ab0786f41a45f36864383bcca2f4f2658" title="Parses a string of uric characters starting at in[0]." alt="" coords="638,186,801,226"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="533,101,561,108,589,121,605,133,615,146,623,159,638,171,647,177,644,182,634,176,619,162,610,149,601,137,587,125,560,113,532,106"/>
+<area shape="rect" id="Node000009" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a4666c8d916f7397270c5cc93734482d3" title="Check that a char[3] sequence is ESCAPED." alt="" coords="851,122,1013,162"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="786,183,851,163,853,168,787,188"/>
+<area shape="rect" id="Node000010" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a72aa299b86ca4486b62de1ac2e11b649" title="Check for a RESERVED character." alt="" coords="851,186,1013,226"/>
+<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="801,203,837,203,837,208,801,208"/>
+<area shape="rect" id="Node000011" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#abb4b2d5f48da8f6aaa405da333b3ab45" title="Check for an UNRESERVED character." alt="" coords="851,250,1013,290"/>
+<area shape="poly" id="edge10_Node000008_Node000011" title=" " alt="" coords="787,223,853,243,851,248,786,228"/>
+<area shape="rect" id="Node000012" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a1425dfc37b98f61a0b49a36ac07660d1" title="Check for a MARK character." alt="" coords="1061,250,1224,290"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="1014,267,1048,267,1048,272,1014,272"/>
+<area shape="rect" id="Node000014" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catch error for later use." alt="" coords="425,250,564,290"/>
+<area shape="poly" id="edge14_Node000013_Node000014" title=" " alt="" coords="348,238,412,251,411,256,347,243"/>
+<area shape="rect" id="Node000015" href="$d6/d58/namespaceanonymous__namespace_02httpreadwrite_8cpp_03.html#a54d65a1040bec3ce5cd1653277714254" title="Checks socket connection and wait if it is not connected." alt="" coords="401,314,588,383"/>
+<area shape="poly" id="edge15_Node000013_Node000015" title=" " alt="" coords="330,240,355,253,379,276,403,299,410,304,407,308,400,304,376,280,352,257,328,245"/>
+<area shape="rect" id="Node000016" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4" title="Get human readable error description of the catched error." alt="" coords="425,186,564,226"/>
+<area shape="poly" id="edge16_Node000013_Node000016" title=" " alt="" coords="347,220,412,213,412,218,348,226"/>
+<area shape="poly" id="edge18_Node000017_Node000014" title=" " alt="" coords="330,191,355,202,379,219,403,235,417,242,415,247,400,240,376,223,352,207,328,195"/>
+<area shape="poly" id="edge19_Node000017_Node000016" title=" " alt="" coords="341,184,412,193,411,198,340,189"/>
+<area shape="rect" id="Node000018" href="$d6/df0/sock_8hpp.html#a703577f3b40fc1c9e865b798beab18e5" title="Closes the socket if it is different from &#45;1." alt="" coords="451,136,539,161"/>
+<area shape="poly" id="edge20_Node000017_Node000018" title=" " alt="" coords="340,170,437,155,437,160,341,175"/>
 </map>

@@ -1,16 +1,16 @@
 <map id="StopMiniServer" name="StopMiniServer">
-<area shape="rect" id="Node000001" title="Stop and Shutdown the MiniServer and free socket resources." alt="" coords="692,31,813,56"/>
-<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a75a3c9f9180bc908e17d49c3e2218e99" title="Terminates the Linux SDK for UPnP Devices." alt="" coords="549,31,644,56"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="678,46,644,46,644,41,678,41"/>
-<area shape="rect" id="Node000003" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="5,31,91,56"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="536,33,501,28,399,16,320,9,240,10,139,21,86,34,85,28,138,16,240,5,320,4,400,10,502,22,536,28"/>
-<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="148,31,287,56"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="536,46,287,46,287,41,536,41"/>
-<area shape="rect" id="Node000005" href="$d4/d99/upnpapi_8cpp.html#a679257c76bd4ebdd2aa3fa2bb470dadd" title="Finishes initializing the UPnP SDK." alt="" coords="139,80,296,106"/>
-<area shape="poly" id="edge5_Node000002_Node000005" title=" " alt="" coords="568,66,537,84,502,97,449,106,395,110,296,106,296,101,395,105,448,101,501,92,535,79,565,62"/>
-<area shape="rect" id="Node000006" href="$d4/d99/upnpapi_8cpp.html#aabf66e54504de499079a21f1d01b91ca" title="Initializes the global threadm pools used by the UPnP SDK." alt="" coords="344,56,501,82"/>
-<area shape="poly" id="edge7_Node000002_Node000006" title=" " alt="" coords="536,55,502,60,501,55,535,50"/>
-<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="134,46,91,46,91,41,134,41"/>
-<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="159,79,90,59,92,53,161,74"/>
-<area shape="poly" id="edge8_Node000006_Node000004" title=" " alt="" coords="330,60,287,55,288,50,330,55"/>
+<area shape="rect" id="Node000001" title="Stop and Shutdown the MiniServer and free socket resources." alt="" coords="652,30,763,56"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a75a3c9f9180bc908e17d49c3e2218e99" title="Terminates the Linux SDK for UPnP Devices." alt="" coords="516,30,604,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="638,46,604,46,604,40,638,40"/>
+<area shape="rect" id="Node000003" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="5,30,84,56"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="502,33,468,27,373,16,300,9,226,10,132,20,81,33,80,28,132,15,226,5,300,4,374,10,468,22,503,27"/>
+<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="141,30,267,56"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="502,46,268,46,268,40,502,40"/>
+<area shape="rect" id="Node000005" href="$d4/d99/upnpapi_8cpp.html#a679257c76bd4ebdd2aa3fa2bb470dadd" title="Finishes initializing the UPnP SDK." alt="" coords="132,80,276,105"/>
+<area shape="poly" id="edge5_Node000002_Node000005" title=" " alt="" coords="532,66,502,83,469,96,419,105,368,109,276,105,276,100,368,104,419,100,467,91,500,78,529,61"/>
+<area shape="rect" id="Node000006" href="$d4/d99/upnpapi_8cpp.html#aabf66e54504de499079a21f1d01b91ca" title="Initializes the global threadm pools used by the UPnP SDK." alt="" coords="324,56,468,81"/>
+<area shape="poly" id="edge7_Node000002_Node000006" title=" " alt="" coords="503,55,469,60,468,55,502,49"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="127,46,84,46,84,40,127,40"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="149,78,83,58,85,52,150,73"/>
+<area shape="poly" id="edge8_Node000006_Node000004" title=" " alt="" coords="310,60,267,54,268,49,310,54"/>
 </map>

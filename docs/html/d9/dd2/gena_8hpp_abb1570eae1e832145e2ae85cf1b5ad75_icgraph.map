@@ -1,25 +1,25 @@
 <map id="error_respond" name="error_respond">
-<area shape="rect" id="Node000001" title="Sends an error message to the control point in the case of incorrect GENA requests." alt="" coords="973,154,1085,179"/>
-<area shape="rect" id="Node000002" href="$d6/de3/gena__ctrlpt_8cpp.html#a2eb03f67113de1b037f592d6e49cdf3c" title="This function processes NOTIFY events that are sent by devices." alt="" coords="487,5,678,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1010,144,974,103,950,83,924,66,863,44,799,30,736,24,678,22,678,17,736,18,800,25,865,39,927,62,953,78,977,99,1014,141"/>
-<area shape="rect" id="Node000003" href="$dc/d02/gena__callback2_8cpp.html#a6f658b4eab5786398a00a53b87e7c622" title="This is the callback function called by the miniserver to handle incoming GENA requests." alt="" coords="325,127,436,153"/>
-<area shape="poly" id="edge11_Node000001_Node000003" title=" " alt="" coords="979,152,925,137,802,112,705,98,608,97,484,111,448,119,415,130,413,125,447,114,484,105,608,91,706,92,803,107,926,132,980,147"/>
-<area shape="rect" id="Node000006" href="$dd/de6/gena__device_8cpp.html#a6fd1575d4217390506014c896b22251e" title="Handles a subscription renewal request from a ctrl point. The connection is not destroyed on return." alt="" coords="484,120,681,160"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="960,164,925,161,681,147,682,142,926,156,960,158"/>
-<area shape="rect" id="Node000007" href="$dd/de6/gena__device_8cpp.html#a25ad1852d4d32c6f34a87b92225202fd" title="Handles a subscription request from a ctrl point. The socket is not closed on return." alt="" coords="484,184,681,224"/>
-<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="1006,191,970,218,926,240,889,249,852,253,776,252,705,241,645,227,646,222,706,236,776,246,851,248,889,243,924,235,968,214,1003,187"/>
-<area shape="rect" id="Node000008" href="$dd/de6/gena__device_8cpp.html#a4b03afbfa4cbf8c318857a43bbf92d8e" title="Handles a subscription cancellation request from a ctrl point. The connection is not destroyed on ret..." alt="" coords="729,301,925,341"/>
-<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="1014,192,977,238,953,263,927,285,892,304,890,299,924,280,950,259,973,235,1010,189"/>
-<area shape="rect" id="Node000009" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#a11f6b8370b141ab90b844dbf1092265c" title="Returns OK message in the case of a subscription request." alt="" coords="737,171,917,226"/>
-<area shape="poly" id="edge12_Node000001_Node000009" title=" " alt="" coords="960,180,918,187,917,182,959,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="512,53,485,66,437,98,399,129,395,125,434,94,483,62,510,48"/>
-<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="139,127,277,153"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="312,143,277,143,277,137,312,137"/>
-<area shape="rect" id="Node000005" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="5,127,91,153"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="125,143,91,143,91,137,125,137"/>
-<area shape="poly" id="edge6_Node000006_Node000003" title=" " alt="" coords="470,143,436,143,436,137,470,137"/>
-<area shape="poly" id="edge8_Node000007_Node000003" title=" " alt="" coords="505,182,421,155,423,150,507,177"/>
-<area shape="poly" id="edge10_Node000008_Node000003" title=" " alt="" coords="715,311,600,285,540,265,483,238,454,219,427,196,390,155,394,151,431,192,457,215,485,234,542,260,601,280,716,306"/>
-<area shape="poly" id="edge13_Node000009_Node000006" title=" " alt="" coords="724,177,666,163,667,157,725,171"/>
-<area shape="poly" id="edge14_Node000009_Node000007" title=" " alt="" coords="724,204,682,205,682,199,723,198"/>
+<area shape="rect" id="Node000001" title="Sends an error message to the control point in the case of incorrect GENA requests." alt="" coords="912,154,1013,179"/>
+<area shape="rect" id="Node000002" href="$d6/de3/gena__ctrlpt_8cpp.html#a2eb03f67113de1b037f592d6e49cdf3c" title="This function processes NOTIFY events that are sent by devices." alt="" coords="459,5,633,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="944,144,910,103,888,83,863,66,806,44,746,31,687,25,633,23,633,18,687,19,747,26,808,39,865,62,891,78,914,99,948,141"/>
+<area shape="rect" id="Node000003" href="$dc/d02/gena__callback2_8cpp.html#a6f658b4eab5786398a00a53b87e7c622" title="This is the callback function called by the miniserver to handle incoming GENA requests." alt="" coords="307,127,408,153"/>
+<area shape="poly" id="edge11_Node000001_Node000003" title=" " alt="" coords="914,152,863,137,750,113,661,99,571,97,456,111,422,119,390,130,388,125,420,114,456,105,570,92,661,93,751,107,865,132,916,147"/>
+<area shape="rect" id="Node000006" href="$dd/de6/gena__device_8cpp.html#a6fd1575d4217390506014c896b22251e" title="Handles a subscription renewal request from a ctrl point. The connection is not destroyed on return." alt="" coords="456,120,636,160"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="898,164,864,161,636,147,636,142,864,156,898,159"/>
+<area shape="rect" id="Node000007" href="$dd/de6/gena__device_8cpp.html#a25ad1852d4d32c6f34a87b92225202fd" title="Handles a subscription request from a ctrl point. The socket is not closed on return." alt="" coords="456,184,636,224"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="941,191,907,218,865,240,831,248,796,253,726,251,660,241,605,227,606,222,661,236,727,246,796,247,830,243,863,235,904,214,938,187"/>
+<area shape="rect" id="Node000008" href="$dd/de6/gena__device_8cpp.html#a4b03afbfa4cbf8c318857a43bbf92d8e" title="Handles a subscription cancellation request from a ctrl point. The connection is not destroyed on ret..." alt="" coords="684,301,864,341"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="948,192,914,238,891,263,866,285,834,303,831,299,862,280,887,259,909,235,944,189"/>
+<area shape="rect" id="Node000009" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#a11f6b8370b141ab90b844dbf1092265c" title="Returns OK message in the case of a subscription request." alt="" coords="693,171,855,226"/>
+<area shape="poly" id="edge12_Node000001_Node000009" title=" " alt="" coords="899,180,856,188,855,182,898,175"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="482,53,457,66,411,99,375,129,371,125,408,94,455,62,479,49"/>
+<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="132,127,259,153"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="293,143,259,143,259,137,293,137"/>
+<area shape="rect" id="Node000005" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="5,127,84,153"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="118,143,84,143,84,137,118,137"/>
+<area shape="poly" id="edge6_Node000006_Node000003" title=" " alt="" coords="442,143,408,143,408,137,442,137"/>
+<area shape="poly" id="edge8_Node000007_Node000003" title=" " alt="" coords="473,182,395,155,397,150,474,177"/>
+<area shape="poly" id="edge10_Node000008_Node000003" title=" " alt="" coords="670,310,563,284,507,264,455,238,427,219,402,196,366,154,370,151,405,192,430,215,457,234,509,259,564,279,671,305"/>
+<area shape="poly" id="edge13_Node000009_Node000006" title=" " alt="" coords="679,177,624,163,625,158,680,172"/>
+<area shape="poly" id="edge14_Node000009_Node000007" title=" " alt="" coords="679,204,636,205,636,199,679,198"/>
 </map>

@@ -1,7 +1,7 @@
 #ifndef COMPA_UPNPSTATEVARCOMPLETE_HPP
 #define COMPA_UPNPSTATEVARCOMPLETE_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-08-04
+// Redistribution only with this Copyright remark. Last modified: 2024-08-13
 /*!
  * \file
  * \brief Header file for UpnpStateVarComplete methods.
@@ -15,11 +15,14 @@
 #include <cstdlib> /* for size_t */
 /// \endcond
 
-
 /*!
  * UpnpStateVarComplete
  */
 typedef struct s_UpnpStateVarComplete UpnpStateVarComplete;
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 /*! Constructor */
 UPNPLIB_API UpnpStateVarComplete* UpnpStateVarComplete_new();
@@ -92,5 +95,9 @@ UPNPLIB_API int UpnpStateVarComplete_set_CurrentVal(UpnpStateVarComplete* p,
 /*! UpnpStateVarComplete_get_CurrentVal_cstr */
 UPNPLIB_API const char*
 UpnpStateVarComplete_get_CurrentVal_cstr(const UpnpStateVarComplete* p);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* COMPA_UPNPSTATEVARCOMPLETE_HPP */

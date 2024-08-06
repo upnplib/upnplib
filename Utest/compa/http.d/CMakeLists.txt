@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-02-23
+# Redistribution only with this Copyright remark. Last modified: 2024-08-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -19,7 +19,7 @@ add_executable(test_webserver-pst
     ./test_webserver.cpp
 )
 target_include_directories(test_webserver-pst
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
 )
 target_compile_options(test_webserver-pst
     PRIVATE
@@ -46,7 +46,7 @@ add_executable(test_webserver-cst
     ./test_webserver.cpp
 )
 target_include_directories(test_webserver-cst
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
 )
 target_link_libraries(test_webserver-cst
         PRIVATE
@@ -86,7 +86,7 @@ add_executable(test_httpparser-pst
     ./test_httpparser.cpp
 )
 target_include_directories(test_httpparser-pst
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
 )
 target_compile_definitions(test_httpparser-pst
     PRIVATE
@@ -113,7 +113,7 @@ add_executable(test_httpparser-cst
     ./test_httpparser.cpp
 )
 target_include_directories(test_httpparser-cst
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
 )
 target_compile_definitions(test_httpparser-cst
     PRIVATE

@@ -1,7 +1,7 @@
 #ifndef PUPNP_UPNPFILEINFO_HPP
 #define PUPNP_UPNPFILEINFO_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-25
+// Redistribution only with this Copyright remark. Last modified: 2024-08-13
 // Also Copyright by other contributor as noted below.
 // Last compare with pupnp original source file on 2023-04-25, ver 1.14.15
 
@@ -9,7 +9,7 @@
  * \file
  *
  * \brief Header file for UpnpFileInfo methods.
- * \author Marcelo Roberto Jimenez
+ * \authors Marcelo Roberto Jimenez, Ingo Höft
  */
 #include <stdlib.h> /* for size_t */
 
@@ -24,6 +24,10 @@
 #include "ixml.hpp"
 #include "list.hpp"
 #include <sys/types.h> // needed for off_t
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 /*!
  * UpnpFileInfo
@@ -103,5 +107,9 @@ EXPORT_SPEC int UpnpFileInfo_strncpy_Os(UpnpFileInfo* p, const char* s,
                                         size_t n);
 /*! UpnpFileInfo_clear_Os */
 EXPORT_SPEC void UpnpFileInfo_clear_Os(UpnpFileInfo* p);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* PUPNP_UPNPFILEINFO_HPP */

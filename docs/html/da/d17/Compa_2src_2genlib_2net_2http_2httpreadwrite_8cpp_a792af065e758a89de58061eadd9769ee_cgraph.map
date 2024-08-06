@@ -1,9 +1,9 @@
 <map id="private_connect" name="private_connect">
-<area shape="rect" id="Node000001" title="Initiate a connection on a socket." alt="" coords="5,91,132,117"/>
-<area shape="rect" id="Node000002" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catch error for later use." alt="" coords="205,5,353,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,89,179,55,200,47,202,52,181,60,99,94"/>
-<area shape="rect" id="Node000003" href="$d6/d58/namespaceanonymous__namespace_02httpreadwrite_8cpp_03.html#a54d65a1040bec3ce5cd1653277714254" title="Checks socket connection and wait if it is not connected." alt="" coords="180,69,379,139"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="132,101,166,101,166,107,132,107"/>
-<area shape="rect" id="Node000004" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4" title="Get human readable error description of the catched error." alt="" coords="205,163,353,203"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="99,114,181,148,202,156,200,161,179,153,97,119"/>
+<area shape="rect" id="Node000001" title="Initiate a connection on a socket." alt="" coords="5,91,120,117"/>
+<area shape="rect" id="Node000002" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catch error for later use." alt="" coords="192,5,331,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,89,167,55,186,47,188,52,169,60,92,94"/>
+<area shape="rect" id="Node000003" href="$d6/d58/namespaceanonymous__namespace_02httpreadwrite_8cpp_03.html#a54d65a1040bec3ce5cd1653277714254" title="Checks socket connection and wait if it is not connected." alt="" coords="168,69,355,139"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="120,101,155,101,155,107,120,107"/>
+<area shape="rect" id="Node000004" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4" title="Get human readable error description of the catched error." alt="" coords="192,163,331,203"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="92,114,169,148,188,156,186,161,167,153,90,119"/>
 </map>

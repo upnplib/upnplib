@@ -1,5 +1,5 @@
 <map id="genaNotifyAllExt" name="genaNotifyAllExt">
-<area shape="rect" id="Node000001" title="Sends a notification to all the subscribed control points." alt="" coords="169,5,300,31"/>
-<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a2244040bbe493e66273b8b53a61a1959" title="Similar to UpnpNotify except that it takes a DOM document for the event rather than an array of strin..." alt="" coords="5,5,121,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,21,122,21,122,15,156,15"/>
+<area shape="rect" id="Node000001" title="Sends a notification to all the subscribed control points." alt="" coords="161,5,281,31"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a2244040bbe493e66273b8b53a61a1959" title="Similar to UpnpNotify except that it takes a DOM document for the event rather than an array of strin..." alt="" coords="5,5,113,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,21,114,21,114,15,148,15"/>
 </map>

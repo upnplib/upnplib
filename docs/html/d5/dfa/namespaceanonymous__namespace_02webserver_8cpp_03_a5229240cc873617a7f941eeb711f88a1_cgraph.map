@@ -1,11 +1,11 @@
 <map id="anonymous_namespace{webserver::cpp}::glob_alias_init" name="anonymous_namespace{webserver::cpp}::glob_alias_init">
-<area shape="rect" id="Node000001" title="Initialize the global XML document. Allocate buffers for the XML document." alt="" coords="5,5,185,60"/>
-<area shape="rect" id="Node000002" href="$d4/db6/structanonymous__namespace_02webserver_8cpp_03_1_1xml__alias__t.html#a29029bffc2a9680f4b946e77d569e323" title="Clear the XML object." alt="" coords="233,5,413,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,30,220,30,220,35,186,35"/>
-<area shape="rect" id="Node000003" href="$da/dd9/membuffer_8cpp.html#a132a367b6d8baf0d9de4b6e1f0fffe14" title="Free&#39;s memory allocated for membuffer* m." alt="" coords="461,20,612,45"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="413,30,447,30,447,35,413,35"/>
-<area shape="rect" id="Node000004" href="$da/dd9/membuffer_8cpp.html#a53d54a6586b380b385d18ae7dcd37e80" title="Wrapper to membuffer_initialize()." alt="" coords="660,20,783,45"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="612,30,646,30,646,35,612,35"/>
-<area shape="rect" id="Node000005" href="$d8/d45/namespaceanonymous__namespace_02membuffer_8cpp_03.html#aa81aeb90fb3c8389c7eb0a77b847101e" title="Initialize the buffer." alt="" coords="831,5,1052,60"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="783,30,817,30,817,35,783,35"/>
+<area shape="rect" id="Node000001" title="Initialize the global XML document. Allocate buffers for the XML document." alt="" coords="5,5,168,60"/>
+<area shape="rect" id="Node000002" href="$d4/db6/structanonymous__namespace_02webserver_8cpp_03_1_1xml__alias__t.html#a29029bffc2a9680f4b946e77d569e323" title="Clear the XML object." alt="" coords="216,5,379,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,30,202,30,202,35,168,35"/>
+<area shape="rect" id="Node000003" href="$da/dd9/membuffer_8cpp.html#a132a367b6d8baf0d9de4b6e1f0fffe14" title="Free&#39;s memory allocated for membuffer* m." alt="" coords="427,20,560,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="379,30,413,30,413,35,379,35"/>
+<area shape="rect" id="Node000004" href="$da/dd9/membuffer_8cpp.html#a53d54a6586b380b385d18ae7dcd37e80" title="Wrapper to membuffer_initialize()." alt="" coords="608,20,715,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="560,30,594,30,594,35,560,35"/>
+<area shape="rect" id="Node000005" href="$d8/d45/namespaceanonymous__namespace_02membuffer_8cpp_03.html#aa81aeb90fb3c8389c7eb0a77b847101e" title="Initialize the buffer." alt="" coords="763,5,952,60"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="715,30,749,30,749,35,715,35"/>
 </map>

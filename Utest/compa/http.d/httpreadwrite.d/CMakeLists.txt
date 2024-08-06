@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-04-13
+# Redistribution only with this Copyright remark. Last modified: 2024-08-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../../cmake/project-header.cmake)
@@ -50,7 +50,7 @@ add_executable(test_httpreadwrite-pst
     ./test_httpreadwrite.cpp
 )
 target_include_directories(test_httpreadwrite-pst
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
 )
 target_compile_options(test_httpreadwrite-pst
     PRIVATE
@@ -78,7 +78,7 @@ add_executable(test_httpreadwrite-cst
     ./test_httpreadwrite.cpp
 )
 target_include_directories(test_httpreadwrite-cst
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
 )
 target_link_libraries(test_httpreadwrite-cst
     PRIVATE
@@ -134,7 +134,7 @@ add_executable(test_netconnect-pst
     ./test_netconnect.cpp
 )
 target_include_directories(test_netconnect-pst
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
 )
 target_compile_options(test_netconnect-pst
     PRIVATE
@@ -160,7 +160,7 @@ add_executable(test_netconnect-cst
     ./test_netconnect.cpp
 )
 target_include_directories(test_netconnect-cst
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
 )
 target_link_libraries(test_netconnect-cst
     PRIVATE compa_static
@@ -184,7 +184,7 @@ add_executable(test_http_Download-pst
     ./test_http_Download.cpp
 )
 target_include_directories(test_http_Download-pst
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
 )
 target_compile_options(test_http_Download-pst
     PRIVATE
@@ -209,7 +209,7 @@ add_executable(test_http_Download-cst
     ./test_http_Download.cpp
 )
 target_include_directories(test_http_Download-cst
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
 )
 target_link_libraries(test_http_Download-cst
     PRIVATE

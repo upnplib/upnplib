@@ -1,5 +1,5 @@
 <map id="s_UpnpEventSubscribe" name="s_UpnpEventSubscribe">
-<area shape="rect" id="Node000001" title="s_UpnpEventSubscribe" alt="" coords="5,108,176,133"/>
-<area shape="rect" id="Node000002" href="$d1/d03/group__UpnpString.html#d8/dbb/structs__UpnpString" title="Internal implementation of the class UpnpString." alt="" coords="37,5,145,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,45,93,108,88,108,88,45"/>
+<area shape="rect" id="Node000001" title="s_UpnpEventSubscribe" alt="" coords="5,108,164,133"/>
+<area shape="rect" id="Node000002" href="$d1/d03/group__UpnpString.html#d8/dbb/structs__UpnpString" title="Internal implementation of the class UpnpString." alt="" coords="34,5,135,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,45,87,108,82,108,82,45"/>
 </map>

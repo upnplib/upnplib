@@ -1,9 +1,9 @@
 <map id="sock_destroy" name="sock_destroy">
-<area shape="rect" id="Node000001" title="Shutsdown the socket using the ShutdownMethod to indicate whether sends and receives on the socket wi..." alt="" coords="5,77,113,102"/>
-<area shape="rect" id="Node000002" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catch error for later use." alt="" coords="161,5,309,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,74,166,48,168,53,96,79"/>
-<area shape="rect" id="Node000003" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4" title="Get human readable error description of the catched error." alt="" coords="161,69,309,109"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="114,87,147,87,147,92,114,92"/>
-<area shape="rect" id="Node000004" href="$d6/df0/sock_8hpp.html#a703577f3b40fc1c9e865b798beab18e5" title="Closes the socket if it is different from &#45;1." alt="" coords="189,134,282,159"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="100,100,184,127,182,132,98,105"/>
+<area shape="rect" id="Node000001" title="Shutsdown the socket using the ShutdownMethod to indicate whether sends and receives on the socket wi..." alt="" coords="5,77,105,102"/>
+<area shape="rect" id="Node000002" href="$d2/dd2/classupnplib_1_1CSocketErr.html#a8142e787e3e0f3e190b2541ebfc13ef3" title="Catch error for later use." alt="" coords="153,5,292,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,74,156,48,158,53,91,79"/>
+<area shape="rect" id="Node000003" href="$d2/dd2/classupnplib_1_1CSocketErr.html#ae8d893eda87328bf1e475378f6b8a8f4" title="Get human readable error description of the catched error." alt="" coords="153,69,292,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="106,87,139,87,139,92,106,92"/>
+<area shape="rect" id="Node000004" href="$d6/df0/sock_8hpp.html#a703577f3b40fc1c9e865b798beab18e5" title="Closes the socket if it is different from &#45;1." alt="" coords="179,134,267,159"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="94,100,173,127,171,132,92,105"/>
 </map>

@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-03-20
+# Redistribution only with this Copyright remark. Last modified: 2024-08-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -119,7 +119,7 @@ add_executable(test_miniserver-pst
     test_miniserver.cpp
 )
 target_include_directories(test_miniserver-pst
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
 )
 target_compile_definitions(test_miniserver-pst
     PRIVATE INCLUDE_DEVICE_APIS
@@ -140,7 +140,7 @@ add_executable(test_miniserver-cst
     test_miniserver.cpp
 )
 target_include_directories(test_miniserver-cst
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
 )
 target_link_libraries(test_miniserver-cst
     PRIVATE
@@ -169,7 +169,7 @@ add_executable(test_miniserver_run-psh
     ${PUPNP_UPNP_SOURCE_DIR}/src/genlib/util/membuffer.cpp
 )
 target_include_directories(test_miniserver_run-psh
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
 )
 target_compile_options(test_miniserver_run-psh
     # disable warning C4273: inconsistent dll linkage.
@@ -190,7 +190,7 @@ add_executable(test_miniserver_run-cst
     test_miniserver_run.cpp
 )
 target_include_directories(test_miniserver_run-cst
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
 )
 target_compile_options(test_miniserver_run-cst
     # disable warning C4273: inconsistent dll linkage.

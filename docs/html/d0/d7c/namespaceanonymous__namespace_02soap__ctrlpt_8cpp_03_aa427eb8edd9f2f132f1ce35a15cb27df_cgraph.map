@@ -1,21 +1,21 @@
 <map id="anonymous_namespace{soap_ctrlpt::cpp}::get_host_and_path" name="anonymous_namespace{soap_ctrlpt::cpp}::get_host_and_path">
-<area shape="rect" id="Node000001" title="This function retrives the host and path from the control URL." alt="" coords="5,94,185,149"/>
-<area shape="rect" id="Node000002" href="$d8/dd2/uri_8cpp.html#ae59095a3e023c16f4dd68bc60e21f7c7" title="Parses a uri as defined in RFC 2396 (explaining URIs)." alt="" coords="233,109,316,134"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,119,219,119,219,124,186,124"/>
-<area shape="rect" id="Node000003" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#afb6a0fce453e470360da2b0d0d5f8a8b" title="Parses a string with host and port and fills a hostport structure." alt="" coords="364,5,555,45"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="289,106,322,81,363,55,377,48,379,53,365,60,325,85,292,111"/>
-<area shape="rect" id="Node000004" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#ab8f57212a00e026034f1864f0239bad9" title="parses a uri scheme starting at in[0]." alt="" coords="365,69,553,109"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="316,112,352,105,352,111,317,117"/>
-<area shape="rect" id="Node000005" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#ab0786f41a45f36864383bcca2f4f2658" title="Parses a string of uric characters starting at in[0]." alt="" coords="369,133,549,173"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="317,126,356,133,355,138,316,131"/>
-<area shape="rect" id="Node000010" href="$d8/dd2/uri_8cpp.html#a8f32e8ba916b944b37e9f23e1fc60ec9" title="Compares buffer in the token object with the buffer in in2 case insensitive." alt="" coords="376,198,543,223"/>
-<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="292,132,324,158,365,183,386,191,384,196,363,188,321,162,289,137"/>
-<area shape="rect" id="Node000006" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a4666c8d916f7397270c5cc93734482d3" title="Check that a char[3] sequence is ESCAPED." alt="" coords="605,69,785,109"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="533,131,607,110,609,115,535,136"/>
-<area shape="rect" id="Node000007" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a72aa299b86ca4486b62de1ac2e11b649" title="Check for a RESERVED character." alt="" coords="605,133,785,173"/>
-<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="550,151,592,151,592,156,550,156"/>
-<area shape="rect" id="Node000008" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#abb4b2d5f48da8f6aaa405da333b3ab45" title="Check for an UNRESERVED character." alt="" coords="603,197,788,237"/>
-<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="535,171,609,191,607,196,533,176"/>
-<area shape="rect" id="Node000009" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a1425dfc37b98f61a0b49a36ac07660d1" title="Check for a MARK character." alt="" coords="836,197,1016,237"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="788,215,822,215,822,220,788,220"/>
+<area shape="rect" id="Node000001" title="This function retrives the host and path from the control URL." alt="" coords="5,94,168,149"/>
+<area shape="rect" id="Node000002" href="$d8/dd2/uri_8cpp.html#ae59095a3e023c16f4dd68bc60e21f7c7" title="Parses a uri as defined in RFC 2396 (explaining URIs)." alt="" coords="216,109,291,134"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,119,202,119,202,124,168,124"/>
+<area shape="rect" id="Node000003" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#afb6a0fce453e470360da2b0d0d5f8a8b" title="Parses a string with host and port and fills a hostport structure." alt="" coords="339,5,505,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="268,106,299,81,337,55,350,49,352,53,340,60,302,85,271,110"/>
+<area shape="rect" id="Node000004" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#ab8f57212a00e026034f1864f0239bad9" title="parses a uri scheme starting at in[0]." alt="" coords="339,69,505,109"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="290,112,325,105,326,110,291,117"/>
+<area shape="rect" id="Node000005" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#ab0786f41a45f36864383bcca2f4f2658" title="Parses a string of uric characters starting at in[0]." alt="" coords="341,133,503,173"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="291,126,327,133,326,138,290,131"/>
+<area shape="rect" id="Node000010" href="$d8/dd2/uri_8cpp.html#a8f32e8ba916b944b37e9f23e1fc60ec9" title="Compares buffer in the token object with the buffer in in2 case insensitive." alt="" coords="345,198,499,223"/>
+<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="270,132,301,158,340,183,358,191,356,196,337,188,298,162,267,136"/>
+<area shape="rect" id="Node000006" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a4666c8d916f7397270c5cc93734482d3" title="Check that a char[3] sequence is ESCAPED." alt="" coords="553,69,716,109"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="488,131,554,111,555,116,490,136"/>
+<area shape="rect" id="Node000007" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a72aa299b86ca4486b62de1ac2e11b649" title="Check for a RESERVED character." alt="" coords="553,133,716,173"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="504,151,540,151,540,156,504,156"/>
+<area shape="rect" id="Node000008" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#abb4b2d5f48da8f6aaa405da333b3ab45" title="Check for an UNRESERVED character." alt="" coords="553,197,716,237"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="490,171,555,191,554,196,488,176"/>
+<area shape="rect" id="Node000009" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a1425dfc37b98f61a0b49a36ac07660d1" title="Check for a MARK character." alt="" coords="764,197,927,237"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="716,215,750,215,750,220,716,220"/>
 </map>

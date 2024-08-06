@@ -1,5 +1,5 @@
 <map id="UpnpCloseHttpConnection" name="UpnpCloseHttpConnection">
-<area shape="rect" id="Node000001" title="Closes the connection created with UpnpOpenHttpConnection and frees any memory associated with the co..." alt="" coords="196,5,389,31"/>
-<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a016d21ff4d92fd6367469cf7f0d4e562" title="Closes the connection and frees memory that was allocated for the handle parameter." alt="" coords="5,5,148,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="182,21,148,21,148,15,182,15"/>
+<area shape="rect" id="Node000001" title="Closes the connection created with UpnpOpenHttpConnection and frees any memory associated with the co..." alt="" coords="187,5,365,31"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a016d21ff4d92fd6367469cf7f0d4e562" title="Closes the connection and frees memory that was allocated for the handle parameter." alt="" coords="5,5,139,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="173,21,139,21,139,15,173,15"/>
 </map>

@@ -1,13 +1,12 @@
-#ifndef _UPNP_LIST_H_
-#define _UPNP_LIST_H_
-
+#ifndef PUPNP_UPNP_LIST_HPP
+#define PUPNP_UPNP_LIST_HPP
 /*******************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
- * Copyright (C) 2021 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2021-12-29
+ * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+ * Redistribution only with this Copyright remark. Last modified: 2024-08-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,6 +41,10 @@
 
 #include "UpnpGlobal.hpp"
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 /** List anchor structure. This should be the *first* entry in list
  *  member objects, except if you want to do member offset arithmetic
  *  instead of simple casts (look up "containerof"). The list code itself
@@ -73,4 +76,8 @@ EXPORT_SPEC UpnpListIter UpnpListInsert(UpnpListHead* list, UpnpListIter pos,
 /** Erase element at pos, return next one, or end()*/
 EXPORT_SPEC UpnpListIter UpnpListErase(UpnpListHead* list, UpnpListIter pos);
 
-#endif /* _UPNPLISTH_ */
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+
+#endif /* PUPNP_UPNP_LIST_HPP */

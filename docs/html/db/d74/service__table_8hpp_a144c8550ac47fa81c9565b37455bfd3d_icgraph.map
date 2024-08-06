@@ -1,9 +1,9 @@
 <map id="printServiceTable" name="printServiceTable">
-<area shape="rect" id="Node000001" title="Prints the URL base of the table and information of each service from the service table." alt="" coords="247,55,381,80"/>
-<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers one root&#45; or logical&#45;device object with the UPnP Library to get a handle for it." alt="" coords="9,5,195,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="245,54,157,33,158,28,246,49"/>
-<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers one root&#45; or logical&#45;device object with the UPnP Library with additional description and ge..." alt="" coords="5,55,199,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="233,70,199,70,199,65,233,65"/>
-<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers one UPnP device object for a specific address family with the UPnP library and get a handle..." alt="" coords="5,104,199,129"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="246,86,158,107,157,101,245,81"/>
+<area shape="rect" id="Node000001" title="Prints the URL base of the table and information of each service from the service table." alt="" coords="232,55,355,80"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a9ab7cff61eb3a2dcff3219d5105ce8f7" title="Registers one root&#45; or logical&#45;device object with the UPnP Library to get a handle for it." alt="" coords="9,5,180,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="228,54,146,33,147,28,229,49"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a6294280d1c16b827b29625bdf2084fa4" title="Registers one root&#45; or logical&#45;device object with the UPnP Library with additional description and ge..." alt="" coords="5,55,184,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="218,70,184,70,184,65,218,65"/>
+<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a40c47dc11eed3d58d20b64dd2804a206" title="Registers one UPnP device object for a specific address family with the UPnP library and get a handle..." alt="" coords="5,104,184,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="229,86,147,107,146,101,228,81"/>
 </map>

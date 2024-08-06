@@ -1,5 +1,5 @@
 <map id="anonymous_namespace{uri::cpp}::is_unreserved" name="anonymous_namespace{uri::cpp}::is_unreserved">
-<area shape="rect" id="Node000001" title="Check for an UNRESERVED character." alt="" coords="5,5,191,45"/>
-<area shape="rect" id="Node000002" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a1425dfc37b98f61a0b49a36ac07660d1" title="Check for a MARK character." alt="" coords="239,5,419,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="191,23,225,23,225,28,191,28"/>
+<area shape="rect" id="Node000001" title="Check for an UNRESERVED character." alt="" coords="5,5,168,45"/>
+<area shape="rect" id="Node000002" href="$dc/d9c/namespaceanonymous__namespace_02uri_8cpp_03.html#a1425dfc37b98f61a0b49a36ac07660d1" title="Check for a MARK character." alt="" coords="216,5,379,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,23,202,23,202,28,168,28"/>
 </map>

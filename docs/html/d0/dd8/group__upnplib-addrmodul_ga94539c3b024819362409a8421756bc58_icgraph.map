@@ -1,8 +1,0 @@
-<map id="upnplib::is_port" name="upnplib::is_port">
-<area shape="rect" id="Node000001" title="Check if a given string represents a port number." alt="" coords="257,49,380,75"/>
-<area shape="rect" id="Node000002" href="$d8/d44/classupnplib_1_1Netaddr.html#a708035c6099832d99f9b81025a962fd7" title="Assign a netaddress." alt="" coords="5,5,209,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="243,49,168,33,169,28,244,44"/>
-<area shape="rect" id="Node000003" href="$d0/dd8/group__upnplib-addrmodul.html#gae717eb4b8c4749ec70fcf88294e826ee" title="Get the port number from a string." alt="" coords="22,79,193,133"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="244,80,193,91,192,86,243,75"/>
-<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="142,68,130,60,107,57,89,59,77,64,71,70,71,79,66,79,66,69,74,60,87,54,107,52,131,55,145,63"/>
-</map>

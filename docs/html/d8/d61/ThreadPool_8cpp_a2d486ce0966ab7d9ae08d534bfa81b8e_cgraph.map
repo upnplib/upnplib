@@ -1,7 +1,7 @@
 <map id="ThreadPoolPrintStats" name="ThreadPoolPrintStats">
-<area shape="rect" id="Node000001" title="Prints various statistics about the thread pool to stderr." alt="" coords="5,13,164,38"/>
-<area shape="rect" id="Node000002" href="$dd/d01/namespaceanonymous__namespace_02ThreadPool_8cpp_03.html#a5d82052257f2437e8c4ae8fd2a814f86" title="StatsTime." alt="" coords="212,5,428,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,23,198,23,198,28,164,28"/>
-<area shape="rect" id="Node000003" href="$d5/d91/ThreadPool_8hpp.html#aaf2d0a99430a6d5253b8c395c30ca7e3" title="Get time of day." alt="" coords="476,13,587,38"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="428,23,462,23,462,28,428,28"/>
+<area shape="rect" id="Node000001" title="Prints various statistics about the thread pool to stderr." alt="" coords="5,13,152,38"/>
+<area shape="rect" id="Node000002" href="$dd/d01/namespaceanonymous__namespace_02ThreadPool_8cpp_03.html#a5d82052257f2437e8c4ae8fd2a814f86" title="StatsTime." alt="" coords="200,5,393,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,23,186,23,186,28,152,28"/>
+<area shape="rect" id="Node000003" href="$d5/d91/ThreadPool_8hpp.html#aaf2d0a99430a6d5253b8c395c30ca7e3" title="Get time of day." alt="" coords="441,13,539,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="394,23,427,23,427,28,394,28"/>
 </map>

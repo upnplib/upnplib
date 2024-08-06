@@ -1,133 +1,133 @@
 <map id="UpnpInit2" name="UpnpInit2">
-<area shape="rect" id="Node000001" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="5,567,91,593"/>
-<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a75a3c9f9180bc908e17d49c3e2218e99" title="Terminates the Linux SDK for UPnP Devices." alt="" coords="635,467,729,493"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="68,565,113,539,175,507,248,476,325,453,405,444,485,445,560,453,622,464,621,469,559,458,485,450,405,449,326,459,250,481,177,512,115,544,71,569"/>
-<area shape="rect" id="Node000187" href="$d4/d99/upnpapi_8cpp.html#a9b1e118dea693a492fc976b037e35bfe" title="Retrieve interface information and keep it in global variables. If NULL, we&#39;ll find the first suitabl..." alt="" coords="151,1066,265,1091"/>
-<area shape="poly" id="edge54_Node000001_Node000187" title=" " alt="" coords="56,592,201,1052,196,1054,51,594"/>
-<area shape="rect" id="Node000189" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="139,717,277,742"/>
-<area shape="poly" id="edge57_Node000001_Node000189" title=" " alt="" coords="65,591,185,705,182,709,61,595"/>
-<area shape="rect" id="Node000310" href="$d4/d99/upnpapi_8cpp.html#a679257c76bd4ebdd2aa3fa2bb470dadd" title="Finishes initializing the UPnP SDK." alt="" coords="359,194,516,219"/>
-<area shape="poly" id="edge74_Node000001_Node000310" title=" " alt="" coords="51,566,81,495,106,451,137,409,201,348,272,295,340,253,395,223,398,228,343,258,275,300,204,352,141,412,110,454,86,498,56,568"/>
-<area shape="rect" id="Node000003" href="$d5/d78/sock_8cpp.html#aa1c16c9b2701dab6728c2b7e2efacf7b" title="Free the OpenSSL context." alt="" coords="871,451,961,477"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="729,474,858,465,858,471,730,479"/>
-<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#af1c7fa6eff1380708c436bad3d4843d2" title="Get client handle info." alt="" coords="1089,403,1244,429"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="705,490,763,520,801,536,843,549,888,558,932,561,976,554,1016,536,1028,527,1034,516,1040,491,1045,465,1052,452,1064,439,1076,431,1079,436,1067,443,1056,455,1050,467,1045,492,1039,518,1032,530,1019,541,977,559,933,566,887,564,842,554,799,541,761,525,703,495"/>
-<area shape="rect" id="Node000006" href="$d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement." alt="" coords="1603,567,1694,593"/>
-<area shape="poly" id="edge32_Node000002_Node000006" title=" " alt="" coords="685,466,700,429,726,379,763,329,787,307,813,290,876,262,933,248,984,245,1034,251,1139,277,1199,293,1268,307,1349,316,1413,322,1443,328,1473,338,1505,355,1540,379,1579,420,1609,467,1630,514,1643,553,1638,555,1625,516,1604,470,1575,423,1537,383,1503,359,1471,343,1442,333,1412,327,1348,321,1268,312,1198,298,1138,282,1033,256,984,250,933,253,878,267,816,294,790,311,767,332,730,382,705,431,690,468"/>
-<area shape="rect" id="Node000009" href="$d4/d99/upnpapi_8cpp.html#ab014d8c655f48d04fcc9ea7931a8f99c" title="Retrieves the device handle and information of the first device of the address family specified...." alt="" coords="835,303,997,329"/>
-<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="690,465,737,404,772,369,813,339,829,331,832,336,816,344,776,373,741,408,694,469"/>
-<area shape="rect" id="Node000010" href="$d4/d99/upnpapi_8cpp.html#a4a0f84b177b8a84964bcb7a057fc3831" title="Prints thread pool statistics if DEBUG is enabled. See also #define PrintThreadPoolStats()" alt="" coords="837,871,995,897"/>
-<area shape="poly" id="edge10_Node000002_Node000010" title=" " alt="" coords="692,492,741,592,817,731,900,859,896,862,812,733,737,594,687,494"/>
-<area shape="rect" id="Node000013" href="$d5/db2/miniserver_8cpp.html#ac0223038b7afa1e3ea3d7cec983ccc63" title="Stop and Shutdown the MiniServer and free socket resources." alt="" coords="855,602,977,627"/>
-<area shape="poly" id="edge13_Node000002_Node000013" title=" " alt="" coords="698,491,748,534,781,559,816,580,851,595,849,600,813,585,778,563,744,538,695,495"/>
-<area shape="rect" id="Node000015" href="$d8/d61/ThreadPool_8cpp.html#a281f138c93124463e1fbbbdf00caf21f" title="Shuts the thread pool down." alt="" coords="1087,1094,1246,1119"/>
-<area shape="poly" id="edge16_Node000002_Node000015" title=" " alt="" coords="689,492,706,575,737,699,776,823,796,873,817,908,848,942,884,973,963,1024,1042,1062,1110,1087,1108,1092,1040,1067,961,1028,881,977,845,946,813,911,791,876,771,825,732,700,701,576,683,494"/>
-<area shape="rect" id="Node000023" href="$dd/d9f/TimerThread_8cpp.html#a19a3b97cd97e1c5f9d465c96ac71e588" title="Shutdown the timer thread." alt="" coords="1082,1245,1251,1270"/>
-<area shape="poly" id="edge24_Node000002_Node000023" title=" " alt="" coords="689,493,723,622,769,811,775,850,777,884,776,943,777,970,783,997,796,1025,817,1056,840,1078,863,1090,887,1097,912,1100,964,1107,991,1118,1019,1137,1036,1158,1044,1179,1051,1200,1067,1219,1098,1237,1095,1242,1064,1223,1046,1202,1039,1181,1031,1161,1016,1141,989,1122,963,1112,911,1105,886,1102,861,1095,837,1082,813,1059,791,1028,778,999,772,971,771,943,772,884,770,850,764,813,718,623,684,494"/>
-<area shape="rect" id="Node000026" href="$d5/dfa/upnpdebug_8cpp.html#aef83a39b0da5868966600f99163cce38" title="Closes the log files." alt="" coords="859,353,973,378"/>
-<area shape="poly" id="edge31_Node000002_Node000026" title=" " alt="" coords="697,465,747,427,814,388,844,377,846,382,816,393,750,432,700,469"/>
-<area shape="rect" id="Node000027" href="$d4/d99/upnpapi_8cpp.html#ac1faae99fb914af807e9537867a46935" title="Removes all virtual directory mappings." alt="" coords="818,402,1014,427"/>
-<area shape="poly" id="edge33_Node000002_Node000027" title=" " alt="" coords="723,465,814,437,849,428,850,433,815,443,724,470"/>
-<area shape="rect" id="Node000028" href="$d4/d99/upnpapi_8cpp.html#aead9c1aad0998507f66cf7f0749013d3" title="Unregisters a control point application, unsubscribing all active subscriptions." alt="" coords="833,694,999,719"/>
-<area shape="poly" id="edge34_Node000002_Node000028" title=" " alt="" coords="694,491,743,557,778,599,816,638,849,663,881,685,878,689,846,668,813,642,774,602,738,561,690,494"/>
-<area shape="rect" id="Node000156" href="$d4/d99/upnpapi_8cpp.html#abb1c47010971d19ecd2b46ee842871ec" title="Unregisters a root device registered with UpnpRegisterRootDevice, UpnpRegisterRootDevice2,..." alt="" coords="815,501,1017,526"/>
-<area shape="poly" id="edge44_Node000002_Node000156" title=" " alt="" coords="730,484,813,496,813,501,729,489"/>
-<area shape="rect" id="Node000183" href="$d1/d28/Compa_2src_2genlib_2net_2http_2webserver_8cpp.html#aba5685f22e83826b14771e59d0edbc05" title="Release memory allocated for the global web server root directory and the global XML document." alt="" coords="839,119,993,145"/>
-<area shape="poly" id="edge51_Node000002_Node000183" title=" " alt="" coords="685,466,701,422,728,357,766,283,813,213,847,178,882,150,885,155,850,182,817,216,770,286,733,359,706,424,690,468"/>
-<area shape="rect" id="Node000005" href="$d4/d99/upnpapi_8cpp.html#a276f608a72d2b223bb429ba31c32f64b" title="Get handle information." alt="" coords="1369,459,1485,485"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="1227,426,1356,454,1355,459,1226,431"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="1473,482,1540,508,1583,532,1620,557,1617,561,1580,537,1538,513,1471,487"/>
-<area shape="rect" id="Node000007" href="$d5/dfa/upnpdebug_8cpp.html#adee8b149b1dca33417740b21a862ad00" title="Check Debug level." alt="" coords="1779,543,1919,569"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="1694,572,1765,563,1765,569,1695,577"/>
-<area shape="rect" id="Node000008" href="$d5/dfa/upnpdebug_8cpp.html#a4190a252f156f35bad0781b542cea98d" title="Display File and Line." alt="" coords="1759,593,1939,618"/>
-<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="1695,583,1745,590,1744,595,1694,588"/>
-<area shape="poly" id="edge9_Node000009_Node000005" title=" " alt="" coords="997,306,1058,305,1127,309,1199,319,1269,340,1312,363,1350,391,1408,447,1405,451,1347,395,1309,367,1267,345,1198,325,1127,314,1058,310,997,311"/>
-<area shape="poly" id="edge12_Node000010_Node000006" title=" " alt="" coords="983,869,1093,843,1235,803,1389,747,1465,713,1537,675,1586,639,1625,602,1628,606,1589,643,1540,680,1467,718,1391,752,1236,808,1094,848,984,874"/>
-<area shape="rect" id="Node000011" href="$d8/d61/ThreadPool_8cpp.html#a9575d30ed041fc240cf373ea0f7f3515" title="Returns various statistics about the thread pool." alt="" coords="1091,922,1242,947"/>
-<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="980,894,1091,917,1090,922,979,899"/>
-<area shape="poly" id="edge15_Node000013_Node000006" title=" " alt="" coords="977,615,1083,619,1222,620,1380,616,1538,603,1589,593,1590,598,1539,608,1380,621,1222,626,1082,624,977,621"/>
-<area shape="rect" id="Node000014" href="$d6/df0/sock_8hpp.html#a703577f3b40fc1c9e865b798beab18e5" title="Closes the socket if it is different from &#45;1." alt="" coords="1120,354,1213,379"/>
-<area shape="poly" id="edge14_Node000013_Node000014" title=" " alt="" coords="940,600,979,574,998,557,1015,537,1026,517,1032,498,1035,462,1040,426,1048,408,1064,390,1084,377,1106,369,1108,374,1086,381,1067,394,1053,411,1045,428,1040,462,1037,499,1031,519,1020,540,1002,560,982,578,943,604"/>
-<area shape="rect" id="Node000016" href="$d7/d20/FreeList_8cpp.html#ae64c10055f937a33eff150f678303b7f" title="Releases the resources stored with the free list." alt="" coords="1587,1319,1711,1345"/>
-<area shape="poly" id="edge17_Node000015_Node000016" title=" " alt="" coords="1213,1117,1317,1144,1380,1153,1432,1155,1482,1163,1510,1173,1540,1190,1572,1215,1600,1246,1637,1305,1633,1308,1595,1250,1569,1219,1537,1194,1507,1178,1481,1168,1432,1161,1380,1159,1315,1149,1212,1122"/>
-<area shape="rect" id="Node000017" href="$dd/d01/namespaceanonymous__namespace_02ThreadPool_8cpp_03.html#a7a528d1b1b1733d0139ea70befee0691" title="Deallocates a dynamically allocated ThreadPoolJob." alt="" coords="1316,1022,1539,1077"/>
-<area shape="poly" id="edge18_Node000015_Node000017" title=" " alt="" coords="1225,1091,1302,1074,1303,1079,1226,1097"/>
-<area shape="rect" id="Node000019" href="$df/db8/LinkedList_8cpp.html#a751d0c613a5c8d83b2675c5f4261e2d7" title="Removes a node from the list. The memory for the node is freed." alt="" coords="1598,1153,1699,1178"/>
-<area shape="poly" id="edge19_Node000015_Node000019" title=" " alt="" coords="1247,1111,1383,1125,1539,1144,1585,1151,1584,1156,1538,1149,1383,1130,1246,1116"/>
-<area shape="rect" id="Node000021" href="$df/db8/LinkedList_8cpp.html#a28e5dc6ff4a189982c97ae5780d360fd" title="Removes all memory associated with list nodes. Does not free LinkedList *list." alt="" coords="1379,1203,1475,1229"/>
-<area shape="poly" id="edge20_Node000015_Node000021" title=" " alt="" coords="1191,1117,1247,1149,1317,1182,1367,1198,1365,1204,1315,1186,1245,1153,1188,1122"/>
-<area shape="rect" id="Node000022" href="$df/db8/LinkedList_8cpp.html#a898216a354e8dd7089db150630862376" title="Returns the head of the list." alt="" coords="1388,973,1467,998"/>
-<area shape="poly" id="edge23_Node000015_Node000022" title=" " alt="" coords="1204,1091,1235,1077,1266,1059,1280,1046,1289,1033,1299,1021,1315,1008,1344,996,1374,988,1375,993,1345,1001,1317,1013,1303,1024,1294,1037,1284,1050,1270,1063,1238,1082,1206,1096"/>
-<area shape="poly" id="edge21_Node000021_Node000016" title=" " alt="" coords="1454,1227,1612,1310,1609,1315,1452,1231"/>
-<area shape="poly" id="edge22_Node000021_Node000019" title=" " alt="" coords="1475,1203,1584,1177,1585,1182,1476,1208"/>
-<area shape="poly" id="edge25_Node000023_Node000016" title=" " alt="" coords="1251,1268,1270,1281,1284,1298,1291,1317,1293,1354,1295,1389,1303,1405,1318,1419,1346,1437,1372,1448,1398,1453,1422,1453,1475,1441,1538,1419,1564,1406,1588,1390,1626,1353,1630,1357,1591,1394,1567,1411,1540,1424,1477,1446,1423,1458,1397,1458,1371,1453,1344,1442,1314,1423,1298,1408,1290,1391,1287,1355,1286,1318,1279,1301,1266,1285,1248,1272"/>
-<area shape="poly" id="edge27_Node000023_Node000019" title=" " alt="" coords="1252,1264,1315,1267,1388,1266,1464,1257,1538,1239,1584,1215,1622,1186,1625,1190,1587,1219,1540,1244,1465,1262,1389,1271,1315,1272,1251,1269"/>
-<area shape="poly" id="edge28_Node000023_Node000021" title=" " alt="" coords="1247,1242,1365,1223,1366,1228,1248,1247"/>
-<area shape="poly" id="edge29_Node000023_Node000022" title=" " alt="" coords="1179,1243,1220,1195,1266,1131,1279,1096,1284,1066,1292,1037,1300,1023,1314,1009,1343,992,1374,985,1375,990,1345,997,1318,1013,1305,1026,1296,1040,1289,1067,1284,1098,1270,1133,1224,1198,1183,1246"/>
-<area shape="rect" id="Node000024" href="$da/d04/namespaceanonymous__namespace_02TimerThread_8cpp_03.html#ab40f4f1217f62d380736126fec2ae82e" title="Deallocates a dynamically allocated TimerEvent." alt="" coords="1337,1354,1517,1409"/>
-<area shape="poly" id="edge26_Node000023_Node000024" title=" " alt="" coords="1243,1268,1269,1280,1286,1295,1295,1311,1303,1326,1318,1341,1326,1346,1324,1351,1314,1345,1299,1329,1290,1313,1282,1299,1267,1285,1241,1273"/>
-<area shape="rect" id="Node000025" href="$df/db8/LinkedList_8cpp.html#a83123d7868ce3aba2cf9d5c066fb7eb4" title="Returns the next item in the list." alt="" coords="1389,1305,1465,1330"/>
-<area shape="poly" id="edge30_Node000023_Node000025" title=" " alt="" coords="1223,1267,1376,1303,1375,1308,1222,1273"/>
-<area shape="poly" id="edge39_Node000028_Node000005" title=" " alt="" coords="943,692,980,669,1015,638,1030,612,1036,587,1044,563,1064,539,1106,524,1182,508,1355,479,1356,485,1183,513,1107,529,1067,544,1048,565,1041,589,1035,614,1019,642,983,674,945,696"/>
-<area shape="poly" id="edge43_Node000028_Node000006" title=" " alt="" coords="999,701,1108,694,1243,681,1392,657,1538,623,1608,596,1610,601,1539,628,1393,663,1244,686,1108,700,1000,707"/>
-<area shape="poly" id="edge40_Node000028_Node000019" title=" " alt="" coords="993,717,1110,744,1180,765,1255,791,1331,823,1405,862,1476,907,1541,959,1578,1003,1607,1052,1628,1100,1642,1139,1637,1140,1623,1102,1602,1055,1573,1006,1537,963,1473,911,1403,866,1328,828,1253,796,1179,770,1109,749,992,722"/>
-<area shape="poly" id="edge41_Node000028_Node000021" title=" " alt="" coords="931,718,974,776,999,816,1020,859,1032,900,1035,938,1030,1005,1028,1036,1032,1067,1044,1098,1067,1130,1099,1158,1135,1179,1174,1195,1215,1206,1296,1217,1366,1218,1366,1224,1295,1223,1214,1211,1172,1200,1132,1184,1095,1162,1063,1134,1039,1100,1026,1068,1023,1036,1024,1005,1029,938,1026,901,1015,861,995,819,970,779,926,721"/>
-<area shape="poly" id="edge42_Node000028_Node000022" title=" " alt="" coords="938,717,1067,799,1124,830,1169,851,1215,874,1270,909,1293,931,1317,951,1346,964,1375,973,1374,978,1344,969,1315,956,1290,935,1266,913,1212,878,1167,856,1121,834,1064,804,935,722"/>
-<area shape="rect" id="Node000029" href="$d4/d99/upnpapi_8cpp.html#adede929017553d41a13e25f2aa4c9c98" title="Free handle." alt="" coords="1379,567,1475,593"/>
-<area shape="poly" id="edge35_Node000028_Node000029" title=" " alt="" coords="968,691,1365,592,1367,598,969,697"/>
-<area shape="rect" id="Node000030" href="$d6/de3/gena__ctrlpt_8cpp.html#a1061c296a8e1902dfa6e17e105d46121" title="Unsubcribes all the outstanding subscriptions and cleans the subscription list." alt="" coords="1087,453,1247,478"/>
-<area shape="poly" id="edge37_Node000028_Node000030" title=" " alt="" coords="945,692,982,670,1015,638,1027,619,1033,601,1036,566,1041,531,1049,513,1063,495,1082,482,1085,486,1067,499,1054,516,1046,533,1041,567,1038,602,1032,622,1019,642,985,674,948,696"/>
-<area shape="poly" id="edge36_Node000029_Node000006" title=" " alt="" coords="1476,577,1589,577,1589,583,1476,583"/>
-<area shape="poly" id="edge38_Node000030_Node000005" title=" " alt="" coords="1247,465,1356,468,1355,473,1247,470"/>
-<area shape="poly" id="edge45_Node000156_Node000006" title=" " alt="" coords="1000,498,1016,487,1029,470,1036,452,1037,414,1039,375,1047,357,1064,341,1090,324,1115,315,1138,312,1161,314,1210,326,1269,340,1350,356,1413,373,1471,401,1540,446,1570,471,1596,500,1635,554,1631,557,1592,504,1566,475,1537,450,1469,405,1411,378,1348,361,1267,345,1209,331,1160,319,1138,318,1116,321,1093,329,1067,345,1052,360,1044,377,1042,414,1041,453,1034,473,1019,491,1003,503"/>
-<area shape="rect" id="Node000157" href="$d4/d99/upnpapi_8cpp.html#ab04dfc9206cdac78f584e6d208ba9c72" title="Unregisters a root device registered with UpnpRegisterRootDevice, UpnpRegisterRootDevice2,..." alt="" coords="1065,553,1268,593"/>
-<area shape="poly" id="edge46_Node000156_Node000157" title=" " alt="" coords="971,523,1070,548,1069,553,969,529"/>
-<area shape="poly" id="edge48_Node000157_Node000005" title=" " alt="" coords="1222,551,1267,532,1315,508,1372,487,1374,492,1317,513,1269,537,1224,556"/>
-<area shape="poly" id="edge50_Node000157_Node000006" title=" " alt="" coords="1268,558,1397,549,1468,549,1539,553,1590,562,1589,568,1538,559,1468,554,1397,554,1268,563"/>
-<area shape="poly" id="edge49_Node000157_Node000021" title=" " alt="" coords="1177,593,1271,910,1282,961,1289,1002,1298,1041,1318,1088,1337,1118,1360,1147,1403,1192,1399,1196,1356,1150,1333,1121,1314,1091,1293,1043,1283,1003,1277,962,1265,911,1172,594"/>
-<area shape="poly" id="edge47_Node000157_Node000029" title=" " alt="" coords="1268,573,1366,576,1365,581,1268,579"/>
-<area shape="rect" id="Node000184" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#a54e6c7136fbfff4ed5b5e2e447d19446" title="Release the XML document referred to by the input parameter." alt="" coords="1077,43,1257,98"/>
-<area shape="poly" id="edge52_Node000183_Node000184" title=" " alt="" coords="968,117,1062,93,1064,99,969,122"/>
-<area shape="rect" id="Node000186" href="$d4/db6/structanonymous__namespace_02webserver_8cpp_03_1_1xml__alias__t.html#a29029bffc2a9680f4b946e77d569e323" title="Clear the XML object." alt="" coords="1077,122,1257,177"/>
-<area shape="poly" id="edge53_Node000183_Node000186" title=" " alt="" coords="993,135,1063,139,1062,145,993,140"/>
-<area shape="poly" id="edge56_Node000187_Node000006" title=" " alt="" coords="265,1077,476,1077,769,1070,920,1061,1061,1048,1180,1029,1228,1017,1267,1003,1282,994,1291,983,1300,971,1314,959,1347,941,1378,930,1433,918,1459,912,1484,903,1510,887,1537,863,1561,833,1582,800,1613,727,1632,659,1642,606,1647,607,1637,660,1618,729,1587,802,1566,836,1541,867,1513,892,1486,907,1460,917,1434,923,1379,935,1350,946,1318,964,1304,975,1295,987,1285,998,1269,1008,1229,1022,1181,1034,1061,1053,921,1067,769,1076,476,1083,265,1082"/>
-<area shape="rect" id="Node000188" href="$d4/d99/upnpapi_8cpp.html#a2722e4ec9ac52e4572c134313a3239dd" title="Computes prefix length from IPv6 netmask." alt="" coords="325,1117,549,1142"/>
-<area shape="poly" id="edge55_Node000187_Node000188" title=" " alt="" coords="265,1088,367,1111,365,1116,264,1094"/>
-<area shape="poly" id="edge67_Node000189_Node000002" title=" " alt="" coords="277,717,428,690,499,671,548,651,588,618,621,578,648,538,666,504,671,507,652,541,626,581,592,622,551,656,501,676,430,695,278,722"/>
-<area shape="rect" id="Node000190" href="$dc/d02/gena__callback2_8cpp.html#a6f658b4eab5786398a00a53b87e7c622" title="This is the callback function called by the miniserver to handle incoming GENA requests." alt="" coords="627,823,737,849"/>
-<area shape="poly" id="edge58_Node000189_Node000190" title=" " alt="" coords="278,723,337,723,406,726,479,736,550,753,609,781,656,813,653,817,606,785,548,759,478,741,405,732,337,728,278,728"/>
-<area shape="rect" id="Node000236" href="$d5/db2/miniserver_8cpp.html#af500b18ad2a00dd3c3fa6da8ce62369d" title="Set GENA Callback." alt="" coords="371,817,504,842"/>
-<area shape="poly" id="edge60_Node000189_Node000236" title=" " alt="" coords="226,740,270,772,326,803,358,813,356,819,324,808,267,776,223,744"/>
-<area shape="rect" id="Node000237" href="$d5/db2/miniserver_8cpp.html#a569fe15e9cbb156f31065a8b7ac12799" title="Set SOAP Callback." alt="" coords="372,866,503,891"/>
-<area shape="poly" id="edge61_Node000189_Node000237" title=" " alt="" coords="219,740,261,795,291,826,327,852,359,866,357,871,324,857,288,831,256,799,215,744"/>
-<area shape="rect" id="Node000238" href="$d6/d92/soap__device_8cpp.html#a4b5104845d73b836d6365a306fba1679" title="This is a callback called by minisever." alt="" coords="355,915,519,941"/>
-<area shape="poly" id="edge62_Node000189_Node000238" title=" " alt="" coords="216,741,230,774,253,818,286,864,305,884,327,902,344,911,341,916,324,906,302,888,282,867,249,821,226,777,212,743"/>
-<area shape="rect" id="Node000275" href="$dd/d9f/TimerThread_8cpp.html#a88b075dce04bff1935ef802ff6df4621" title="Initializes and starts timer thread." alt="" coords="1103,1294,1230,1319"/>
-<area shape="poly" id="edge63_Node000189_Node000275" title=" " alt="" coords="214,742,223,790,243,859,277,934,300,970,327,1001,373,1029,457,1066,688,1153,924,1234,1066,1280,1095,1288,1093,1293,1065,1285,922,1239,687,1158,455,1071,371,1033,324,1005,296,973,272,937,238,861,218,791,209,743"/>
-<area shape="rect" id="Node000215" href="$db/d37/uuid_8cpp.html#a810c4032637bfecbb4ea1a039dbf6ef0" title="Unpack a UUID." alt="" coords="366,965,509,990"/>
-<area shape="poly" id="edge66_Node000189_Node000215" title=" " alt="" coords="215,742,226,783,247,840,280,901,302,928,327,951,354,966,352,970,324,956,298,932,276,904,242,843,221,785,209,743"/>
-<area shape="rect" id="Node000295" href="$d5/dfa/upnpdebug_8cpp.html#acb989a0182d5595b14f2dc3de64225b9" title="Initialize the log files." alt="" coords="387,517,487,542"/>
-<area shape="poly" id="edge68_Node000189_Node000295" title=" " alt="" coords="212,715,226,682,249,638,282,591,324,552,348,540,373,533,375,538,350,545,327,557,286,595,254,641,230,684,216,717"/>
-<area shape="rect" id="Node000296" href="$d4/d99/upnpapi_8cpp.html#a7855376cc412564ea0b12b867e11e3a7" title="Initializes the global mutexes used by the UPnP SDK." alt="" coords="371,566,503,591"/>
-<area shape="poly" id="edge69_Node000189_Node000296" title=" " alt="" coords="215,715,257,660,288,628,324,602,357,588,359,593,327,606,291,632,261,663,220,718"/>
-<area shape="rect" id="Node000297" href="$d4/d99/upnpapi_8cpp.html#aabf66e54504de499079a21f1d01b91ca" title="Initializes the global threadm pools used by the UPnP SDK." alt="" coords="359,467,516,493"/>
-<area shape="poly" id="edge70_Node000189_Node000297" title=" " alt="" coords="209,716,221,674,242,616,276,555,298,527,324,503,344,491,347,496,327,507,302,531,280,558,247,619,226,676,215,717"/>
-<area shape="rect" id="Node000221" href="$db/d37/uuid_8cpp.html#acc106615ebd609fdd904738800e442a3" title="Generate a UUID." alt="" coords="388,615,487,641"/>
-<area shape="poly" id="edge72_Node000189_Node000221" title=" " alt="" coords="226,714,270,686,324,658,373,640,375,645,326,662,272,691,229,719"/>
-<area shape="rect" id="Node000309" href="$d4/d99/upnpapi_8cpp.html#afa9a02a6a9dc20f16c191c563c61f53d" title="(Windows Only) Initializes the Windows Winsock library." alt="" coords="388,767,487,793"/>
-<area shape="poly" id="edge73_Node000189_Node000309" title=" " alt="" coords="267,740,375,764,374,769,266,745"/>
-<area shape="poly" id="edge59_Node000190_Node000006" title=" " alt="" coords="703,846,796,902,864,936,941,966,1023,988,1065,995,1108,998,1149,996,1190,989,1229,977,1267,958,1278,948,1285,938,1291,915,1297,889,1303,876,1314,863,1344,842,1372,830,1427,821,1481,812,1508,801,1537,781,1574,739,1603,691,1624,644,1637,605,1642,607,1629,646,1608,693,1578,742,1540,785,1511,806,1482,818,1427,826,1374,835,1346,847,1318,867,1308,879,1302,891,1296,916,1290,940,1282,952,1269,962,1231,982,1191,994,1150,1001,1108,1003,1065,1000,1022,994,939,971,861,940,793,907,700,851"/>
-<area shape="poly" id="edge64_Node000275_Node000016" title=" " alt="" coords="1177,1318,1197,1350,1228,1391,1268,1432,1292,1449,1317,1463,1377,1485,1428,1493,1478,1486,1537,1463,1570,1441,1597,1413,1618,1383,1633,1356,1638,1358,1623,1386,1601,1416,1573,1445,1540,1468,1480,1491,1428,1499,1376,1491,1315,1468,1289,1454,1265,1436,1224,1395,1192,1353,1173,1321"/>
-<area shape="poly" id="edge65_Node000275_Node000021" title=" " alt="" coords="1227,1291,1267,1280,1331,1256,1386,1232,1389,1237,1333,1261,1269,1285,1229,1296"/>
-<area shape="poly" id="edge71_Node000297_Node000002" title=" " alt="" coords="516,477,621,477,621,483,516,483"/>
-<area shape="poly" id="edge80_Node000310_Node000002" title=" " alt="" coords="452,218,662,455,658,458,448,221"/>
-<area shape="poly" id="edge81_Node000310_Node000006" title=" " alt="" coords="454,192,523,143,633,81,699,51,768,26,841,9,915,3,1168,3,1221,8,1271,22,1318,44,1361,73,1401,108,1438,147,1472,191,1502,236,1555,330,1595,420,1624,497,1642,553,1637,555,1619,499,1590,422,1550,332,1498,239,1467,194,1434,151,1397,112,1358,77,1315,49,1269,27,1220,13,1168,8,915,8,842,14,770,31,701,56,635,85,526,148,457,196"/>
-<area shape="rect" id="Node000065" href="$da/dd9/membuffer_8cpp.html#a53d54a6586b380b385d18ae7dcd37e80" title="Wrapper to membuffer_initialize()." alt="" coords="621,169,743,194"/>
-<area shape="poly" id="edge75_Node000310_Node000065" title=" " alt="" coords="516,196,607,186,607,192,517,201"/>
-<area shape="rect" id="Node000311" href="$d5/db2/miniserver_8cpp.html#a85c0b17d965bdb9430a9ce2e6931770a" title="Initialize the sockets functionality for the Miniserver." alt="" coords="621,218,743,243"/>
-<area shape="poly" id="edge76_Node000310_Node000311" title=" " alt="" coords="516,212,607,221,607,226,516,217"/>
-<area shape="rect" id="Node000331" href="$d4/d99/upnpapi_8cpp.html#a3c6309a98eb5281fbbfa45644c06fc34" title="Enables or disables the webserver." alt="" coords="597,119,767,145"/>
-<area shape="poly" id="edge78_Node000310_Node000331" title=" " alt="" coords="479,191,597,155,625,146,626,151,598,160,481,196"/>
-<area shape="poly" id="edge77_Node000311_Node000014" title=" " alt="" coords="744,234,872,253,946,269,1018,289,1081,316,1134,345,1132,349,1079,321,1016,295,944,274,871,258,743,239"/>
-<area shape="poly" id="edge79_Node000331_Node000183" title=" " alt="" coords="767,129,825,129,825,135,767,135"/>
+<area shape="rect" id="Node000001" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="5,567,84,593"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a75a3c9f9180bc908e17d49c3e2218e99" title="Terminates the Linux SDK for UPnP Devices." alt="" coords="592,467,680,493"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="64,565,106,539,164,507,233,476,306,453,379,444,453,445,522,453,579,463,578,469,521,458,453,450,379,449,307,459,235,481,166,512,108,544,67,569"/>
+<area shape="rect" id="Node000187" href="$d4/d99/upnpapi_8cpp.html#a9b1e118dea693a492fc976b037e35bfe" title="Retrieve interface information and keep it in global variables. If NULL, we&#39;ll find the first suitabl..." alt="" coords="143,1066,247,1091"/>
+<area shape="poly" id="edge54_Node000001_Node000187" title=" " alt="" coords="52,592,189,1052,184,1054,47,594"/>
+<area shape="rect" id="Node000189" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="132,717,259,742"/>
+<area shape="poly" id="edge57_Node000001_Node000189" title=" " alt="" coords="61,591,174,705,170,709,57,595"/>
+<area shape="rect" id="Node000310" href="$d4/d99/upnpapi_8cpp.html#a679257c76bd4ebdd2aa3fa2bb470dadd" title="Finishes initializing the UPnP SDK." alt="" coords="337,194,481,219"/>
+<area shape="poly" id="edge74_Node000001_Node000310" title=" " alt="" coords="48,566,77,495,100,451,130,409,189,349,255,297,318,254,370,224,372,228,321,259,258,301,193,353,134,412,105,454,81,498,53,568"/>
+<area shape="rect" id="Node000003" href="$d5/d78/sock_8cpp.html#aa1c16c9b2701dab6728c2b7e2efacf7b" title="Free the OpenSSL context." alt="" coords="813,451,897,477"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="680,474,799,465,800,471,680,479"/>
+<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#af1c7fa6eff1380708c436bad3d4843d2" title="Get client handle info." alt="" coords="1021,403,1161,429"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="659,490,713,519,788,547,829,556,870,559,911,553,948,536,960,527,966,516,972,491,977,465,984,452,996,439,1007,431,1010,436,999,443,988,455,982,467,977,493,971,518,964,530,951,541,912,558,871,564,828,561,786,553,710,524,656,495"/>
+<area shape="rect" id="Node000006" href="$d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement." alt="" coords="1495,567,1579,593"/>
+<area shape="poly" id="edge32_Node000002_Node000006" title=" " alt="" coords="639,466,652,429,676,379,712,329,734,307,760,290,819,263,871,250,920,247,967,253,1065,278,1121,294,1186,308,1259,317,1318,324,1345,330,1373,340,1402,356,1434,379,1471,420,1500,468,1520,514,1532,553,1527,555,1515,516,1495,470,1467,423,1430,383,1399,361,1371,345,1344,335,1317,329,1258,323,1185,313,1120,299,1063,284,966,258,919,252,872,255,821,268,763,294,738,311,716,332,681,382,657,431,644,468"/>
+<area shape="rect" id="Node000009" href="$d4/d99/upnpapi_8cpp.html#ab014d8c655f48d04fcc9ea7931a8f99c" title="Retrieves the device handle and information of the first device of the address family specified...." alt="" coords="782,303,929,329"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="643,465,687,405,721,369,760,339,775,331,777,336,763,344,724,373,691,408,647,469"/>
+<area shape="rect" id="Node000010" href="$d4/d99/upnpapi_8cpp.html#a4a0f84b177b8a84964bcb7a057fc3831" title="Prints thread pool statistics if DEBUG is enabled. See also #define PrintThreadPoolStats()" alt="" coords="782,871,929,897"/>
+<area shape="poly" id="edge10_Node000002_Node000010" title=" " alt="" coords="646,492,693,592,764,731,841,859,836,861,759,733,688,594,641,494"/>
+<area shape="rect" id="Node000013" href="$d5/db2/miniserver_8cpp.html#ac0223038b7afa1e3ea3d7cec983ccc63" title="Stop and Shutdown the MiniServer and free socket resources." alt="" coords="800,602,911,627"/>
+<area shape="poly" id="edge13_Node000002_Node000013" title=" " alt="" coords="651,491,698,534,729,559,763,580,795,595,792,600,760,585,726,563,695,538,648,495"/>
+<area shape="rect" id="Node000015" href="$d8/d61/ThreadPool_8cpp.html#a281f138c93124463e1fbbbdf00caf21f" title="Shuts the thread pool down." alt="" coords="1018,1094,1165,1119"/>
+<area shape="poly" id="edge16_Node000002_Node000015" title=" " alt="" coords="642,492,659,575,688,698,724,823,744,873,764,908,793,941,826,971,901,1022,975,1061,1039,1087,1037,1092,973,1065,898,1027,823,975,789,945,759,911,739,875,719,825,682,700,654,576,637,494"/>
+<area shape="rect" id="Node000023" href="$dd/d9f/TimerThread_8cpp.html#a19a3b97cd97e1c5f9d465c96ac71e588" title="Shutdown the timer thread." alt="" coords="1015,1245,1168,1270"/>
+<area shape="poly" id="edge24_Node000002_Node000023" title=" " alt="" coords="643,493,716,811,722,849,724,883,723,941,725,968,731,995,743,1023,763,1053,785,1074,806,1087,828,1094,852,1098,900,1107,925,1118,951,1137,968,1158,976,1178,983,1197,999,1217,1033,1237,1030,1242,996,1221,979,1200,971,1180,963,1160,947,1141,923,1123,898,1113,851,1103,827,1099,804,1092,781,1078,759,1056,738,1025,726,996,719,969,718,941,718,883,717,850,711,813,638,494"/>
+<area shape="rect" id="Node000026" href="$d5/dfa/upnpdebug_8cpp.html#aef83a39b0da5868966600f99163cce38" title="Closes the log files." alt="" coords="801,353,909,378"/>
+<area shape="poly" id="edge31_Node000002_Node000026" title=" " alt="" coords="650,465,697,427,760,388,787,378,789,383,763,393,700,432,653,469"/>
+<area shape="rect" id="Node000027" href="$d4/d99/upnpapi_8cpp.html#ac1faae99fb914af807e9537867a46935" title="Removes all virtual directory mappings." alt="" coords="766,402,945,427"/>
+<area shape="poly" id="edge33_Node000002_Node000027" title=" " alt="" coords="674,465,761,437,792,428,793,434,762,443,676,470"/>
+<area shape="rect" id="Node000028" href="$d4/d99/upnpapi_8cpp.html#aead9c1aad0998507f66cf7f0749013d3" title="Unregisters a control point application, unsubscribing all active subscriptions." alt="" coords="779,694,932,719"/>
+<area shape="poly" id="edge34_Node000002_Node000028" title=" " alt="" coords="648,492,694,557,727,599,763,638,793,663,823,684,820,689,790,667,759,642,723,602,689,561,643,495"/>
+<area shape="rect" id="Node000156" href="$d4/d99/upnpapi_8cpp.html#abb1c47010971d19ecd2b46ee842871ec" title="Unregisters a root device registered with UpnpRegisterRootDevice, UpnpRegisterRootDevice2,..." alt="" coords="761,501,949,526"/>
+<area shape="poly" id="edge44_Node000002_Node000156" title=" " alt="" coords="681,484,759,496,758,501,680,489"/>
+<area shape="rect" id="Node000183" href="$d1/d28/Compa_2src_2genlib_2net_2http_2webserver_8cpp.html#aba5685f22e83826b14771e59d0edbc05" title="Release memory allocated for the global web server root directory and the global XML document." alt="" coords="786,119,925,145"/>
+<area shape="poly" id="edge51_Node000002_Node000183" title=" " alt="" coords="639,466,680,357,715,284,759,213,790,179,823,151,826,155,794,183,763,216,720,286,684,359,644,468"/>
+<area shape="rect" id="Node000005" href="$d4/d99/upnpapi_8cpp.html#a276f608a72d2b223bb429ba31c32f64b" title="Get handle information." alt="" coords="1279,459,1386,485"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="1147,426,1266,454,1265,459,1146,431"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="1373,482,1433,508,1510,557,1507,562,1431,513,1371,487"/>
+<area shape="rect" id="Node000007" href="$d5/dfa/upnpdebug_8cpp.html#adee8b149b1dca33417740b21a862ad00" title="Check Debug level." alt="" coords="1661,543,1790,569"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="1579,572,1647,563,1647,569,1580,577"/>
+<area shape="rect" id="Node000008" href="$d5/dfa/upnpdebug_8cpp.html#a4190a252f156f35bad0781b542cea98d" title="Display File and Line." alt="" coords="1643,593,1808,618"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="1580,583,1629,590,1629,595,1579,588"/>
+<area shape="poly" id="edge9_Node000009_Node000005" title=" " alt="" coords="929,306,986,305,1052,309,1121,319,1186,340,1226,363,1262,391,1315,447,1311,450,1259,395,1223,367,1184,345,1119,325,1052,314,986,310,929,312"/>
+<area shape="poly" id="edge12_Node000010_Node000006" title=" " alt="" coords="911,869,1012,842,1145,800,1290,743,1362,709,1431,671,1477,637,1513,601,1517,605,1480,641,1433,676,1365,714,1292,748,1146,805,1014,847,912,874"/>
+<area shape="rect" id="Node000011" href="$d8/d61/ThreadPool_8cpp.html#a9575d30ed041fc240cf373ea0f7f3515" title="Returns various statistics about the thread pool." alt="" coords="1021,922,1161,947"/>
+<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="916,894,1019,916,1018,922,915,899"/>
+<area shape="poly" id="edge15_Node000013_Node000006" title=" " alt="" coords="911,615,1138,620,1285,616,1432,603,1481,593,1482,598,1432,608,1285,621,1139,625,911,620"/>
+<area shape="rect" id="Node000014" href="$d6/df0/sock_8hpp.html#a703577f3b40fc1c9e865b798beab18e5" title="Closes the socket if it is different from &#45;1." alt="" coords="1047,354,1135,379"/>
+<area shape="poly" id="edge14_Node000013_Node000014" title=" " alt="" coords="877,600,913,574,947,537,958,517,964,498,967,462,972,426,980,408,996,390,1013,378,1033,370,1035,375,1016,383,999,394,985,411,977,428,972,462,969,499,963,519,951,540,917,578,880,604"/>
+<area shape="rect" id="Node000016" href="$d7/d20/FreeList_8cpp.html#ae64c10055f937a33eff150f678303b7f" title="Releases the resources stored with the free list." alt="" coords="1480,1319,1595,1345"/>
+<area shape="poly" id="edge17_Node000015_Node000016" title=" " alt="" coords="1136,1117,1234,1144,1291,1154,1337,1157,1382,1165,1406,1174,1434,1190,1465,1216,1491,1247,1527,1306,1522,1308,1487,1250,1461,1220,1430,1194,1404,1179,1381,1170,1337,1162,1290,1159,1233,1149,1135,1122"/>
+<area shape="rect" id="Node000017" href="$dd/d01/namespaceanonymous__namespace_02ThreadPool_8cpp_03.html#a7a528d1b1b1733d0139ea70befee0691" title="Deallocates a dynamically allocated ThreadPoolJob." alt="" coords="1233,1022,1432,1077"/>
+<area shape="poly" id="edge18_Node000015_Node000017" title=" " alt="" coords="1145,1091,1219,1074,1220,1079,1146,1097"/>
+<area shape="rect" id="Node000019" href="$df/db8/LinkedList_8cpp.html#a751d0c613a5c8d83b2675c5f4261e2d7" title="Removes a node from the list. The memory for the node is freed." alt="" coords="1490,1153,1585,1178"/>
+<area shape="poly" id="edge19_Node000015_Node000019" title=" " alt="" coords="1165,1111,1432,1144,1476,1151,1476,1157,1432,1149,1165,1117"/>
+<area shape="rect" id="Node000021" href="$df/db8/LinkedList_8cpp.html#a28e5dc6ff4a189982c97ae5780d360fd" title="Removes all memory associated with list nodes. Does not free LinkedList *list." alt="" coords="1288,1203,1377,1229"/>
+<area shape="poly" id="edge20_Node000015_Node000021" title=" " alt="" coords="1114,1117,1168,1148,1234,1182,1276,1197,1274,1202,1232,1186,1165,1153,1112,1122"/>
+<area shape="rect" id="Node000022" href="$df/db8/LinkedList_8cpp.html#a898216a354e8dd7089db150630862376" title="Returns the head of the list." alt="" coords="1295,973,1370,998"/>
+<area shape="poly" id="edge23_Node000015_Node000022" title=" " alt="" coords="1124,1092,1154,1077,1184,1059,1198,1046,1207,1033,1216,1021,1232,1008,1256,997,1281,990,1283,995,1258,1002,1235,1013,1220,1025,1211,1037,1202,1050,1187,1063,1157,1082,1127,1096"/>
+<area shape="poly" id="edge21_Node000021_Node000016" title=" " alt="" coords="1358,1227,1503,1310,1500,1315,1355,1231"/>
+<area shape="poly" id="edge22_Node000021_Node000019" title=" " alt="" coords="1377,1203,1476,1178,1477,1183,1378,1208"/>
+<area shape="poly" id="edge25_Node000023_Node000016" title=" " alt="" coords="1168,1268,1187,1281,1201,1299,1208,1317,1210,1354,1213,1389,1220,1405,1235,1419,1260,1435,1284,1445,1306,1449,1328,1449,1375,1439,1431,1419,1456,1406,1479,1390,1516,1353,1519,1357,1483,1394,1459,1411,1433,1424,1377,1444,1329,1455,1306,1455,1282,1450,1258,1440,1232,1423,1216,1408,1208,1391,1205,1355,1203,1318,1197,1301,1184,1285,1165,1272"/>
+<area shape="poly" id="edge27_Node000023_Node000019" title=" " alt="" coords="1168,1263,1227,1266,1294,1264,1364,1256,1431,1239,1476,1215,1512,1186,1515,1190,1479,1219,1433,1244,1365,1261,1294,1270,1227,1271,1168,1269"/>
+<area shape="poly" id="edge28_Node000023_Node000021" title=" " alt="" coords="1166,1242,1274,1223,1275,1228,1167,1247"/>
+<area shape="poly" id="edge29_Node000023_Node000022" title=" " alt="" coords="1102,1243,1140,1195,1183,1131,1196,1096,1201,1066,1209,1037,1232,1009,1255,994,1281,986,1282,992,1257,999,1235,1013,1214,1040,1206,1067,1201,1098,1188,1133,1145,1198,1106,1246"/>
+<area shape="rect" id="Node000024" href="$da/d04/namespaceanonymous__namespace_02TimerThread_8cpp_03.html#ab40f4f1217f62d380736126fec2ae82e" title="Deallocates a dynamically allocated TimerEvent." alt="" coords="1251,1354,1414,1409"/>
+<area shape="poly" id="edge26_Node000023_Node000024" title=" " alt="" coords="1161,1268,1187,1280,1203,1295,1212,1311,1220,1326,1235,1341,1241,1345,1238,1349,1232,1345,1216,1329,1207,1313,1199,1299,1184,1285,1159,1273"/>
+<area shape="rect" id="Node000025" href="$df/db8/LinkedList_8cpp.html#a83123d7868ce3aba2cf9d5c066fb7eb4" title="Returns the next item in the list." alt="" coords="1297,1305,1368,1330"/>
+<area shape="poly" id="edge30_Node000023_Node000025" title=" " alt="" coords="1144,1267,1285,1303,1284,1308,1143,1273"/>
+<area shape="poly" id="edge39_Node000028_Node000005" title=" " alt="" coords="879,692,914,669,947,638,962,612,968,587,976,563,996,539,1035,525,1105,509,1265,480,1266,485,1106,514,1036,530,999,544,980,565,973,589,967,614,951,642,917,673,882,696"/>
+<area shape="poly" id="edge43_Node000028_Node000006" title=" " alt="" coords="932,701,1033,693,1158,679,1296,656,1431,623,1498,596,1500,601,1433,628,1297,662,1159,685,1033,699,932,706"/>
+<area shape="poly" id="edge40_Node000028_Node000019" title=" " alt="" coords="922,717,1030,745,1096,766,1166,793,1238,825,1308,863,1374,908,1434,959,1470,1004,1497,1053,1518,1100,1531,1139,1526,1141,1513,1102,1493,1055,1465,1007,1430,963,1371,912,1305,868,1235,830,1164,797,1094,771,1029,750,921,722"/>
+<area shape="poly" id="edge41_Node000028_Node000021" title=" " alt="" coords="869,718,909,777,933,817,952,859,963,900,966,938,961,1005,960,1036,964,1067,976,1098,999,1130,1028,1156,1061,1176,1097,1192,1135,1203,1209,1214,1274,1217,1274,1222,1209,1220,1133,1208,1095,1197,1059,1181,1025,1160,995,1134,971,1100,958,1068,955,1036,956,1005,961,938,958,901,947,861,928,819,905,779,864,721"/>
+<area shape="poly" id="edge42_Node000028_Node000022" title=" " alt="" coords="877,717,999,799,1094,852,1136,875,1187,909,1210,931,1235,951,1283,971,1281,976,1232,956,1207,935,1184,913,1133,879,1091,856,996,804,874,722"/>
+<area shape="rect" id="Node000029" href="$d4/d99/upnpapi_8cpp.html#adede929017553d41a13e25f2aa4c9c98" title="Free handle." alt="" coords="1288,567,1377,593"/>
+<area shape="poly" id="edge35_Node000028_Node000029" title=" " alt="" coords="904,691,1274,593,1275,598,905,697"/>
+<area shape="rect" id="Node000030" href="$d6/de3/gena__ctrlpt_8cpp.html#a1061c296a8e1902dfa6e17e105d46121" title="Unsubcribes all the outstanding subscriptions and cleans the subscription list." alt="" coords="1019,453,1163,478"/>
+<area shape="poly" id="edge37_Node000028_Node000030" title=" " alt="" coords="881,692,915,669,947,638,958,619,964,601,968,566,973,531,981,513,995,495,1014,482,1017,486,999,499,986,516,978,533,973,567,970,602,963,621,951,642,919,674,884,696"/>
+<area shape="poly" id="edge36_Node000029_Node000006" title=" " alt="" coords="1377,577,1482,577,1482,583,1377,583"/>
+<area shape="poly" id="edge38_Node000030_Node000005" title=" " alt="" coords="1164,465,1266,467,1266,473,1164,470"/>
+<area shape="poly" id="edge45_Node000156_Node000006" title=" " alt="" coords="931,498,948,487,961,470,967,452,969,413,971,375,979,357,996,341,1020,326,1043,317,1065,314,1086,315,1132,326,1186,340,1261,356,1318,375,1371,402,1434,446,1462,472,1487,500,1524,554,1520,557,1483,504,1458,475,1430,450,1369,407,1316,380,1259,362,1185,345,1130,331,1086,321,1065,319,1044,322,1023,330,999,345,984,360,976,377,974,414,973,453,966,472,951,491,934,503"/>
+<area shape="rect" id="Node000157" href="$d4/d99/upnpapi_8cpp.html#ab04dfc9206cdac78f584e6d208ba9c72" title="Unregisters a root device registered with UpnpRegisterRootDevice, UpnpRegisterRootDevice2,..." alt="" coords="997,553,1185,593"/>
+<area shape="poly" id="edge46_Node000156_Node000157" title=" " alt="" coords="907,523,999,547,998,552,905,529"/>
+<area shape="poly" id="edge48_Node000157_Node000005" title=" " alt="" coords="1141,551,1184,532,1232,508,1283,487,1285,492,1234,513,1186,537,1144,556"/>
+<area shape="poly" id="edge50_Node000157_Node000006" title=" " alt="" coords="1185,558,1303,549,1368,549,1432,553,1482,562,1481,568,1432,559,1368,554,1303,554,1186,563"/>
+<area shape="poly" id="edge49_Node000157_Node000021" title=" " alt="" coords="1101,593,1188,910,1199,961,1206,1002,1216,1041,1236,1088,1273,1146,1311,1192,1307,1195,1268,1149,1231,1091,1211,1042,1201,1003,1194,962,1183,911,1096,594"/>
+<area shape="poly" id="edge47_Node000157_Node000029" title=" " alt="" coords="1186,573,1274,576,1274,581,1186,579"/>
+<area shape="rect" id="Node000184" href="$d5/dfa/namespaceanonymous__namespace_02webserver_8cpp_03.html#a54e6c7136fbfff4ed5b5e2e447d19446" title="Release the XML document referred to by the input parameter." alt="" coords="1010,43,1173,98"/>
+<area shape="poly" id="edge52_Node000183_Node000184" title=" " alt="" coords="904,117,996,93,997,98,906,122"/>
+<area shape="rect" id="Node000186" href="$d4/db6/structanonymous__namespace_02webserver_8cpp_03_1_1xml__alias__t.html#a29029bffc2a9680f4b946e77d569e323" title="Clear the XML object." alt="" coords="1010,122,1173,177"/>
+<area shape="poly" id="edge53_Node000183_Node000186" title=" " alt="" coords="925,134,997,140,996,145,925,140"/>
+<area shape="poly" id="edge56_Node000187_Node000006" title=" " alt="" coords="248,1082,410,1096,522,1099,647,1098,780,1090,918,1072,1054,1042,1120,1022,1184,999,1199,991,1208,981,1232,959,1262,943,1289,932,1338,918,1384,901,1406,886,1430,864,1454,833,1474,799,1503,727,1521,659,1530,606,1536,607,1526,660,1508,729,1478,801,1458,836,1434,867,1410,890,1386,906,1340,923,1291,937,1264,947,1235,963,1212,985,1202,995,1186,1004,1122,1027,1055,1047,919,1077,781,1095,647,1104,522,1105,410,1101,247,1088"/>
+<area shape="rect" id="Node000188" href="$d4/d99/upnpapi_8cpp.html#a2722e4ec9ac52e4572c134313a3239dd" title="Computes prefix length from IPv6 netmask." alt="" coords="307,1117,511,1142"/>
+<area shape="poly" id="edge55_Node000187_Node000188" title=" " alt="" coords="248,1088,342,1111,341,1116,247,1094"/>
+<area shape="poly" id="edge67_Node000189_Node000002" title=" " alt="" coords="258,717,399,689,464,671,509,651,548,618,579,578,604,538,621,504,626,506,609,541,584,581,551,621,512,656,466,676,400,694,259,722"/>
+<area shape="rect" id="Node000190" href="$dc/d02/gena__callback2_8cpp.html#a6f658b4eab5786398a00a53b87e7c622" title="This is the callback function called by the miniserver to handle incoming GENA requests." alt="" coords="585,823,687,849"/>
+<area shape="poly" id="edge58_Node000189_Node000190" title=" " alt="" coords="259,723,314,723,378,727,446,736,512,754,567,781,611,812,608,817,564,785,510,758,445,742,378,732,314,729,259,729"/>
+<area shape="rect" id="Node000236" href="$d5/db2/miniserver_8cpp.html#af500b18ad2a00dd3c3fa6da8ce62369d" title="Set GENA Callback." alt="" coords="347,817,471,842"/>
+<area shape="poly" id="edge60_Node000189_Node000236" title=" " alt="" coords="213,740,254,772,308,803,334,812,332,818,306,808,251,776,210,744"/>
+<area shape="rect" id="Node000237" href="$d5/db2/miniserver_8cpp.html#a569fe15e9cbb156f31065a8b7ac12799" title="Set SOAP Callback." alt="" coords="347,866,470,891"/>
+<area shape="poly" id="edge61_Node000189_Node000237" title=" " alt="" coords="206,741,245,796,274,826,308,852,335,864,333,869,305,857,271,830,241,799,202,744"/>
+<area shape="rect" id="Node000238" href="$d6/d92/soap__device_8cpp.html#a4b5104845d73b836d6365a306fba1679" title="This is a callback called by minisever." alt="" coords="333,915,484,941"/>
+<area shape="poly" id="edge62_Node000189_Node000238" title=" " alt="" coords="203,741,216,774,238,818,269,864,287,884,308,902,322,910,319,914,305,906,284,888,264,867,233,821,211,776,198,743"/>
+<area shape="rect" id="Node000275" href="$dd/d9f/TimerThread_8cpp.html#a88b075dce04bff1935ef802ff6df4621" title="Initializes and starts timer thread." alt="" coords="1035,1294,1148,1319"/>
+<area shape="poly" id="edge63_Node000189_Node000275" title=" " alt="" coords="201,742,209,789,228,858,260,934,282,969,308,1001,351,1028,429,1065,645,1152,865,1234,998,1280,1023,1288,1022,1293,997,1285,864,1239,643,1157,427,1070,349,1033,305,1005,278,972,255,936,223,860,204,791,196,743"/>
+<area shape="rect" id="Node000215" href="$db/d37/uuid_8cpp.html#a810c4032637bfecbb4ea1a039dbf6ef0" title="Unpack a UUID." alt="" coords="343,965,474,990"/>
+<area shape="poly" id="edge66_Node000189_Node000215" title=" " alt="" coords="202,742,212,783,231,840,263,900,284,928,308,951,332,964,329,969,305,955,280,931,259,903,227,842,207,784,196,743"/>
+<area shape="rect" id="Node000295" href="$d5/dfa/upnpdebug_8cpp.html#acb989a0182d5595b14f2dc3de64225b9" title="Initialize the log files." alt="" coords="363,517,455,542"/>
+<area shape="poly" id="edge68_Node000189_Node000295" title=" " alt="" coords="198,715,212,682,234,638,265,592,305,553,326,541,348,534,350,539,328,546,308,557,269,595,238,641,216,685,203,717"/>
+<area shape="rect" id="Node000296" href="$d4/d99/upnpapi_8cpp.html#a7855376cc412564ea0b12b867e11e3a7" title="Initializes the global mutexes used by the UPnP SDK." alt="" coords="348,566,469,591"/>
+<area shape="poly" id="edge69_Node000189_Node000296" title=" " alt="" coords="202,715,241,660,271,628,305,602,334,589,336,594,308,606,274,632,245,663,206,718"/>
+<area shape="rect" id="Node000297" href="$d4/d99/upnpapi_8cpp.html#aabf66e54504de499079a21f1d01b91ca" title="Initializes the global threadm pools used by the UPnP SDK." alt="" coords="337,467,481,493"/>
+<area shape="poly" id="edge70_Node000189_Node000297" title=" " alt="" coords="196,716,207,674,227,617,259,556,280,528,305,503,322,492,325,497,308,507,284,531,263,559,232,619,212,676,202,717"/>
+<area shape="rect" id="Node000221" href="$db/d37/uuid_8cpp.html#acc106615ebd609fdd904738800e442a3" title="Generate a UUID." alt="" coords="364,615,453,641"/>
+<area shape="poly" id="edge72_Node000189_Node000221" title=" " alt="" coords="212,714,254,686,306,658,350,641,352,646,308,662,256,691,215,719"/>
+<area shape="rect" id="Node000309" href="$d4/d99/upnpapi_8cpp.html#afa9a02a6a9dc20f16c191c563c61f53d" title="(Windows Only) Initializes the Windows Winsock library." alt="" coords="363,767,454,793"/>
+<area shape="poly" id="edge73_Node000189_Node000309" title=" " alt="" coords="250,740,350,764,349,769,249,745"/>
+<area shape="poly" id="edge59_Node000190_Node000006" title=" " alt="" coords="657,847,744,901,808,933,880,963,957,985,1036,995,1074,993,1112,987,1149,975,1184,958,1196,948,1203,938,1209,915,1215,890,1221,876,1231,863,1258,842,1283,829,1332,816,1380,803,1405,790,1430,770,1464,730,1491,685,1512,641,1525,605,1530,607,1517,643,1496,687,1469,733,1434,774,1407,795,1382,808,1333,821,1285,834,1261,847,1235,867,1225,879,1220,891,1214,916,1207,941,1199,952,1187,962,1151,980,1114,992,1075,999,1035,1000,956,990,878,968,806,938,742,906,654,851"/>
+<area shape="poly" id="edge64_Node000275_Node000016" title=" " alt="" coords="1101,1318,1120,1350,1149,1391,1187,1432,1210,1449,1234,1463,1288,1483,1333,1491,1378,1484,1431,1463,1462,1441,1488,1413,1508,1383,1523,1356,1527,1359,1513,1386,1492,1417,1465,1446,1433,1468,1380,1489,1333,1496,1286,1489,1232,1468,1207,1454,1184,1436,1145,1394,1115,1353,1097,1321"/>
+<area shape="poly" id="edge65_Node000275_Node000021" title=" " alt="" coords="1147,1291,1184,1280,1243,1257,1294,1232,1296,1237,1245,1261,1186,1285,1149,1297"/>
+<area shape="poly" id="edge71_Node000297_Node000002" title=" " alt="" coords="481,477,578,477,578,483,481,483"/>
+<area shape="poly" id="edge80_Node000310_Node000002" title=" " alt="" coords="423,218,617,455,613,458,418,221"/>
+<area shape="poly" id="edge81_Node000310_Node000006" title=" " alt="" coords="424,192,488,143,590,81,651,51,717,26,785,9,854,3,1093,3,1144,8,1192,22,1236,44,1277,73,1315,108,1349,148,1380,191,1408,236,1456,330,1492,420,1517,497,1532,553,1527,555,1512,499,1487,422,1451,332,1404,239,1376,194,1345,151,1311,112,1274,77,1234,49,1190,27,1143,13,1093,8,854,8,786,14,718,31,653,56,593,85,491,148,427,196"/>
+<area shape="rect" id="Node000065" href="$da/dd9/membuffer_8cpp.html#a53d54a6586b380b385d18ae7dcd37e80" title="Wrapper to membuffer_initialize()." alt="" coords="583,169,689,194"/>
+<area shape="poly" id="edge75_Node000310_Node000065" title=" " alt="" coords="481,196,569,186,569,191,481,201"/>
+<area shape="rect" id="Node000311" href="$d5/db2/miniserver_8cpp.html#a85c0b17d965bdb9430a9ce2e6931770a" title="Initialize the sockets functionality for the Miniserver." alt="" coords="580,218,692,243"/>
+<area shape="poly" id="edge76_Node000310_Node000311" title=" " alt="" coords="481,212,567,221,566,226,481,217"/>
+<area shape="rect" id="Node000331" href="$d4/d99/upnpapi_8cpp.html#a3c6309a98eb5281fbbfa45644c06fc34" title="Enables or disables the webserver." alt="" coords="559,119,713,145"/>
+<area shape="poly" id="edge78_Node000310_Node000331" title=" " alt="" coords="448,191,583,146,585,151,449,196"/>
+<area shape="poly" id="edge77_Node000311_Node000014" title=" " alt="" coords="693,234,812,253,882,269,950,290,1010,316,1060,344,1057,349,1007,321,948,294,881,274,811,258,692,239"/>
+<area shape="poly" id="edge79_Node000331_Node000183" title=" " alt="" coords="714,129,772,129,772,135,714,135"/>
 </map>

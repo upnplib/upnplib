@@ -1,11 +1,11 @@
 <map id="GetDeviceHandleInfo" name="GetDeviceHandleInfo">
-<area shape="rect" id="Node000001" title="Retrieves the device handle and information of the first device of the address family specified...." alt="" coords="5,31,167,56"/>
-<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a276f608a72d2b223bb429ba31c32f64b" title="Get handle information." alt="" coords="215,31,331,56"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,41,201,41,201,46,167,46"/>
-<area shape="rect" id="Node000003" href="$d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement." alt="" coords="379,31,469,56"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="331,41,365,41,365,46,331,46"/>
-<area shape="rect" id="Node000004" href="$d5/dfa/upnpdebug_8cpp.html#adee8b149b1dca33417740b21a862ad00" title="Check Debug level." alt="" coords="537,5,677,31"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="469,34,523,27,524,32,470,40"/>
-<area shape="rect" id="Node000005" href="$d5/dfa/upnpdebug_8cpp.html#a4190a252f156f35bad0781b542cea98d" title="Display File and Line." alt="" coords="517,55,697,80"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="470,47,504,51,503,56,469,52"/>
+<area shape="rect" id="Node000001" title="Retrieves the device handle and information of the first device of the address family specified...." alt="" coords="5,31,152,56"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a276f608a72d2b223bb429ba31c32f64b" title="Get handle information." alt="" coords="200,31,307,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,41,186,41,186,46,152,46"/>
+<area shape="rect" id="Node000003" href="$d5/dfa/upnpdebug_8cpp.html#afe489651d95ecf91dd452cdb2d5497c3" title="Prints the debug statement." alt="" coords="355,31,439,56"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="307,41,341,41,341,46,307,46"/>
+<area shape="rect" id="Node000004" href="$d5/dfa/upnpdebug_8cpp.html#adee8b149b1dca33417740b21a862ad00" title="Check Debug level." alt="" coords="505,5,634,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="438,35,490,27,491,32,439,40"/>
+<area shape="rect" id="Node000005" href="$d5/dfa/upnpdebug_8cpp.html#a4190a252f156f35bad0781b542cea98d" title="Display File and Line." alt="" coords="487,55,652,80"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="439,46,474,51,473,57,438,52"/>
 </map>

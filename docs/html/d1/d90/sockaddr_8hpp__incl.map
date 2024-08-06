@@ -1,9 +1,9 @@
 <map id="Upnplib/include/upnplib/sockaddr.hpp" name="Upnplib/include/upnplib/sockaddr.hpp">
-<area shape="rect" id="Node000001" title="Declaration of the Sockaddr class and some free helper functions." alt="" coords="163,5,337,45"/>
-<area shape="rect" id="Node000002" href="$d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="5,93,161,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,48,121,90,119,85,209,43"/>
-<area shape="rect" id="Node000003" href="$d1/d42/port_8hpp.html" title="Specifications to be portable between different platforms." alt="" coords="186,93,314,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="253,46,253,79,247,79,247,46"/>
-<area shape="rect" id="Node000004" href="$d8/d43/port__sock_8hpp.html" title="Specifications to be portable with sockets between different platforms." alt="" coords="338,93,503,119"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="292,43,384,85,382,90,290,48"/>
+<area shape="rect" id="Node000001" title="Declaration of the Sockaddr class and some free helper functions." alt="" coords="147,5,303,45"/>
+<area shape="rect" id="Node000002" href="$d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="5,93,144,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="190,48,111,89,108,84,188,43"/>
+<area shape="rect" id="Node000003" href="$d1/d42/port_8hpp.html" title="Specifications to be portable between different platforms." alt="" coords="168,93,283,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="228,46,228,79,223,79,223,46"/>
+<area shape="rect" id="Node000004" href="$d8/d43/port__sock_8hpp.html" title="Specifications to be portable with sockets between different platforms." alt="" coords="307,93,456,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="264,43,347,85,345,89,262,48"/>
 </map>

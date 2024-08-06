@@ -1,14 +1,14 @@
 <map id="Upnplib/include/upnplib/netaddr.hpp" name="Upnplib/include/upnplib/netaddr.hpp">
-<area shape="rect" id="Node000001" title="Declaration of the Netaddr class." alt="" coords="442,5,617,45"/>
-<area shape="rect" id="Node000002" href="$d6/dbf/addrinfo_8hpp.html" title="Declaration of the Addrinfo class." alt="" coords="293,93,467,133"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="486,54,414,96,411,91,484,50"/>
-<area shape="rect" id="Node000004" href="$d5/dd7/netaddr_8cpp.html" title="Definition of the Netaddr class." alt="" coords="453,181,653,207"/>
-<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="537,59,554,181,549,182,531,60"/>
-<area shape="rect" id="Node000006" href="$d7/def/sockaddr_8cpp.html" title="Definition of the Sockaddr class and some free helper functions." alt="" coords="567,101,775,126"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="573,50,653,98,650,103,571,55"/>
-<area shape="rect" id="Node000003" href="$dc/d59/addrinfo_8cpp.html" title="Definition of the Addrinfo class and free helper functions." alt="" coords="5,181,211,207"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="302,140,149,184,147,179,301,135"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="435,137,529,179,527,184,433,141"/>
-<area shape="rect" id="Node000005" href="$d8/d81/socket_8cpp.html" title="Definition of the &#39;class Socket&#39;." alt="" coords="235,181,429,207"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="364,146,341,182,337,180,359,144"/>
+<area shape="rect" id="Node000001" title="Declaration of the Netaddr class." alt="" coords="409,5,565,45"/>
+<area shape="rect" id="Node000002" href="$d6/dbf/addrinfo_8hpp.html" title="Declaration of the Addrinfo class." alt="" coords="271,93,427,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="447,55,380,96,378,91,444,50"/>
+<area shape="rect" id="Node000004" href="$d5/dd7/netaddr_8cpp.html" title="Definition of the Netaddr class." alt="" coords="419,181,601,207"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="494,59,511,181,506,182,489,60"/>
+<area shape="rect" id="Node000006" href="$d7/def/sockaddr_8cpp.html" title="Definition of the Sockaddr class and some free helper functions." alt="" coords="525,101,717,126"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="530,51,604,98,601,103,527,55"/>
+<area shape="rect" id="Node000003" href="$dc/d59/addrinfo_8cpp.html" title="Definition of the Addrinfo class and free helper functions." alt="" coords="5,181,191,207"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="276,140,135,184,134,179,275,135"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="400,137,487,179,485,184,398,142"/>
+<area shape="rect" id="Node000005" href="$d8/d81/socket_8cpp.html" title="Definition of the &#39;class Socket&#39;." alt="" coords="215,181,394,207"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="334,147,314,182,309,180,329,144"/>
 </map>

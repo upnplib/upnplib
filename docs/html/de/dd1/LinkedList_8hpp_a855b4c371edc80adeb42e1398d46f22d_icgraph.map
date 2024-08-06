@@ -1,5 +1,5 @@
 <map id="ListAddAfter" name="ListAddAfter">
-<area shape="rect" id="Node000001" title="Adds a node after the specified node. Node gets added immediately after bnode." alt="" coords="157,5,259,31"/>
-<area shape="rect" id="Node000002" href="$df/db8/LinkedList_8cpp.html#a8c517a31d1d52d1ed1f48d4338b31781" title="Adds a node to the head of the list. Node gets immediately after list head." alt="" coords="5,5,109,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="143,21,109,21,109,15,143,15"/>
+<area shape="rect" id="Node000001" title="Adds a node after the specified node. Node gets added immediately after bnode." alt="" coords="151,5,245,31"/>
+<area shape="rect" id="Node000002" href="$df/db8/LinkedList_8cpp.html#a8c517a31d1d52d1ed1f48d4338b31781" title="Adds a node to the head of the list. Node gets immediately after list head." alt="" coords="5,5,103,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,21,103,21,103,15,137,15"/>
 </map>

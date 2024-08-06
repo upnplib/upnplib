@@ -1,17 +1,17 @@
 <map id="anonymous_namespace{ssdp_ctrlpt::cpp}::send_search_result" name="anonymous_namespace{ssdp_ctrlpt::cpp}::send_search_result">
-<area shape="rect" id="Node000001" title="Sends a callback to the control point application with a SEARCH result." alt="" coords="5,123,185,178"/>
-<area shape="rect" id="Node000002" href="$da/d8a/SSDPResultDataCallback_8cpp.html#a8d562a6405fec05590298febbba88421" title="SSDP result data callback function." alt="" coords="233,109,424,134"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,137,219,132,220,138,186,142"/>
-<area shape="rect" id="Node000006" href="$da/db6/SSDPResultData_8cpp.html#abee23a01947f1247c3563e1a82071b4d" title="Destructor." alt="" coords="241,162,417,187"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="186,157,227,162,227,167,186,163"/>
-<area shape="rect" id="Node000003" href="$da/db6/SSDPResultData_8cpp.html#a51193c9ba63e38f512121460b0e87d81" title="SSDPResultData_get_Cookie." alt="" coords="479,5,635,45"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="356,106,471,55,488,48,490,53,473,60,358,111"/>
-<area shape="rect" id="Node000004" href="$da/db6/SSDPResultData_8cpp.html#aac0ffcc355b4ffb6d8a3c5df651a61b1" title="SSDPResultData_get_CtrlptCallback." alt="" coords="479,69,635,109"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="419,106,465,100,465,105,420,111"/>
-<area shape="rect" id="Node000005" href="$da/db6/SSDPResultData_8cpp.html#a9173f93ecb10d204505ca5627be34ac3" title="SSDPResultData_get_Param." alt="" coords="479,133,635,173"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="420,131,465,138,465,143,419,137"/>
-<area shape="rect" id="Node000007" href="$d8/db8/UpnpDiscovery_8cpp.html#a58aca6889f6bde70985000c65814601f" title=" " alt="" coords="472,198,641,223"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="410,185,463,193,462,198,409,190"/>
-<area shape="rect" id="Node000008" href="$d1/d03/group__UpnpString.html#ga8877a4f1ad605a508a31942527f0ce9f" title="Destructor." alt="" coords="689,198,832,223"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="642,208,676,208,676,213,642,213"/>
+<area shape="rect" id="Node000001" title="Sends a callback to the control point application with a SEARCH result." alt="" coords="5,123,168,178"/>
+<area shape="rect" id="Node000002" href="$da/d8a/SSDPResultDataCallback_8cpp.html#a8d562a6405fec05590298febbba88421" title="SSDP result data callback function." alt="" coords="216,109,399,134"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,137,202,133,203,138,169,142"/>
+<area shape="rect" id="Node000006" href="$da/db6/SSDPResultData_8cpp.html#abee23a01947f1247c3563e1a82071b4d" title="Destructor." alt="" coords="224,162,391,187"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="169,157,211,162,210,167,168,162"/>
+<area shape="rect" id="Node000003" href="$da/db6/SSDPResultData_8cpp.html#a51193c9ba63e38f512121460b0e87d81" title="SSDPResultData_get_Cookie." alt="" coords="449,5,599,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="334,106,446,55,461,48,463,53,448,60,337,111"/>
+<area shape="rect" id="Node000004" href="$da/db6/SSDPResultData_8cpp.html#aac0ffcc355b4ffb6d8a3c5df651a61b1" title="SSDPResultData_get_CtrlptCallback." alt="" coords="449,69,599,109"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="393,106,435,100,435,105,394,111"/>
+<area shape="rect" id="Node000005" href="$da/db6/SSDPResultData_8cpp.html#a9173f93ecb10d204505ca5627be34ac3" title="SSDPResultData_get_Param." alt="" coords="449,133,599,173"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="394,131,435,138,435,143,393,137"/>
+<area shape="rect" id="Node000007" href="$d8/db8/UpnpDiscovery_8cpp.html#a58aca6889f6bde70985000c65814601f" title=" " alt="" coords="447,198,601,223"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="385,185,434,193,433,198,384,190"/>
+<area shape="rect" id="Node000008" href="$d1/d03/group__UpnpString.html#ga8877a4f1ad605a508a31942527f0ce9f" title="Destructor." alt="" coords="649,198,779,223"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="602,208,636,208,636,213,602,213"/>
 </map>

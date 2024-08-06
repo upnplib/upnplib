@@ -1,5 +1,5 @@
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-06-04
+// Redistribution only with this Copyright remark. Last modified: 2024-08-06
 
 // -----------------------------------------------------------------------------
 // This testsuite starts the sample TV Device with general command line
@@ -135,8 +135,8 @@ TEST_F(SampleTvDeviceFTestSuite, valid_commandline_arguments) {
 
     // Provide commandline values
     constexpr int argc{3};
-    constexpr int argsize = sizeof(UPNPLIB_PROJECT_BINARY_DIR "/bin/tv_device");
-    char arg[argc][argsize]{UPNPLIB_PROJECT_BINARY_DIR "/bin/tv_device",
+    constexpr int argsize = sizeof(CMAKE_BINARY_DIR "/bin/tv_device");
+    char arg[argc][argsize]{CMAKE_BINARY_DIR "/bin/tv_device",
                             "--webdir", SAMPLE_SOURCE_DIR "/web"};
     char* argv[argc]{arg[0], arg[1], arg[2]};
 

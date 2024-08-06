@@ -1,9 +1,9 @@
 <map id="web_server_init" name="web_server_init">
-<area shape="rect" id="Node000001" title="Initilialize root directory for web server and different documents." alt="" coords="561,5,687,31"/>
-<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a3c6309a98eb5281fbbfa45644c06fc34" title="Enables or disables the webserver." alt="" coords="344,5,513,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="548,21,513,21,513,15,548,15"/>
-<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a679257c76bd4ebdd2aa3fa2bb470dadd" title="Finishes initializing the UPnP SDK." alt="" coords="139,5,296,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="330,21,296,21,296,15,330,15"/>
-<area shape="rect" id="Node000004" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="5,5,91,31"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="125,21,91,21,91,15,125,15"/>
+<area shape="rect" id="Node000001" title="Initilialize root directory for web server and different documents." alt="" coords="527,5,640,31"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a3c6309a98eb5281fbbfa45644c06fc34" title="Enables or disables the webserver." alt="" coords="324,5,479,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="513,21,479,21,479,15,513,15"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a679257c76bd4ebdd2aa3fa2bb470dadd" title="Finishes initializing the UPnP SDK." alt="" coords="132,5,276,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="310,21,276,21,276,15,310,15"/>
+<area shape="rect" id="Node000004" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="5,5,84,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="118,21,84,21,84,15,118,15"/>
 </map>

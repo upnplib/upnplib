@@ -1,5 +1,5 @@
 <map id="anonymous_namespace{LinkedList::cpp}::CreateListNode" name="anonymous_namespace{LinkedList::cpp}::CreateListNode">
-<area shape="rect" id="Node000001" title="Dynamically creates a list node." alt="" coords="5,5,248,45"/>
-<area shape="rect" id="Node000002" href="$d7/d20/FreeList_8cpp.html#a63cf965052240dbc6fec792326bf6719" title="Allocates chunk of set size." alt="" coords="296,13,401,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="249,23,282,23,282,28,249,28"/>
+<area shape="rect" id="Node000001" title="Dynamically creates a list node." alt="" coords="5,5,223,45"/>
+<area shape="rect" id="Node000002" href="$d7/d20/FreeList_8cpp.html#a63cf965052240dbc6fec792326bf6719" title="Allocates chunk of set size." alt="" coords="271,13,369,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="223,23,257,23,257,28,223,28"/>
 </map>

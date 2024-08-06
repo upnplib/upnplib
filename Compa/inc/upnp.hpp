@@ -6,7 +6,7 @@
  * All rights reserved.
  * Copyright (C) 2011-2012 France Telecom All rights reserved.
  * Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-04-22
+ * Redistribution only with this Copyright remark. Last modified: 2024-08-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,7 +33,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-// Last compare with pupnp original source file on 2023-02-03, ver 1.14.15
+// Last compare with ./Pupnp source file on 2024-08-13, ver 1.14.19
 
 /*!
  * \file
@@ -482,6 +482,10 @@ typedef enum Upnp_DescType_e Upnp_DescType;
 #include <Callback.hpp>
 
 /// @} Constants and Types
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 /******************************************************************************
  ******************************************************************************
@@ -2772,5 +2776,9 @@ UPNPLIB_API int UpnpRemoveVirtualDir(
 UPNPLIB_API void UpnpRemoveAllVirtualDirs();
 
 /// @} Web Server API
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif // COMPA_UPNP_HPP

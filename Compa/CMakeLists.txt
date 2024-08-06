@@ -1,5 +1,5 @@
 # Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-08-05
+# Redistribution only with this Copyright remark. Last modified: 2024-08-15
 
 cmake_minimum_required(VERSION 3.18)
 include(../cmake/project-header.cmake)
@@ -163,10 +163,10 @@ set(COMPA_SOURCE_FILES
     # Other sources (need rework)
     # -------------------------------------------------------------------------
     $<$<BOOL:${COMPA_DEF_TOOLS}>:src/api/upnptools.cpp>
-    $<$<CONFIG:Debug>:src/api/upnpdebug.cpp>
+    src/api/upnpdebug.cpp
 
     ${UMOCK_SOURCE_DIR}/src/pupnp_sock.cpp
-    ${UPNPLIB_PROJECT_SOURCE_DIR}/Interface/src/pupnp-sock.cpp
+    ${CMAKE_SOURCE_DIR}/Interface/src/pupnp-sock.cpp
 
     # Helper classes added here. They are assigned with the UPnPlib rules, e.g.
     # throwing exceptions etc. They only encapsulate old functions mainly for
@@ -180,7 +180,7 @@ set(COMPA_INCLUDE_DIRECTORIES
     PUBLIC src/inc
     PUBLIC src/threadutil
     PUBLIC ${PUPNP_SOURCE_DIR}/include
-    PUBLIC ${UPNPLIB_PROJECT_SOURCE_DIR}/Interface/include
+    PUBLIC ${CMAKE_SOURCE_DIR}/Interface/include
     PRIVATE ${PUPNP_IXML_SOURCE_DIR}/inc
 )
 
@@ -226,7 +226,10 @@ if(NOT WIN32)
     # Compa SHared library: suffix -csh
     #----------------------------------
     add_library(compa_shared SHARED
-            ${COMPA_SOURCE_FILES}
+        ${COMPA_SOURCE_FILES}
+    )
+    set_target_properties(compa_shared PROPERTIES
+            OUTPUT_NAME upnpsdk-compa
     )
     target_include_directories(compa_shared
         ${COMPA_INCLUDE_DIRECTORIES}
@@ -253,6 +256,9 @@ if(NOT WIN32)
     add_library(compa_static STATIC
             ${COMPA_SOURCE_FILES}
     )
+    set_target_properties(compa_static PROPERTIES
+            OUTPUT_NAME upnpsdk-compa
+    )
     target_include_directories(compa_static
         ${COMPA_INCLUDE_DIRECTORIES}
         PUBLIC
@@ -269,6 +275,8 @@ if(NOT WIN32)
         INTERFACE ixml_static
     )
 
+    install(TARGETS compa_shared compa_static)
+
 else() # WIN32
 
     # Link with POSIX Threads for Windows (pthreads4w)
@@ -280,6 +288,9 @@ else() # WIN32
     #---------------------------------
     add_library(compa_shared SHARED
             ${COMPA_SOURCE_FILES}
+    )
+    set_target_properties(compa_shared PROPERTIES
+            OUTPUT_NAME upnpsdk-compa
     )
     target_include_directories(compa_shared
         ${COMPA_INCLUDE_DIRECTORIES}
@@ -309,6 +320,9 @@ else() # WIN32
     add_library(compa_static STATIC
             ${COMPA_SOURCE_FILES}
     )
+    set_target_properties(compa_static PROPERTIES
+            OUTPUT_NAME upnpsdk-compa-static
+    )
     target_include_directories(compa_static
         ${COMPA_INCLUDE_DIRECTORIES}
     )
@@ -321,6 +335,8 @@ else() # WIN32
         PUBLIC umock_static
         INTERFACE ixml_static
     )
+
+    install(TARGETS compa_shared compa_static)
 
 endif() # WIN32
 

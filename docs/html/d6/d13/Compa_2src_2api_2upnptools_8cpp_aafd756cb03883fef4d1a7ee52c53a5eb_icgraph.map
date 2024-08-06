@@ -1,7 +1,7 @@
 <map id="addToAction" name="addToAction">
-<area shape="rect" id="Node000001" title="Adds the argument in the action request or response." alt="" coords="252,31,353,56"/>
-<area shape="rect" id="Node000002" href="$d3/d57/group__UPnPTools.html#gaecd324ad2ede6fa97a0fb77a67074468" title="Adds the argument in the action request." alt="" coords="37,5,173,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="238,38,173,29,173,24,239,33"/>
-<area shape="rect" id="Node000003" href="$d3/d57/group__UPnPTools.html#ga6a5c02ae1eca518c8d6507eacd76a928" title="Creates an action response packet based on its output parameters (status variable name and value pair..." alt="" coords="5,55,204,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="239,54,205,58,204,53,238,48"/>
+<area shape="rect" id="Node000001" title="Adds the argument in the action request or response." alt="" coords="240,31,335,56"/>
+<area shape="rect" id="Node000002" href="$d3/d57/group__UPnPTools.html#gaecd324ad2ede6fa97a0fb77a67074468" title="Adds the argument in the action request." alt="" coords="35,5,162,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="226,38,162,29,163,24,226,33"/>
+<area shape="rect" id="Node000003" href="$d3/d57/group__UPnPTools.html#ga6a5c02ae1eca518c8d6507eacd76a928" title="Creates an action response packet based on its output parameters (status variable name and value pair..." alt="" coords="5,55,192,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="227,54,193,58,192,53,226,48"/>
 </map>

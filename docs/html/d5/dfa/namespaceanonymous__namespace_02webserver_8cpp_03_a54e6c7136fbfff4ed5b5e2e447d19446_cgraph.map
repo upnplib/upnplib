@@ -1,5 +1,5 @@
 <map id="anonymous_namespace{webserver::cpp}::alias_release" name="anonymous_namespace{webserver::cpp}::alias_release">
-<area shape="rect" id="Node000001" title="Release the XML document referred to by the input parameter." alt="" coords="5,5,185,60"/>
-<area shape="rect" id="Node000002" href="$d4/db6/structanonymous__namespace_02webserver_8cpp_03_1_1xml__alias__t.html#a21dfd75fa4f2840442cfabdc470cd158" title="Release an XML document from the XML object." alt="" coords="233,5,413,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,30,220,30,220,35,186,35"/>
+<area shape="rect" id="Node000001" title="Release the XML document referred to by the input parameter." alt="" coords="5,5,168,60"/>
+<area shape="rect" id="Node000002" href="$d4/db6/structanonymous__namespace_02webserver_8cpp_03_1_1xml__alias__t.html#a21dfd75fa4f2840442cfabdc470cd158" title="Release an XML document from the XML object." alt="" coords="216,5,379,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,30,202,30,202,35,168,35"/>
 </map>

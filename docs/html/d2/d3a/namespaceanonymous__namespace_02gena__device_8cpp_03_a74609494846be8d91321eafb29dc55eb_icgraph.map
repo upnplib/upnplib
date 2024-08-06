@@ -1,13 +1,13 @@
 <map id="anonymous_namespace{gena_device::cpp}::maybeDiscardEvents" name="anonymous_namespace{gena_device::cpp}::maybeDiscardEvents">
-<area shape="rect" id="Node000001" title="This gets called before queuing a new event." alt="" coords="576,16,756,71"/>
-<area shape="rect" id="Node000002" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#ac1a38d06cf74cd21f7f8ac40f00efb11" title="We take ownership of propertySet and will free it." alt="" coords="348,16,528,71"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="562,46,528,46,528,41,562,41"/>
-<area shape="rect" id="Node000003" href="$dd/de6/gena__device_8cpp.html#a3300ba366cae7db4f8c21b0119cdacd9" title="Sends a notification to all the subscribed control points." alt="" coords="179,5,290,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="334,33,290,28,291,22,335,28"/>
-<area shape="rect" id="Node000005" href="$dd/de6/gena__device_8cpp.html#a8f2185f7e2ef6345535174b920c6e86b" title="Sends a notification to all the subscribed control points." alt="" coords="169,55,300,80"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="334,58,301,62,300,57,334,53"/>
-<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a889522712799600d91e157c50e8bcd38" title="Sends out an event change notification to all control points subscribed to a particular service." alt="" coords="16,5,111,31"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="165,21,111,21,111,15,165,15"/>
-<area shape="rect" id="Node000006" href="$d4/d99/upnpapi_8cpp.html#a2244040bbe493e66273b8b53a61a1959" title="Similar to UpnpNotify except that it takes a DOM document for the event rather than an array of strin..." alt="" coords="5,55,121,80"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="156,70,122,70,122,65,156,65"/>
+<area shape="rect" id="Node000001" title="This gets called before queuing a new event." alt="" coords="540,16,703,71"/>
+<area shape="rect" id="Node000002" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#ac1a38d06cf74cd21f7f8ac40f00efb11" title="We take ownership of propertySet and will free it." alt="" coords="329,16,492,71"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="526,46,492,46,492,41,526,41"/>
+<area shape="rect" id="Node000003" href="$dd/de6/gena__device_8cpp.html#a3300ba366cae7db4f8c21b0119cdacd9" title="Sends a notification to all the subscribed control points." alt="" coords="171,5,271,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="315,33,271,27,272,22,316,28"/>
+<area shape="rect" id="Node000005" href="$dd/de6/gena__device_8cpp.html#a8f2185f7e2ef6345535174b920c6e86b" title="Sends a notification to all the subscribed control points." alt="" coords="161,55,281,80"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="316,58,282,62,281,57,315,53"/>
+<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a889522712799600d91e157c50e8bcd38" title="Sends out an event change notification to all control points subscribed to a particular service." alt="" coords="15,5,103,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="158,21,104,21,104,15,158,15"/>
+<area shape="rect" id="Node000006" href="$d4/d99/upnpapi_8cpp.html#a2244040bbe493e66273b8b53a61a1959" title="Similar to UpnpNotify except that it takes a DOM document for the event rather than an array of strin..." alt="" coords="5,55,113,80"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="148,70,114,70,114,65,148,65"/>
 </map>

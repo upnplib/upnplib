@@ -1,14 +1,14 @@
 <map id="TPAttrInit" name="TPAttrInit">
-<area shape="rect" id="Node000001" title="Initializes thread pool attributes." alt="" coords="719,56,801,81"/>
-<area shape="rect" id="Node000002" href="$d8/d61/ThreadPool_8cpp.html#a03dbe83dda6a8fbe38a4a6c2f14edc7f" title="Initializes and starts ThreadPool." alt="" coords="543,5,659,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="706,54,641,33,642,28,707,49"/>
-<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#aabf66e54504de499079a21f1d01b91ca" title="Initializes the global threadm pools used by the UPnP SDK." alt="" coords="325,31,483,56"/>
-<area shape="poly" id="edge6_Node000001_Node000003" title=" " alt="" coords="705,67,483,52,483,46,705,62"/>
-<area shape="rect" id="Node000006" href="$d8/d61/ThreadPool_8cpp.html#a7c0e9ebe393a89c04d80e6a40c7affa6" title="Sets the attributes for the thread pool." alt="" coords="531,107,671,132"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="707,88,642,109,641,104,706,83"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="529,30,483,36,483,31,528,25"/>
-<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="139,31,277,56"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="312,46,278,46,278,41,312,41"/>
-<area shape="rect" id="Node000005" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="5,31,91,56"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="125,46,91,46,91,41,125,41"/>
+<area shape="rect" id="Node000001" title="Initializes thread pool attributes." alt="" coords="676,56,753,81"/>
+<area shape="rect" id="Node000002" href="$d8/d61/ThreadPool_8cpp.html#a03dbe83dda6a8fbe38a4a6c2f14edc7f" title="Initializes and starts ThreadPool." alt="" coords="510,5,617,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="662,54,601,33,603,28,664,49"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#aabf66e54504de499079a21f1d01b91ca" title="Initializes the global threadm pools used by the UPnP SDK." alt="" coords="307,31,451,56"/>
+<area shape="poly" id="edge6_Node000001_Node000003" title=" " alt="" coords="662,67,451,51,451,46,662,62"/>
+<area shape="rect" id="Node000006" href="$d8/d61/ThreadPool_8cpp.html#a7c0e9ebe393a89c04d80e6a40c7affa6" title="Sets the attributes for the thread pool." alt="" coords="499,107,628,132"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="664,88,603,109,601,104,662,83"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="497,30,451,36,450,31,496,24"/>
+<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="132,31,259,56"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="293,46,259,46,259,41,293,41"/>
+<area shape="rect" id="Node000005" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="5,31,84,56"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="118,46,84,46,84,41,118,41"/>
 </map>

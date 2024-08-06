@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-02-28
+# Redistribution only with this Copyright remark. Last modified: 2024-08-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../../../cmake/project-header.cmake)
@@ -19,7 +19,7 @@ add_executable(test_upnpdebug-pst
         ./test_upnpdebug.cpp
 )
 target_include_directories(test_upnpdebug-pst
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
 )
 target_compile_options(test_upnpdebug-pst
     PRIVATE
@@ -42,7 +42,7 @@ add_executable(test_upnpdebug-cst
         ./test_upnpdebug.cpp
 )
 target_include_directories(test_upnpdebug-cst
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
 )
 target_link_libraries(test_upnpdebug-cst
     PRIVATE
@@ -215,7 +215,7 @@ add_executable(test_upnpapi-pst
     ./test_upnpapi.cpp
 )
 target_include_directories(test_upnpapi-pst
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
 )
 target_compile_options(test_upnpapi-pst
     PRIVATE
@@ -247,7 +247,7 @@ add_executable(test_upnpapi-cst
     ./test_upnpapi.cpp
 )
 target_include_directories(test_upnpapi-cst
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
 )
 target_compile_definitions(test_upnpapi-cst
     PRIVATE COMPA_HAVE_DEVICE_SSDP
@@ -269,7 +269,7 @@ add_executable(test_upnpapi_platform-pst
     $<$<NOT:$<PLATFORM_ID:Windows>>:test_upnpapi_unix.cpp>
 )
 target_include_directories(test_upnpapi_platform-pst
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
 )
 target_compile_options(test_upnpapi_platform-pst
     PRIVATE
@@ -294,7 +294,7 @@ add_executable(test_upnpapi_platform-cst
     $<$<NOT:$<PLATFORM_ID:Windows>>:test_upnpapi_unix.cpp>
 )
 target_include_directories(test_upnpapi_platform-cst
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
 )
 target_link_libraries(test_upnpapi_platform-cst
     PRIVATE

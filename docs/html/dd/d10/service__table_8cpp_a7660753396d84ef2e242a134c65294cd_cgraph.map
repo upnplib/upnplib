@@ -1,29 +1,29 @@
 <map id="removeServiceTable" name="removeServiceTable">
-<area shape="rect" id="Node000001" title="Remove all services for a root device." alt="" coords="5,135,160,160"/>
-<area shape="rect" id="Node000002" href="$dd/d10/service__table_8cpp.html#a4d079e2620831263f2dffddcfd66ddbc" title="Free&#39;s memory allocated for the various components of the service entry in the service table." alt="" coords="227,85,323,111"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,132,212,111,214,116,133,137"/>
-<area shape="rect" id="Node000013" href="$dd/d10/service__table_8cpp.html#af7f28a46c4ebae33f7e351f621c17570" title="Returns the clone of the element value." alt="" coords="208,135,341,160"/>
-<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="160,145,194,145,194,150,160,150"/>
-<area shape="rect" id="Node000014" href="$dd/d10/service__table_8cpp.html#a174b2e13ecbe601b9b1c20fedaef147e" title="Traverses through a list of XML nodes to find the node with the known element name." alt="" coords="214,184,335,209"/>
-<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="133,157,212,178,210,183,132,163"/>
-<area shape="rect" id="Node000003" href="$dd/d10/service__table_8cpp.html#a9f501c03d21e7c4135ddaa8e9303eacb" title="Free&#39;s memory allocated for all the subscriptions in the service table." alt="" coords="389,85,540,111"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="323,95,375,95,375,101,323,101"/>
-<area shape="rect" id="Node000004" href="$dd/d10/service__table_8cpp.html#a749aa5278c90b85e8af8c5eb80f65564" title="Free&#39;s the memory allocated for storing the URL of the subscription." alt="" coords="588,85,716,111"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="540,95,574,95,574,101,540,101"/>
-<area shape="rect" id="Node000005" href="$d8/dd2/uri_8cpp.html#afb7b37727ebf22a77a8edac2b15108ed" title="Frees the memory associated with a URL_list." alt="" coords="821,60,929,85"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="716,88,808,78,808,83,717,93"/>
-<area shape="rect" id="Node000006" href="$dd/de6/gena__device_8cpp.html#a1503915b6cd3d0ea5adc7b5493b589ab" title="???" alt="" coords="764,109,987,135"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="717,102,750,106,750,111,716,108"/>
-<area shape="rect" id="Node000007" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#ae0ca4bdec01c3edef6b166d0641c9038" title="Frees memory used in notify_threads if the reference count is 0, otherwise decrements the refrence co..." alt="" coords="1035,5,1215,60"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="944,107,986,94,1010,82,1033,69,1045,63,1048,68,1036,74,1012,87,988,99,945,112"/>
-<area shape="rect" id="Node000008" href="$df/db8/LinkedList_8cpp.html#a751d0c613a5c8d83b2675c5f4261e2d7" title="Removes a node from the list. The memory for the node is freed." alt="" coords="1074,84,1175,109"/>
-<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="987,108,1060,100,1060,106,987,113"/>
-<area shape="rect" id="Node000011" href="$df/db8/LinkedList_8cpp.html#a898216a354e8dd7089db150630862376" title="Returns the head of the list." alt="" coords="1085,133,1164,159"/>
-<area shape="poly" id="edge10_Node000006_Node000011" title=" " alt="" coords="987,130,1072,138,1071,144,987,135"/>
-<area shape="rect" id="Node000012" href="$df/db8/LinkedList_8cpp.html#a13e9c21886d19bb76341f1d2a1aefc12" title="Returns the size of the list." alt="" coords="1089,183,1161,208"/>
-<area shape="poly" id="edge11_Node000006_Node000012" title=" " alt="" coords="919,132,1035,167,1076,179,1074,184,1034,173,917,137"/>
-<area shape="rect" id="Node000009" href="$d6/d93/namespaceanonymous__namespace_02LinkedList_8cpp_03.html#a506e66beed0ac75aaee65b0b4d8a852a" title="Free list node." alt="" coords="1263,77,1488,117"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="1176,94,1249,94,1249,99,1176,99"/>
-<area shape="rect" id="Node000010" href="$d7/d20/FreeList_8cpp.html#a559c475ea4c5850cd427740512512df0" title="Returns an item to the Free List." alt="" coords="1536,84,1637,109"/>
-<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="1488,94,1523,94,1523,99,1488,99"/>
+<area shape="rect" id="Node000001" title="Remove all services for a root device." alt="" coords="5,135,145,160"/>
+<area shape="rect" id="Node000002" href="$dd/d10/service__table_8cpp.html#a4d079e2620831263f2dffddcfd66ddbc" title="Free&#39;s memory allocated for the various components of the service entry in the service table." alt="" coords="209,85,297,111"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,132,195,111,197,116,123,137"/>
+<area shape="rect" id="Node000013" href="$dd/d10/service__table_8cpp.html#af7f28a46c4ebae33f7e351f621c17570" title="Returns the clone of the element value." alt="" coords="193,135,313,160"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="145,145,180,145,180,150,145,150"/>
+<area shape="rect" id="Node000014" href="$dd/d10/service__table_8cpp.html#a174b2e13ecbe601b9b1c20fedaef147e" title="Traverses through a list of XML nodes to find the node with the known element name." alt="" coords="198,184,309,209"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="123,157,194,178,192,183,121,163"/>
+<area shape="rect" id="Node000003" href="$dd/d10/service__table_8cpp.html#a9f501c03d21e7c4135ddaa8e9303eacb" title="Free&#39;s memory allocated for all the subscriptions in the service table." alt="" coords="361,85,499,111"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="298,95,347,95,347,101,298,101"/>
+<area shape="rect" id="Node000004" href="$dd/d10/service__table_8cpp.html#a749aa5278c90b85e8af8c5eb80f65564" title="Free&#39;s the memory allocated for storing the URL of the subscription." alt="" coords="547,85,663,111"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="499,95,533,95,533,101,499,101"/>
+<area shape="rect" id="Node000005" href="$d8/dd2/uri_8cpp.html#afb7b37727ebf22a77a8edac2b15108ed" title="Frees the memory associated with a URL_list." alt="" coords="761,60,863,85"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="663,88,747,78,748,83,663,94"/>
+<area shape="rect" id="Node000006" href="$dd/de6/gena__device_8cpp.html#a1503915b6cd3d0ea5adc7b5493b589ab" title="???" alt="" coords="711,109,913,135"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="663,102,697,106,697,111,663,107"/>
+<area shape="rect" id="Node000007" href="$d2/d3a/namespaceanonymous__namespace_02gena__device_8cpp_03.html#ae0ca4bdec01c3edef6b166d0641c9038" title="Frees memory used in notify_threads if the reference count is 0, otherwise decrements the refrence co..." alt="" coords="961,5,1124,60"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="872,107,912,94,936,82,960,69,971,64,973,68,963,74,939,87,914,99,874,112"/>
+<area shape="rect" id="Node000008" href="$df/db8/LinkedList_8cpp.html#a751d0c613a5c8d83b2675c5f4261e2d7" title="Removes a node from the list. The memory for the node is freed." alt="" coords="995,84,1090,109"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="913,108,982,101,982,106,914,114"/>
+<area shape="rect" id="Node000011" href="$df/db8/LinkedList_8cpp.html#a898216a354e8dd7089db150630862376" title="Returns the head of the list." alt="" coords="1005,133,1080,159"/>
+<area shape="poly" id="edge10_Node000006_Node000011" title=" " alt="" coords="914,130,992,138,991,143,913,135"/>
+<area shape="rect" id="Node000012" href="$df/db8/LinkedList_8cpp.html#a13e9c21886d19bb76341f1d2a1aefc12" title="Returns the size of the list." alt="" coords="1008,183,1077,208"/>
+<area shape="poly" id="edge11_Node000006_Node000012" title=" " alt="" coords="853,132,962,167,996,178,994,183,961,173,851,137"/>
+<area shape="rect" id="Node000009" href="$d6/d93/namespaceanonymous__namespace_02LinkedList_8cpp_03.html#a506e66beed0ac75aaee65b0b4d8a852a" title="Free list node." alt="" coords="1172,77,1372,117"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="1090,94,1159,94,1159,99,1090,99"/>
+<area shape="rect" id="Node000010" href="$d7/d20/FreeList_8cpp.html#a559c475ea4c5850cd427740512512df0" title="Returns an item to the Free List." alt="" coords="1420,84,1515,109"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="1372,94,1406,94,1406,99,1372,99"/>
 </map>

@@ -1,20 +1,24 @@
-// Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2022-02-19
-
 #ifndef UPNPLIB_UPNPSUBSCRIPTIONREQUEST_HPP
 #define UPNPLIB_UPNPSUBSCRIPTIONREQUEST_HPP
+// Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
+// Redistribution only with this Copyright remark. Last modified: 2024-08-13
+// Also Copyright by other contributor as noted below.
 
 /*!
  * \file
  *
  * \brief Header file for UpnpSubscriptionRequest methods.
- * \author Marcelo Roberto Jimenez
+ * \author Marcelo Roberto Jimenez, Ingo Höft
  */
 #include <stdlib.h> /* for size_t */
 
-#include "UpnpGlobal.hpp" /* for EXPORT_SPEC */
+// #include "UpnpGlobal.hpp" /* for EXPORT_SPEC */
 
 #include "UpnpString.hpp"
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 /*!
  * UpnpSubscriptionRequest
@@ -99,5 +103,9 @@ EXPORT_SPEC int UpnpSubscriptionRequest_strncpy_SID(UpnpSubscriptionRequest* p,
                                                     const char* s, size_t n);
 /*! UpnpSubscriptionRequest_clear_SID */
 EXPORT_SPEC void UpnpSubscriptionRequest_clear_SID(UpnpSubscriptionRequest* p);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* UPNPLIB_UPNPSUBSCRIPTIONREQUEST_HPP */

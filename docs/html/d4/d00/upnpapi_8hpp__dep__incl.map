@@ -1,25 +1,25 @@
 <map id="Compa/src/inc/upnpapi.hpp" name="Compa/src/inc/upnpapi.hpp">
-<area shape="rect" id="Node000001" title="Inititalize the compatible library before it can be used." alt="" coords="1012,5,1211,31"/>
-<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html" title="Inititalize the compatible library before it can be used." alt="" coords="5,86,204,111"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="998,26,649,44,433,60,217,81,167,89,166,83,216,76,433,55,649,39,998,21"/>
-<area shape="rect" id="Node000003" href="$d6/de3/gena__ctrlpt_8cpp.html" title="Manage GENA control point." alt="" coords="229,79,391,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="998,27,727,46,565,62,404,81,392,83,391,78,403,76,564,56,726,41,998,22"/>
-<area shape="rect" id="Node000004" href="$dd/de6/gena__device_8cpp.html" title="Manage GENA Devices." alt="" coords="415,79,578,119"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="998,32,807,52,590,81,578,83,578,78,590,76,806,47,997,27"/>
-<area shape="rect" id="Node000005" href="$d5/db2/miniserver_8cpp.html" title="Implements the functionality and utility functions used by the Miniserver module." alt="" coords="603,79,812,119"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="1040,36,805,81,804,76,1039,31"/>
-<area shape="rect" id="Node000006" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html" title="This file defines the functionality making use of the http." alt="" coords="837,79,1007,119"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="1072,38,969,81,967,76,1070,33"/>
-<area shape="rect" id="Node000007" href="$d1/d28/Compa_2src_2genlib_2net_2http_2webserver_8cpp.html" title="Internal Web Server and functions to carry out operations of it." alt="" coords="1031,79,1191,119"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="1114,44,1114,79,1109,79,1109,44"/>
-<area shape="rect" id="Node000008" href="$d9/dd1/soap__ctrlpt_8cpp.html" title="Items for control points to manage UPnP Control." alt="" coords="1216,79,1377,119"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="1152,33,1253,76,1251,81,1150,38"/>
-<area shape="rect" id="Node000009" href="$d6/d92/soap__device_8cpp.html" title="Items for UPnP devices to manage UPnP Control." alt="" coords="1401,79,1563,119"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="1179,31,1402,78,1400,83,1178,36"/>
-<area shape="rect" id="Node000010" href="$df/d13/ssdp__common_8cpp.html" title="Manage &quot;Step 1: Discovery&quot; of the UPnP+™ specification for common SSDP usage." alt="" coords="1587,79,1745,119"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="1225,29,1391,49,1576,76,1587,78,1586,83,1575,81,1390,54,1224,34"/>
-<area shape="rect" id="Node000011" href="$d4/d99/ssdp__ctrlpt_8cpp.html" title="Manage &quot;Step 1: Discovery&quot; of the UPnP+™ specification for Control Points with SSDP." alt="" coords="1769,79,1928,119"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="1225,23,1470,42,1615,57,1758,76,1770,78,1769,83,1758,81,1614,63,1470,48,1224,29"/>
-<area shape="rect" id="Node000012" href="$db/db9/ssdp__device_8cpp.html" title="Manage &quot;Step 1: Discovery&quot; of the UPnP+™ specification for UPnP Devices with SSDP." alt="" coords="1952,79,2111,119"/>
-<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="1224,20,1547,37,1744,53,1941,76,1952,78,1951,83,1940,81,1744,59,1547,42,1224,25"/>
+<area shape="rect" id="Node000001" title="Inititalize the compatible library before it can be used." alt="" coords="932,5,1113,31"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html" title="Inititalize the compatible library before it can be used." alt="" coords="5,86,187,111"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="918,26,596,44,398,60,199,81,153,89,152,83,198,76,397,55,596,39,918,21"/>
+<area shape="rect" id="Node000003" href="$d6/de3/gena__ctrlpt_8cpp.html" title="Manage GENA control point." alt="" coords="211,79,362,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="918,28,669,46,521,62,374,81,363,83,362,78,373,76,521,56,669,41,918,22"/>
+<area shape="rect" id="Node000004" href="$dd/de6/gena__device_8cpp.html" title="Manage GENA Devices." alt="" coords="386,79,537,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="919,32,745,53,548,81,537,83,536,78,548,76,744,47,918,27"/>
+<area shape="rect" id="Node000005" href="$d5/db2/miniserver_8cpp.html" title="Implements the functionality and utility functions used by the Miniserver module." alt="" coords="561,79,749,119"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="956,36,743,81,742,76,955,31"/>
+<area shape="rect" id="Node000006" href="$da/d17/Compa_2src_2genlib_2net_2http_2httpreadwrite_8cpp.html" title="This file defines the functionality making use of the http." alt="" coords="773,79,925,119"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="986,39,892,81,890,76,984,34"/>
+<area shape="rect" id="Node000007" href="$d1/d28/Compa_2src_2genlib_2net_2http_2webserver_8cpp.html" title="Internal Web Server and functions to carry out operations of it." alt="" coords="949,79,1096,119"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="1025,44,1025,79,1020,79,1020,44"/>
+<area shape="rect" id="Node000008" href="$d9/dd1/soap__ctrlpt_8cpp.html" title="Items for control points to manage UPnP Control." alt="" coords="1121,79,1271,119"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="1061,34,1155,76,1153,81,1059,39"/>
+<area shape="rect" id="Node000009" href="$d6/d92/soap__device_8cpp.html" title="Items for UPnP devices to manage UPnP Control." alt="" coords="1295,79,1446,119"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="1087,31,1296,78,1294,83,1086,36"/>
+<area shape="rect" id="Node000010" href="$df/d13/ssdp__common_8cpp.html" title="Manage &quot;Step 1: Discovery&quot; of the UPnP+™ specification for common SSDP usage." alt="" coords="1470,79,1621,119"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="1127,29,1284,49,1459,76,1470,78,1469,83,1458,81,1283,54,1127,34"/>
+<area shape="rect" id="Node000011" href="$d4/d99/ssdp__ctrlpt_8cpp.html" title="Manage &quot;Step 1: Discovery&quot; of the UPnP+™ specification for Control Points with SSDP." alt="" coords="1645,79,1795,119"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="1127,23,1360,42,1497,57,1634,76,1645,78,1644,83,1633,81,1496,63,1359,48,1127,28"/>
+<area shape="rect" id="Node000012" href="$db/db9/ssdp__device_8cpp.html" title="Manage &quot;Step 1: Discovery&quot; of the UPnP+™ specification for UPnP Devices with SSDP." alt="" coords="1819,79,1970,119"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="1128,20,1434,37,1621,53,1808,76,1820,78,1819,83,1808,81,1621,59,1433,42,1127,25"/>
 </map>

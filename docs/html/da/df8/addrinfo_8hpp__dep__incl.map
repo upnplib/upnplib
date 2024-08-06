@@ -1,9 +1,9 @@
 <map id="Upnplib/include/upnplib/addrinfo.hpp" name="Upnplib/include/upnplib/addrinfo.hpp">
-<area shape="rect" id="Node000001" title="Declaration of the Addrinfo class." alt="" coords="247,5,422,45"/>
-<area shape="rect" id="Node000002" href="$dc/d59/addrinfo_8cpp.html" title="Definition of the Addrinfo class and free helper functions." alt="" coords="5,93,211,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="268,52,142,96,141,91,266,47"/>
-<area shape="rect" id="Node000003" href="$d5/dd7/netaddr_8cpp.html" title="Definition of the Netaddr class." alt="" coords="235,93,435,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="337,59,337,93,332,93,332,59"/>
-<area shape="rect" id="Node000004" href="$d8/d81/socket_8cpp.html" title="Definition of the &#39;class Socket&#39;." alt="" coords="459,93,653,119"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="401,47,524,91,522,96,400,52"/>
+<area shape="rect" id="Node000001" title="Declaration of the Addrinfo class." alt="" coords="228,5,384,45"/>
+<area shape="rect" id="Node000002" href="$dc/d59/addrinfo_8cpp.html" title="Definition of the Addrinfo class and free helper functions." alt="" coords="5,93,191,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="245,53,130,96,128,91,243,48"/>
+<area shape="rect" id="Node000003" href="$d5/dd7/netaddr_8cpp.html" title="Definition of the Netaddr class." alt="" coords="215,93,397,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="309,59,309,93,303,93,303,59"/>
+<area shape="rect" id="Node000004" href="$d8/d81/socket_8cpp.html" title="Definition of the &#39;class Socket&#39;." alt="" coords="422,93,601,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="369,48,482,91,480,96,367,53"/>
 </map>

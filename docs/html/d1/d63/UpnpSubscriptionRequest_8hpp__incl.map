@@ -1,7 +1,7 @@
 <map id="Compa/inc/UpnpSubscriptionRequest.hpp" name="Compa/inc/UpnpSubscriptionRequest.hpp">
-<area shape="rect" id="Node000001" title="Header file for UpnpSubscriptionRequest methods." alt="" coords="5,5,215,45"/>
-<area shape="rect" id="Node000002" href="$d3/dd1/UpnpString_8hpp.html" title="UpnpString object declaration." alt="" coords="49,93,171,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,46,113,79,107,79,107,46"/>
-<area shape="rect" id="Node000003" href="$d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="32,167,188,192"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="113,119,113,153,107,153,107,119"/>
+<area shape="rect" id="Node000001" title="Header file for UpnpSubscriptionRequest methods." alt="" coords="5,5,197,45"/>
+<area shape="rect" id="Node000002" href="$d3/dd1/UpnpString_8hpp.html" title="UpnpString object declaration." alt="" coords="45,93,157,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,46,104,79,99,79,99,46"/>
+<area shape="rect" id="Node000003" href="$d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="32,167,171,192"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="104,119,104,153,99,153,99,119"/>
 </map>

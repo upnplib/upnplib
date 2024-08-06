@@ -1,5 +1,5 @@
 <map id="s_UpnpStateVarRequest" name="s_UpnpStateVarRequest">
-<area shape="rect" id="Node000001" title="With header typedef &quot;protected&quot; s_UpnpStateVarRequest." alt="" coords="5,137,184,163"/>
-<area shape="rect" id="Node000002" href="$d1/d03/group__UpnpString.html#d8/dbb/structs__UpnpString" title="Internal implementation of the class UpnpString." alt="" coords="41,5,149,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,44,97,137,92,137,92,44"/>
+<area shape="rect" id="Node000001" title="With header typedef &quot;protected&quot; s_UpnpStateVarRequest." alt="" coords="5,137,172,163"/>
+<area shape="rect" id="Node000002" href="$d1/d03/group__UpnpString.html#d8/dbb/structs__UpnpString" title="Internal implementation of the class UpnpString." alt="" coords="38,5,139,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,44,91,137,86,137,86,44"/>
 </map>

@@ -1,5 +1,5 @@
 <map id="UpnpAddToAction" name="UpnpAddToAction">
-<area shape="rect" id="Node000001" title="Adds the argument in the action request." alt="" coords="5,5,141,31"/>
-<area shape="rect" id="Node000002" href="$d6/d13/Compa_2src_2api_2upnptools_8cpp.html#aafd756cb03883fef4d1a7ee52c53a5eb" title="Adds the argument in the action request or response." alt="" coords="189,5,291,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="141,15,176,15,176,21,141,21"/>
+<area shape="rect" id="Node000001" title="Adds the argument in the action request." alt="" coords="5,5,132,31"/>
+<area shape="rect" id="Node000002" href="$d6/d13/Compa_2src_2api_2upnptools_8cpp.html#aafd756cb03883fef4d1a7ee52c53a5eb" title="Adds the argument in the action request or response." alt="" coords="180,5,275,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,15,167,15,167,21,132,21"/>
 </map>

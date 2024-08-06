@@ -1,5 +1,5 @@
 <map id="UpnpAddToActionResponse" name="UpnpAddToActionResponse">
-<area shape="rect" id="Node000001" title="Creates an action response packet based on its output parameters (status variable name and value pair..." alt="" coords="5,5,204,31"/>
-<area shape="rect" id="Node000002" href="$d6/d13/Compa_2src_2api_2upnptools_8cpp.html#aafd756cb03883fef4d1a7ee52c53a5eb" title="Adds the argument in the action request or response." alt="" coords="252,5,353,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="204,15,238,15,238,21,204,21"/>
+<area shape="rect" id="Node000001" title="Creates an action response packet based on its output parameters (status variable name and value pair..." alt="" coords="5,5,192,31"/>
+<area shape="rect" id="Node000002" href="$d6/d13/Compa_2src_2api_2upnptools_8cpp.html#aafd756cb03883fef4d1a7ee52c53a5eb" title="Adds the argument in the action request or response." alt="" coords="240,5,335,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,15,226,15,226,21,192,21"/>
 </map>

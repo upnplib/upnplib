@@ -1,33 +1,33 @@
 <map id="anonymous_namespace{gena_ctrlpt::cpp}::free_subscribe_arg" name="anonymous_namespace{gena_ctrlpt::cpp}::free_subscribe_arg">
-<area shape="rect" id="Node000001" title="Free memory associated with job&#39;s argument." alt="" coords="1464,140,1644,195"/>
-<area shape="rect" id="Node000002" href="$d6/dd1/namespaceanonymous__namespace_02gena__ctrlpt_8cpp_03.html#a6d433d434965ae0ed59a09f3c38bf03a" title="This is a thread function to send the renewal just before the subscription times out." alt="" coords="1205,172,1416,227"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1451,184,1416,188,1416,183,1450,178"/>
-<area shape="rect" id="Node000003" href="$d6/dd1/namespaceanonymous__namespace_02gena__ctrlpt_8cpp_03.html#a997a87554e5a4d733d3cc13bcb1c1dd8" title="Schedules a job to renew the subscription just before time out." alt="" coords="968,107,1157,161"/>
-<area shape="poly" id="edge17_Node000001_Node000003" title=" " alt="" coords="1450,163,1157,143,1158,138,1450,158"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1193,171,1157,161,1158,156,1194,166"/>
-<area shape="rect" id="Node000004" href="$d6/de3/gena__ctrlpt_8cpp.html#ac18ff86dd814e974314f13e3f4b12316" title="Renews a SID." alt="" coords="741,179,920,204"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="955,163,883,181,882,176,954,158"/>
-<area shape="rect" id="Node000013" href="$d6/de3/gena__ctrlpt_8cpp.html#a8fa71879823e3dc936bac4847ca1fcc5" title="This function subscribes to a PublisherURL (also mentioned as EventURL in some places)." alt="" coords="772,121,889,147"/>
-<area shape="poly" id="edge14_Node000003_Node000013" title=" " alt="" coords="954,137,890,137,890,131,954,131"/>
-<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="934,190,1205,195,1205,200,934,196"/>
-<area shape="rect" id="Node000005" href="$d4/d99/upnpapi_8cpp.html#a35ef4435d66e949e612a9ca4f17c48f8" title="Renews a subscription that is about to expire." alt="" coords="513,179,693,204"/>
-<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="728,194,694,194,694,189,728,189"/>
-<area shape="rect" id="Node000006" href="$d4/d99/upnpapi_8cpp.html#a282c8419fef146b7170ee266159029e6" title="Schedule async functions in threadpool." alt="" coords="515,129,692,155"/>
-<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="758,178,662,157,663,152,759,173"/>
-<area shape="rect" id="Node000007" href="$d4/d99/upnpapi_8cpp.html#a8cd338e66ebab077fa1f0d9bb0bec183" title="Queries the state of a variable of a service, generating a callback when the operation is complete." alt="" coords="237,5,465,31"/>
-<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="523,126,512,119,495,100,487,80,480,61,464,44,443,33,445,28,467,40,484,58,492,78,499,97,515,115,525,121"/>
-<area shape="rect" id="Node000008" href="$d4/d99/upnpapi_8cpp.html#a69d01558a5fdec26320b6ea9683f9d70" title="Renews a subscription that is about to expire, generating a callback when the operation is complete." alt="" coords="242,55,461,80"/>
-<area shape="poly" id="edge8_Node000006_Node000008" title=" " alt="" coords="537,128,512,119,488,106,464,94,426,83,428,78,466,89,491,101,514,114,539,123"/>
-<area shape="rect" id="Node000009" href="$d4/d99/upnpapi_8cpp.html#a012bb5501f0167248edf7447ee3f092c" title="Sends a message to change a state variable in a service, generating a callback when the operation is ..." alt="" coords="267,104,435,129"/>
-<area shape="poly" id="edge9_Node000006_Node000009" title=" " alt="" coords="501,134,435,128,436,122,501,129"/>
-<area shape="rect" id="Node000010" href="$d4/d99/upnpapi_8cpp.html#abd5f9f5ca2e83b67eb0dd421ffd030f9" title="Sends a message to change a state variable in a service, generating a callback when the operation is ..." alt="" coords="5,129,189,155"/>
-<area shape="poly" id="edge11_Node000006_Node000010" title=" " alt="" coords="501,145,190,145,190,139,501,139"/>
-<area shape="rect" id="Node000011" href="$d4/d99/upnpapi_8cpp.html#aadb37732f8450dd78eb205842ff82a61" title="Performs the same operation as UpnpSubscribe, but returns immediately and calls the registered callba..." alt="" coords="272,205,431,231"/>
-<area shape="poly" id="edge12_Node000006_Node000011" title=" " alt="" coords="538,161,514,169,466,189,403,208,402,203,464,183,512,163,537,156"/>
-<area shape="rect" id="Node000012" href="$d4/d99/upnpapi_8cpp.html#a6c8bd43f4e0357cdc04939ddd60b383c" title="Removes a subscription of a control point from a service previously subscribed to using UpnpSubscribe..." alt="" coords="263,255,439,280"/>
-<area shape="poly" id="edge13_Node000006_Node000012" title=" " alt="" coords="523,163,515,168,499,186,492,206,485,226,467,245,441,259,438,254,464,241,480,223,487,204,494,184,512,164,520,159"/>
-<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="254,129,190,136,189,130,253,124"/>
-<area shape="poly" id="edge16_Node000013_Node000006" title=" " alt="" coords="758,139,692,142,692,136,758,134"/>
-<area shape="rect" id="Node000014" href="$d4/d99/upnpapi_8cpp.html#a0777bb16dfc74c68a8202e2d9169ebe5" title="Registers a control point to receive event notifications from another device." alt="" coords="544,80,663,105"/>
-<area shape="poly" id="edge15_Node000013_Node000014" title=" " alt="" coords="758,124,662,106,663,101,759,118"/>
+<area shape="rect" id="Node000001" title="Free memory associated with job&#39;s argument." alt="" coords="1376,140,1539,195"/>
+<area shape="rect" id="Node000002" href="$d6/dd1/namespaceanonymous__namespace_02gena__ctrlpt_8cpp_03.html#a6d433d434965ae0ed59a09f3c38bf03a" title="This is a thread function to send the renewal just before the subscription times out." alt="" coords="1135,172,1328,227"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1362,183,1328,188,1328,183,1361,178"/>
+<area shape="rect" id="Node000003" href="$d6/dd1/namespaceanonymous__namespace_02gena__ctrlpt_8cpp_03.html#a997a87554e5a4d733d3cc13bcb1c1dd8" title="Schedules a job to renew the subscription just before time out." alt="" coords="912,107,1087,161"/>
+<area shape="poly" id="edge17_Node000001_Node000003" title=" " alt="" coords="1362,163,1087,143,1087,138,1362,158"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1120,171,1086,161,1087,156,1122,166"/>
+<area shape="rect" id="Node000004" href="$d6/de3/gena__ctrlpt_8cpp.html#ac18ff86dd814e974314f13e3f4b12316" title="Renews a SID." alt="" coords="701,179,864,204"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="899,163,832,181,831,176,898,158"/>
+<area shape="rect" id="Node000013" href="$d6/de3/gena__ctrlpt_8cpp.html#a8fa71879823e3dc936bac4847ca1fcc5" title="This function subscribes to a PublisherURL (also mentioned as EventURL in some places)." alt="" coords="729,121,837,147"/>
+<area shape="poly" id="edge14_Node000003_Node000013" title=" " alt="" coords="898,137,837,137,837,131,898,131"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="878,190,1134,195,1134,200,878,196"/>
+<area shape="rect" id="Node000005" href="$d4/d99/upnpapi_8cpp.html#a35ef4435d66e949e612a9ca4f17c48f8" title="Renews a subscription that is about to expire." alt="" coords="487,179,653,204"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="687,194,653,194,653,189,687,189"/>
+<area shape="rect" id="Node000006" href="$d4/d99/upnpapi_8cpp.html#a282c8419fef146b7170ee266159029e6" title="Schedule async functions in threadpool." alt="" coords="491,129,649,155"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="713,178,625,157,626,152,715,173"/>
+<area shape="rect" id="Node000007" href="$d4/d99/upnpapi_8cpp.html#a8cd338e66ebab077fa1f0d9bb0bec183" title="Queries the state of a variable of a service, generating a callback when the operation is complete." alt="" coords="227,5,439,31"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="496,126,485,119,468,100,461,80,453,61,437,44,416,33,419,28,440,40,458,58,465,78,473,97,488,115,499,121"/>
+<area shape="rect" id="Node000008" href="$d4/d99/upnpapi_8cpp.html#a69d01558a5fdec26320b6ea9683f9d70" title="Renews a subscription that is about to expire, generating a callback when the operation is complete." alt="" coords="231,55,434,80"/>
+<area shape="poly" id="edge8_Node000006_Node000008" title=" " alt="" coords="508,128,486,119,462,106,438,94,400,83,402,77,440,89,464,101,488,114,510,123"/>
+<area shape="rect" id="Node000009" href="$d4/d99/upnpapi_8cpp.html#a012bb5501f0167248edf7447ee3f092c" title="Sends a message to change a state variable in a service, generating a callback when the operation is ..." alt="" coords="254,104,411,129"/>
+<area shape="poly" id="edge9_Node000006_Node000009" title=" " alt="" coords="477,135,411,128,412,122,477,129"/>
+<area shape="rect" id="Node000010" href="$d4/d99/upnpapi_8cpp.html#abd5f9f5ca2e83b67eb0dd421ffd030f9" title="Sends a message to change a state variable in a service, generating a callback when the operation is ..." alt="" coords="5,129,179,155"/>
+<area shape="poly" id="edge11_Node000006_Node000010" title=" " alt="" coords="477,145,179,145,179,139,477,139"/>
+<area shape="rect" id="Node000011" href="$d4/d99/upnpapi_8cpp.html#aadb37732f8450dd78eb205842ff82a61" title="Performs the same operation as UpnpSubscribe, but returns immediately and calls the registered callba..." alt="" coords="259,205,407,231"/>
+<area shape="poly" id="edge12_Node000006_Node000011" title=" " alt="" coords="510,161,488,168,440,189,380,208,378,203,438,183,486,164,508,156"/>
+<area shape="rect" id="Node000012" href="$d4/d99/upnpapi_8cpp.html#a6c8bd43f4e0357cdc04939ddd60b383c" title="Removes a subscription of a control point from a service previously subscribed to using UpnpSubscribe..." alt="" coords="250,255,415,280"/>
+<area shape="poly" id="edge13_Node000006_Node000012" title=" " alt="" coords="496,163,488,168,473,186,465,206,458,226,440,245,417,258,414,253,437,241,453,223,460,204,468,184,485,164,493,159"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="240,129,179,136,179,130,239,124"/>
+<area shape="poly" id="edge16_Node000013_Node000006" title=" " alt="" coords="715,139,650,142,650,136,714,134"/>
+<area shape="rect" id="Node000014" href="$d4/d99/upnpapi_8cpp.html#a0777bb16dfc74c68a8202e2d9169ebe5" title="Registers a control point to receive event notifications from another device." alt="" coords="515,80,625,105"/>
+<area shape="poly" id="edge15_Node000013_Node000014" title=" " alt="" coords="714,124,625,106,626,101,716,118"/>
 </map>

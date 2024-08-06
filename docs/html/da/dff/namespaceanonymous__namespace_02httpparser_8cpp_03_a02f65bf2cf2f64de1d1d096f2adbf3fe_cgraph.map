@@ -1,14 +1,14 @@
 <map id="anonymous_namespace{httpparser::cpp}::skip_blank_lines" name="anonymous_namespace{httpparser::cpp}::skip_blank_lines">
-<area shape="rect" id="Node000001" title="Skips blank lines at the start of a msg." alt="" coords="5,117,185,172"/>
-<area shape="rect" id="Node000002" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#aaed6a3a6bacd057e854adff4617e7b14" title="Reads next token from the input stream." alt="" coords="233,117,428,172"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,142,220,142,220,147,186,147"/>
-<area shape="rect" id="Node000003" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#abf87c2390f505c362f987888532ff366" title="Determines if the passed value is a control character." alt="" coords="476,5,656,60"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="383,115,475,69,487,63,489,68,477,74,385,120"/>
-<area shape="rect" id="Node000004" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#a397ada9472b0ce782d9636144528c8cf" title="Determines if the passed value is permissible in token." alt="" coords="476,84,656,139"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="428,128,462,123,463,129,429,134"/>
-<area shape="rect" id="Node000005" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#a119ec2e9ed02e25cb1dfd3cbba91ab0c" title="Determines if the passed value is a separator." alt="" coords="704,117,884,172"/>
-<area shape="poly" id="edge6_Node000002_Node000005" title=" " alt="" coords="428,146,476,147,656,147,690,146,690,152,656,153,476,153,428,151"/>
-<area shape="rect" id="Node000006" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#aa8849fbe55dcefa7ab2465ea8aabd214" title="Determines if the passed value is permissible in qdtext." alt="" coords="476,215,656,269"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="398,170,488,207,486,212,396,174"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="657,122,691,127,690,132,656,127"/>
+<area shape="rect" id="Node000001" title="Skips blank lines at the start of a msg." alt="" coords="5,117,168,172"/>
+<area shape="rect" id="Node000002" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#aaed6a3a6bacd057e854adff4617e7b14" title="Reads next token from the input stream." alt="" coords="216,117,387,172"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,142,202,142,202,147,168,147"/>
+<area shape="rect" id="Node000003" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#abf87c2390f505c362f987888532ff366" title="Determines if the passed value is a control character." alt="" coords="435,5,597,60"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="349,115,433,69,443,64,446,69,436,74,352,120"/>
+<area shape="rect" id="Node000004" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#a397ada9472b0ce782d9636144528c8cf" title="Determines if the passed value is permissible in token." alt="" coords="435,84,597,139"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="387,129,421,123,422,129,387,134"/>
+<area shape="rect" id="Node000005" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#a119ec2e9ed02e25cb1dfd3cbba91ab0c" title="Determines if the passed value is a separator." alt="" coords="645,117,808,172"/>
+<area shape="poly" id="edge6_Node000002_Node000005" title=" " alt="" coords="387,146,435,147,597,147,632,146,632,152,597,153,435,153,387,151"/>
+<area shape="rect" id="Node000006" href="$da/dff/namespaceanonymous__namespace_02httpparser_8cpp_03.html#aa8849fbe55dcefa7ab2465ea8aabd214" title="Determines if the passed value is permissible in qdtext." alt="" coords="435,215,597,269"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="363,170,444,207,442,211,361,174"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="598,122,632,127,631,132,597,127"/>
 </map>

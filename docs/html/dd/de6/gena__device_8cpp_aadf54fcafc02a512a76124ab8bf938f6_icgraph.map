@@ -1,5 +1,5 @@
 <map id="genaInitNotifyExt" name="genaInitNotifyExt">
-<area shape="rect" id="Node000001" title="Similar to the genaInitNofity. The only difference is that it takes the xml document for the state ta..." alt="" coords="255,5,389,31"/>
-<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#ab7f67326e349b9025ac62d0b8ae8ae43" title="Similar to UpnpAcceptSubscription() except that it takes a DOM document for the variables to event ra..." alt="" coords="5,5,207,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="241,21,207,21,207,15,241,15"/>
+<area shape="rect" id="Node000001" title="Similar to the genaInitNofity. The only difference is that it takes the xml document for the state ta..." alt="" coords="240,5,363,31"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#ab7f67326e349b9025ac62d0b8ae8ae43" title="Similar to UpnpAcceptSubscription() except that it takes a DOM document for the variables to event ra..." alt="" coords="5,5,192,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="227,21,192,21,192,15,227,15"/>
 </map>

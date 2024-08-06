@@ -1,13 +1,13 @@
 <map id="UpnpStateVarRequest_new" name="UpnpStateVarRequest_new">
-<area shape="rect" id="Node000001" title=" " alt="" coords="780,52,979,77"/>
-<area shape="rect" id="Node000002" href="$d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#ade7f137927ec56c6a4c47b57ac6fc3a5" title="Handles the SOAP requests to querry the state variables." alt="" coords="545,5,725,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="768,53,724,47,725,42,769,48"/>
-<area shape="rect" id="Node000006" href="$d3/d7b/UpnpStateVarRequest_8cpp.html#a3866a42a64ca574f4735248481d0c88b" title=" " alt="" coords="537,84,732,109"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="769,82,732,87,732,81,768,76"/>
-<area shape="rect" id="Node000003" href="$d6/d92/soap__device_8cpp.html#a4b5104845d73b836d6365a306fba1679" title="This is a callback called by minisever." alt="" coords="325,20,489,45"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="531,35,490,35,490,30,531,30"/>
-<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="139,20,277,45"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="311,35,278,35,278,30,311,30"/>
-<area shape="rect" id="Node000005" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="5,20,91,45"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="125,35,91,35,91,30,125,30"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="733,52,916,77"/>
+<area shape="rect" id="Node000002" href="$d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#ade7f137927ec56c6a4c47b57ac6fc3a5" title="Handles the SOAP requests to querry the state variables." alt="" coords="514,5,677,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="720,53,676,47,677,41,720,47"/>
+<area shape="rect" id="Node000006" href="$d3/d7b/UpnpStateVarRequest_8cpp.html#a3866a42a64ca574f4735248481d0c88b" title=" " alt="" coords="505,84,685,109"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="720,82,686,87,685,81,719,77"/>
+<area shape="rect" id="Node000003" href="$d6/d92/soap__device_8cpp.html#a4b5104845d73b836d6365a306fba1679" title="This is a callback called by minisever." alt="" coords="307,20,457,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="500,35,457,35,457,30,500,30"/>
+<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="132,20,259,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="293,35,259,35,259,30,293,30"/>
+<area shape="rect" id="Node000005" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="5,20,84,45"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="118,35,84,35,84,30,118,30"/>
 </map>

@@ -1,8 +1,8 @@
 <map id="UpnpSendAdvertisement" name="UpnpSendAdvertisement">
-<area shape="rect" id="Node000001" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="427,31,611,56"/>
-<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#abb1ab3d0ba145286005284d447110fce" title="This function is a timer thread scheduled by UpnpSendAdvertisement to the send advetisement again." alt="" coords="264,5,379,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="413,32,378,28,379,23,413,27"/>
-<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a35b8096fd45fc632c6ac12a835d67f53" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="5,23,216,63"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="250,29,216,33,216,28,250,24"/>
-<area shape="poly" id="edge3_Node000003_Node000001" title=" " alt="" coords="230,41,426,41,426,46,230,46"/>
+<area shape="rect" id="Node000001" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="396,31,563,56"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#abb1ab3d0ba145286005284d447110fce" title="This function is a timer thread scheduled by UpnpSendAdvertisement to the send advetisement again." alt="" coords="244,5,348,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="382,33,348,28,348,22,383,27"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#a35b8096fd45fc632c6ac12a835d67f53" title="Sends out the discovery announcements for all devices and services contained within one root device." alt="" coords="5,23,196,63"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="230,29,197,34,196,28,230,24"/>
+<area shape="poly" id="edge3_Node000003_Node000001" title=" " alt="" coords="210,41,396,41,396,46,210,46"/>
 </map>

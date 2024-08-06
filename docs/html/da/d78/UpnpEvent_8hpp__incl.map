@@ -1,9 +1,9 @@
 <map id="Compa/inc/UpnpEvent.hpp" name="Compa/inc/UpnpEvent.hpp">
-<area shape="rect" id="Node000001" title="Header file for UpnpEvent methods." alt="" coords="10,5,205,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,84,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,33,66,70,62,66,95,29"/>
-<area shape="rect" id="Node000003" href="$d3/dd1/UpnpString_8hpp.html" title="UpnpString object declaration." alt="" coords="109,79,231,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="120,29,153,66,149,70,116,33"/>
-<area shape="rect" id="Node000004" href="$d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="92,152,248,177"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="173,104,173,138,167,138,167,104"/>
+<area shape="rect" id="Node000001" title="Header file for UpnpEvent methods." alt="" coords="9,5,187,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,76,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,33,61,70,57,66,86,29"/>
+<area shape="rect" id="Node000003" href="$d3/dd1/UpnpString_8hpp.html" title="UpnpString object declaration." alt="" coords="101,79,213,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="110,29,141,67,137,70,106,33"/>
+<area shape="rect" id="Node000004" href="$d0/d21/visibility_8hpp.html" title="Macros to support visibility of external symbols." alt="" coords="87,152,226,177"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="159,104,159,138,154,138,154,104"/>
 </map>

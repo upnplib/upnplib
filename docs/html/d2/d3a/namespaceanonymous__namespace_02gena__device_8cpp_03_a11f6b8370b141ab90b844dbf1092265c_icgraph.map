@@ -1,14 +1,14 @@
 <map id="anonymous_namespace{gena_device::cpp}::respond_ok" name="anonymous_namespace{gena_device::cpp}::respond_ok">
-<area shape="rect" id="Node000001" title="Returns OK message in the case of a subscription request." alt="" coords="729,30,909,85"/>
-<area shape="rect" id="Node000002" href="$dd/de6/gena__device_8cpp.html#a6fd1575d4217390506014c896b22251e" title="Handles a subscription renewal request from a ctrl point. The connection is not destroyed on return." alt="" coords="484,5,681,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="715,46,681,41,682,36,716,41"/>
-<area shape="rect" id="Node000006" href="$dd/de6/gena__device_8cpp.html#a25ad1852d4d32c6f34a87b92225202fd" title="Handles a subscription request from a ctrl point. The socket is not closed on return." alt="" coords="484,69,681,109"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="716,74,682,79,681,73,715,69"/>
-<area shape="rect" id="Node000003" href="$dc/d02/gena__callback2_8cpp.html#a6f658b4eab5786398a00a53b87e7c622" title="This is the callback function called by the miniserver to handle incoming GENA requests." alt="" coords="325,45,436,70"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="471,46,437,51,436,46,470,41"/>
-<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="139,45,277,70"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="312,60,277,60,277,55,312,55"/>
-<area shape="rect" id="Node000005" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="5,45,91,70"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="125,60,91,60,91,55,125,55"/>
-<area shape="poly" id="edge6_Node000006_Node000003" title=" " alt="" coords="470,74,436,69,437,63,471,69"/>
+<area shape="rect" id="Node000001" title="Returns OK message in the case of a subscription request." alt="" coords="684,30,847,85"/>
+<area shape="rect" id="Node000002" href="$dd/de6/gena__device_8cpp.html#a6fd1575d4217390506014c896b22251e" title="Handles a subscription renewal request from a ctrl point. The connection is not destroyed on return." alt="" coords="456,5,636,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="670,46,636,41,637,36,671,41"/>
+<area shape="rect" id="Node000006" href="$dd/de6/gena__device_8cpp.html#a25ad1852d4d32c6f34a87b92225202fd" title="Handles a subscription request from a ctrl point. The socket is not closed on return." alt="" coords="456,69,636,109"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="671,74,637,79,636,74,670,68"/>
+<area shape="rect" id="Node000003" href="$dc/d02/gena__callback2_8cpp.html#a6f658b4eab5786398a00a53b87e7c622" title="This is the callback function called by the miniserver to handle incoming GENA requests." alt="" coords="307,45,408,70"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="443,46,409,51,408,46,442,40"/>
+<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="132,45,259,70"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="293,60,259,60,259,55,293,55"/>
+<area shape="rect" id="Node000005" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="5,45,84,70"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="118,60,84,60,84,55,118,55"/>
+<area shape="poly" id="edge6_Node000006_Node000003" title=" " alt="" coords="442,74,408,69,409,63,443,69"/>
 </map>

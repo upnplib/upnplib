@@ -1,7 +1,7 @@
 #ifndef COMPA_UPNPACTIONCOMPLETE_HPP
 #define COMPA_UPNPACTIONCOMPLETE_HPP
 // Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2024-01-28
+// Redistribution only with this Copyright remark. Last modified: 2024-08-13
 /*!
  * \file
  *
@@ -14,6 +14,10 @@
 
 /*! UpnpActionComplete */
 typedef struct s_UpnpActionComplete UpnpActionComplete;
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 /*! Constructor */
 UPNPLIB_API UpnpActionComplete* UpnpActionComplete_new();
@@ -65,4 +69,8 @@ UpnpActionComplete_get_ActionResult(const UpnpActionComplete* p);
 /*! UpnpActionComplete_set_ActionResult */
 UPNPLIB_API int UpnpActionComplete_set_ActionResult(UpnpActionComplete* p,
                                                     IXML_Document* n);
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+
 #endif /* COMPA_UPNPACTIONCOMPLETE_HPP */

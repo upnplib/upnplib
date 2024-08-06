@@ -1,9 +1,11 @@
+#ifndef UPNPLIB_IXML_HPP
+#define UPNPLIB_IXML_HPP
 /**************************************************************************
  *
  * Copyright (c) 2000-2003 Intel Corporation
  * All rights reserved.
  * Copyright (C) 2022 GPL 3 and higher by Ingo Höft,  <Ingo@Hoeft-online.de>
- * Redistribution only with this Copyright remark. Last modified: 2024-08-05
+ * Redistribution only with this Copyright remark. Last modified: 2024-08-13
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,9 +33,6 @@
  *
  **************************************************************************/
 
-#ifndef UPNPLIB_IXML_HPP
-#define UPNPLIB_IXML_HPP
-
 /*!
  * \file
  *
@@ -43,6 +42,10 @@
  */
 
 #include <UpnpGlobal.hpp> /* For EXPORT_SPEC */
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 /*!
  * \brief The type of DOM strings.
@@ -1713,6 +1716,10 @@ EXPORT_SPEC void ixmlFreeDOMString(
     DOMString buf);
 
 /* @} IXML API */
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 /* @} XMLAPI XML API */
 

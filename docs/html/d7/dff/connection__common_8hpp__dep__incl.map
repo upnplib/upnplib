@@ -1,7 +1,7 @@
 <map id="Upnplib/include/upnplib/connection_common.hpp" name="Upnplib/include/upnplib/connection_common.hpp">
-<area shape="rect" id="Node000001" title="Declaration of common used classes and free functions for network connections." alt="" coords="91,5,280,45"/>
-<area shape="rect" id="Node000002" href="$d5/d78/sock_8cpp.html" title="Manage network sockets and connections." alt="" coords="5,93,165,133"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="155,56,109,95,106,91,151,52"/>
-<area shape="rect" id="Node000003" href="$dc/df7/connection__common_8cpp.html" title="Definition of common used classes and free functions for network connections." alt="" coords="189,93,384,133"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="220,52,266,91,263,95,217,56"/>
+<area shape="rect" id="Node000001" title="Declaration of common used classes and free functions for network connections." alt="" coords="87,5,257,45"/>
+<area shape="rect" id="Node000002" href="$d5/d78/sock_8cpp.html" title="Manage network sockets and connections." alt="" coords="5,93,152,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="143,57,101,95,98,91,139,53"/>
+<area shape="rect" id="Node000003" href="$dc/df7/connection__common_8cpp.html" title="Definition of common used classes and free functions for network connections." alt="" coords="177,93,354,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="205,53,246,91,243,95,201,57"/>
 </map>

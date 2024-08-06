@@ -1,11 +1,11 @@
 <map id="anonymous_namespace{httpreadwrite::cpp}::copy_msg_headers" name="anonymous_namespace{httpreadwrite::cpp}::copy_msg_headers">
-<area shape="rect" id="Node000001" title="Dummy function. It do nothing since years. Do we need it?" alt="" coords="5,40,185,95"/>
-<area shape="rect" id="Node000002" href="$df/db8/LinkedList_8cpp.html#a898216a354e8dd7089db150630862376" title="Returns the head of the list." alt="" coords="233,5,312,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,40,219,30,220,35,186,45"/>
-<area shape="rect" id="Node000003" href="$df/db8/LinkedList_8cpp.html#acafc3d2a391f494afc5947668191cc0e" title="Initializes LinkedList. Must be called first and only once for List." alt="" coords="239,55,306,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="186,65,225,65,225,70,186,70"/>
-<area shape="rect" id="Node000005" href="$df/db8/LinkedList_8cpp.html#a83123d7868ce3aba2cf9d5c066fb7eb4" title="Returns the next item in the list." alt="" coords="235,104,311,129"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="186,90,222,100,221,105,185,95"/>
-<area shape="rect" id="Node000004" href="$d7/d20/FreeList_8cpp.html#a2a1bcf0da31489886910109d5f45ee89" title="Initializes Free List." alt="" coords="360,55,455,80"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="306,65,346,65,346,70,306,70"/>
+<area shape="rect" id="Node000001" title="Dummy function. It do nothing since years. Do we need it?" alt="" coords="5,40,168,95"/>
+<area shape="rect" id="Node000002" href="$df/db8/LinkedList_8cpp.html#a898216a354e8dd7089db150630862376" title="Returns the head of the list." alt="" coords="216,5,291,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,41,202,30,204,35,169,46"/>
+<area shape="rect" id="Node000003" href="$df/db8/LinkedList_8cpp.html#acafc3d2a391f494afc5947668191cc0e" title="Initializes LinkedList. Must be called first and only once for List." alt="" coords="223,55,284,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="168,65,209,65,209,70,168,70"/>
+<area shape="rect" id="Node000005" href="$df/db8/LinkedList_8cpp.html#a83123d7868ce3aba2cf9d5c066fb7eb4" title="Returns the next item in the list." alt="" coords="218,104,289,129"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="169,89,206,100,204,105,167,94"/>
+<area shape="rect" id="Node000004" href="$d7/d20/FreeList_8cpp.html#a2a1bcf0da31489886910109d5f45ee89" title="Initializes Free List." alt="" coords="339,55,425,80"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="285,65,325,65,325,70,285,70"/>
 </map>

@@ -1,9 +1,9 @@
 <map id="MiniServerSockArray" name="MiniServerSockArray">
-<area shape="rect" id="Node000001" title="Provides sockets for all network communications." alt="" coords="11,272,170,297"/>
-<area shape="rect" id="Node000002" href="$d8/d73/classupnplib_1_1CSocket.html" title="Manage all aspects of a network socket." alt="" coords="25,155,156,180"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,193,93,272,88,272,88,193"/>
-<area shape="rect" id="Node000003" href="$db/d84/classupnplib_1_1CSocket__basic.html" title="Get information from a raw network socket file descriptor." alt="" coords="5,80,176,105"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="93,120,93,154,88,154,88,120"/>
-<area shape="rect" id="Node000004" href="$d1/dc2/structupnplib_1_1SSockaddr.html" title="Trivial ::sockaddr structures enhanced with methods." alt="" coords="18,5,163,31"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="93,45,93,80,88,80,88,45"/>
+<area shape="rect" id="Node000001" title="Provides sockets for all network communications." alt="" coords="13,272,158,297"/>
+<area shape="rect" id="Node000002" href="$d8/d73/classupnplib_1_1CSocket.html" title="Manage all aspects of a network socket." alt="" coords="24,155,147,180"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,193,88,272,83,272,83,193"/>
+<area shape="rect" id="Node000003" href="$db/d84/classupnplib_1_1CSocket__basic.html" title="Get information from a raw network socket file descriptor." alt="" coords="5,80,165,105"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="88,120,88,154,83,154,83,120"/>
+<area shape="rect" id="Node000004" href="$d1/dc2/structupnplib_1_1SSockaddr.html" title="Trivial ::sockaddr structures enhanced with methods." alt="" coords="18,5,153,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="88,45,88,80,83,80,83,45"/>
 </map>

@@ -1,9 +1,9 @@
 <map id="SSDPResultData_Callback" name="SSDPResultData_Callback">
-<area shape="rect" id="Node000001" title="SSDP result data callback function." alt="" coords="5,77,196,102"/>
-<area shape="rect" id="Node000002" href="$da/db6/SSDPResultData_8cpp.html#a51193c9ba63e38f512121460b0e87d81" title="SSDPResultData_get_Cookie." alt="" coords="244,5,400,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="145,74,238,47,240,52,146,79"/>
-<area shape="rect" id="Node000003" href="$da/db6/SSDPResultData_8cpp.html#aac0ffcc355b4ffb6d8a3c5df651a61b1" title="SSDPResultData_get_CtrlptCallback." alt="" coords="244,69,400,109"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="196,87,230,87,230,92,196,92"/>
-<area shape="rect" id="Node000004" href="$da/db6/SSDPResultData_8cpp.html#a9173f93ecb10d204505ca5627be34ac3" title="SSDPResultData_get_Param." alt="" coords="244,133,400,173"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="146,100,240,127,238,132,145,105"/>
+<area shape="rect" id="Node000001" title="SSDP result data callback function." alt="" coords="5,77,188,102"/>
+<area shape="rect" id="Node000002" href="$da/db6/SSDPResultData_8cpp.html#a51193c9ba63e38f512121460b0e87d81" title="SSDPResultData_get_Cookie." alt="" coords="236,5,387,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,74,230,47,231,52,141,79"/>
+<area shape="rect" id="Node000003" href="$da/db6/SSDPResultData_8cpp.html#aac0ffcc355b4ffb6d8a3c5df651a61b1" title="SSDPResultData_get_CtrlptCallback." alt="" coords="236,69,387,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="189,87,222,87,222,92,189,92"/>
+<area shape="rect" id="Node000004" href="$da/db6/SSDPResultData_8cpp.html#a9173f93ecb10d204505ca5627be34ac3" title="SSDPResultData_get_Param." alt="" coords="236,133,387,173"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="141,100,231,127,230,132,140,105"/>
 </map>

@@ -1,32 +1,32 @@
 <map id="uuid_create" name="uuid_create">
-<area shape="rect" id="Node000001" title="Generate a UUID." alt="" coords="5,173,104,199"/>
-<area shape="rect" id="Node000002" href="$db/dcb/namespaceanonymous__namespace_02uuid_8cpp_03.html#a8e33282048629b0941e6f54fe20b2492" title="Make a UUID from the timestamp, clockseq, and node ID." alt="" coords="170,5,350,60"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="61,172,96,122,121,94,150,69,157,65,160,69,154,73,125,98,100,126,66,175"/>
-<area shape="rect" id="Node000003" href="$db/dcb/namespaceanonymous__namespace_02uuid_8cpp_03.html#a054dd924d2ae30040171e4df3132150c" title="Get time as 60 bit 100ns ticks since whenever." alt="" coords="152,134,368,174"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="104,176,138,170,139,176,104,181"/>
-<area shape="rect" id="Node000006" href="$d6/d4b/sysdep_8cpp.html#a37b1e24ac7da974e63c5b4c54057870e" title="System dependent call to get IEEE node identifier." alt="" coords="169,84,351,109"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="70,171,105,145,151,120,175,111,177,116,153,124,108,149,73,175"/>
-<area shape="rect" id="Node000012" href="$db/dcb/namespaceanonymous__namespace_02uuid_8cpp_03.html#a0b8bf64a1de2d5cf3b0768f3b0c3b0ca" title="Read UUID generator state from non&#45;volatile store." alt="" coords="170,198,350,238"/>
-<area shape="poly" id="edge13_Node000001_Node000012" title=" " alt="" coords="104,191,157,199,156,204,104,196"/>
-<area shape="rect" id="Node000013" href="$db/dcb/namespaceanonymous__namespace_02uuid_8cpp_03.html#a495200f98fe9ffd4178f7128d44ebf8b" title="generate a crypto&#45;quality random number. This sample doesn&#39;t do that." alt="" coords="166,262,354,302"/>
-<area shape="poly" id="edge14_Node000001_Node000013" title=" " alt="" coords="74,197,109,222,153,248,170,255,168,260,151,252,106,227,71,201"/>
-<area shape="rect" id="Node000014" href="$db/dcb/namespaceanonymous__namespace_02uuid_8cpp_03.html#a5856485880e62a9196cb264231c67bf8" title="Save UUID generator state back to non&#45;volatile storage." alt="" coords="170,326,350,366"/>
-<area shape="poly" id="edge16_Node000001_Node000014" title=" " alt="" coords="64,198,97,253,123,285,154,312,162,317,159,322,150,316,119,288,93,256,60,200"/>
-<area shape="rect" id="Node000004" href="$d6/d4b/sysdep_8cpp.html#a6b9dabae04c2b47b7aacaf5d1741cbd3" title="System dependent call to get the current system time." alt="" coords="416,163,551,188"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="369,162,402,165,402,170,368,167"/>
-<area shape="rect" id="Node000005" href="$d5/d91/ThreadPool_8hpp.html#aaf2d0a99430a6d5253b8c395c30ca7e3" title="Get time of day." alt="" coords="599,163,709,188"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="551,173,585,173,585,178,551,178"/>
-<area shape="rect" id="Node000007" href="$d6/d4b/sysdep_8cpp.html#a0608b6a88b9fe8140a7b486ef8aa0da6" title="Get random information." alt="" coords="417,84,549,109"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="352,94,403,94,403,99,352,99"/>
-<area shape="poly" id="edge7_Node000007_Node000005" title=" " alt="" coords="513,107,614,154,612,159,511,112"/>
-<area shape="rect" id="Node000008" href="$d5/d96/md5_8cpp.html#aa8ada27433794b31a33902b8428b3b2f" title="MD5 Final." alt="" coords="613,61,695,87"/>
-<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="549,85,599,79,600,84,550,91"/>
-<area shape="rect" id="Node000009" href="$d5/d96/md5_8cpp.html#a605855522a01b4dd8b6dc51a9ac131b8" title="MD5 Update." alt="" coords="757,87,856,112"/>
-<area shape="poly" id="edge12_Node000007_Node000009" title=" " alt="" coords="550,95,599,95,744,96,744,102,599,101,550,100"/>
-<area shape="rect" id="Node000011" href="$d5/d96/md5_8cpp.html#acd7a26c7e6acb681ee336bfbc86e72bf" title="MD5 Initialisation." alt="" coords="617,12,691,37"/>
-<area shape="poly" id="edge11_Node000007_Node000011" title=" " alt="" coords="513,82,609,40,611,45,515,86"/>
-<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="696,78,744,86,743,92,695,83"/>
-<area shape="rect" id="Node000010" href="$d5/d96/md5_8cpp.html#a6abdf2643785d5f0fc3264b38fb9ce03" title="MD5 Transform." alt="" coords="904,87,1021,112"/>
-<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="856,97,890,97,890,102,856,102"/>
-<area shape="poly" id="edge15_Node000013_Node000004" title=" " alt="" coords="337,259,367,248,413,222,453,194,456,199,416,226,369,252,339,264"/>
+<area shape="rect" id="Node000001" title="Generate a UUID." alt="" coords="5,173,95,199"/>
+<area shape="rect" id="Node000002" href="$db/dcb/namespaceanonymous__namespace_02uuid_8cpp_03.html#a8e33282048629b0941e6f54fe20b2492" title="Make a UUID from the timestamp, clockseq, and node ID." alt="" coords="155,5,318,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="56,172,89,123,113,94,141,69,147,65,150,69,144,73,117,98,93,126,61,175"/>
+<area shape="rect" id="Node000003" href="$db/dcb/namespaceanonymous__namespace_02uuid_8cpp_03.html#a054dd924d2ae30040171e4df3132150c" title="Get time as 60 bit 100ns ticks since whenever." alt="" coords="143,134,331,174"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="94,176,129,170,130,175,95,181"/>
+<area shape="rect" id="Node000006" href="$d6/d4b/sysdep_8cpp.html#a37b1e24ac7da974e63c5b4c54057870e" title="System dependent call to get IEEE node identifier." alt="" coords="155,84,318,109"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="65,171,99,145,141,120,163,111,165,116,144,124,102,149,68,175"/>
+<area shape="rect" id="Node000012" href="$db/dcb/namespaceanonymous__namespace_02uuid_8cpp_03.html#a0b8bf64a1de2d5cf3b0768f3b0c3b0ca" title="Read UUID generator state from non&#45;volatile store." alt="" coords="155,198,318,238"/>
+<area shape="poly" id="edge13_Node000001_Node000012" title=" " alt="" coords="95,191,143,199,142,204,94,196"/>
+<area shape="rect" id="Node000013" href="$db/dcb/namespaceanonymous__namespace_02uuid_8cpp_03.html#a495200f98fe9ffd4178f7128d44ebf8b" title="generate a crypto&#45;quality random number. This sample doesn&#39;t do that." alt="" coords="155,262,318,302"/>
+<area shape="poly" id="edge14_Node000001_Node000013" title=" " alt="" coords="68,197,102,222,144,248,158,254,156,259,141,252,99,226,65,201"/>
+<area shape="rect" id="Node000014" href="$db/dcb/namespaceanonymous__namespace_02uuid_8cpp_03.html#a5856485880e62a9196cb264231c67bf8" title="Save UUID generator state back to non&#45;volatile storage." alt="" coords="155,326,318,366"/>
+<area shape="poly" id="edge16_Node000001_Node000014" title=" " alt="" coords="59,198,91,253,115,284,144,312,152,317,149,321,141,316,111,288,86,256,55,200"/>
+<area shape="rect" id="Node000004" href="$d6/d4b/sysdep_8cpp.html#a6b9dabae04c2b47b7aacaf5d1741cbd3" title="System dependent call to get the current system time." alt="" coords="379,163,501,188"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="331,161,365,165,365,170,330,167"/>
+<area shape="rect" id="Node000005" href="$d5/d91/ThreadPool_8hpp.html#aaf2d0a99430a6d5253b8c395c30ca7e3" title="Get time of day." alt="" coords="549,163,647,188"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="501,173,536,173,536,178,501,178"/>
+<area shape="rect" id="Node000007" href="$d6/d4b/sysdep_8cpp.html#a0608b6a88b9fe8140a7b486ef8aa0da6" title="Get random information." alt="" coords="381,84,499,109"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="318,94,367,94,367,99,318,99"/>
+<area shape="poly" id="edge7_Node000007_Node000005" title=" " alt="" coords="468,107,561,154,558,159,465,112"/>
+<area shape="rect" id="Node000008" href="$d5/d96/md5_8cpp.html#aa8ada27433794b31a33902b8428b3b2f" title="MD5 Final." alt="" coords="559,61,637,87"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="499,86,545,79,545,84,500,91"/>
+<area shape="rect" id="Node000009" href="$d5/d96/md5_8cpp.html#a605855522a01b4dd8b6dc51a9ac131b8" title="MD5 Update." alt="" coords="695,87,787,112"/>
+<area shape="poly" id="edge12_Node000007_Node000009" title=" " alt="" coords="500,95,549,95,681,96,681,102,549,101,500,100"/>
+<area shape="rect" id="Node000011" href="$d5/d96/md5_8cpp.html#acd7a26c7e6acb681ee336bfbc86e72bf" title="MD5 Initialisation." alt="" coords="564,12,632,37"/>
+<area shape="poly" id="edge11_Node000007_Node000011" title=" " alt="" coords="468,82,555,41,558,46,470,86"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="638,78,681,86,681,91,637,84"/>
+<area shape="rect" id="Node000010" href="$d5/d96/md5_8cpp.html#a6abdf2643785d5f0fc3264b38fb9ce03" title="MD5 Transform." alt="" coords="835,87,944,112"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="787,97,820,97,820,102,787,102"/>
+<area shape="poly" id="edge15_Node000013_Node000004" title=" " alt="" coords="302,260,329,248,373,222,411,194,414,199,376,226,332,252,304,264"/>
 </map>

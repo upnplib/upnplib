@@ -1,11 +1,11 @@
 <map id="http_EndHttpRequest" name="http_EndHttpRequest">
-<area shape="rect" id="Node000001" title="Indicates the end of a HTTP request previously made by UpnpMakeHttpRequest()." alt="" coords="441,31,601,56"/>
-<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a32b6a961a76abcb37fcd7f6e3de10ee7" title="Sends and receives any pending data, closes the connection with the server, and frees memory allocate..." alt="" coords="239,5,387,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="427,35,386,30,387,24,428,29"/>
-<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#abf7220a78d77e61b8d3bcc3165cfa71b" title="Indicates the end of a HTTP request previously made by UpnpMakeHttpRequest." alt="" coords="232,55,393,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="428,57,394,61,393,55,427,51"/>
-<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a14067069cf3e1f0dc9ac25867a4ca83d" title="Gets a file specified in a URL." alt="" coords="24,29,165,55"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="218,59,165,53,166,48,219,54"/>
-<area shape="rect" id="Node000005" href="$d4/d99/upnpapi_8cpp.html#a5f069548a767baef4623774d7bb3ce9f" title="Gets a file specified in a URL through the specified proxy." alt="" coords="5,79,184,104"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="218,80,185,84,184,79,218,75"/>
+<area shape="rect" id="Node000001" title="Indicates the end of a HTTP request previously made by UpnpMakeHttpRequest()." alt="" coords="416,31,564,56"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a32b6a961a76abcb37fcd7f6e3de10ee7" title="Sends and receives any pending data, closes the connection with the server, and frees memory allocate..." alt="" coords="223,5,362,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="402,35,362,30,363,24,403,29"/>
+<area shape="rect" id="Node000003" href="$d4/d99/upnpapi_8cpp.html#abf7220a78d77e61b8d3bcc3165cfa71b" title="Indicates the end of a HTTP request previously made by UpnpMakeHttpRequest." alt="" coords="217,55,368,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="403,57,368,61,368,56,402,51"/>
+<area shape="rect" id="Node000004" href="$d4/d99/upnpapi_8cpp.html#a14067069cf3e1f0dc9ac25867a4ca83d" title="Gets a file specified in a URL." alt="" coords="22,29,153,55"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="203,59,153,53,153,47,204,54"/>
+<area shape="rect" id="Node000005" href="$d4/d99/upnpapi_8cpp.html#a5f069548a767baef4623774d7bb3ce9f" title="Gets a file specified in a URL through the specified proxy." alt="" coords="5,79,169,104"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="204,80,170,84,169,79,203,75"/>
 </map>

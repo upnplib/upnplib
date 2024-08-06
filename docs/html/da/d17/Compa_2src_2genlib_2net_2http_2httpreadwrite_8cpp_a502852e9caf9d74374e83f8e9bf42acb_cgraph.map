@@ -1,5 +1,5 @@
 <map id="http_FixUrl" name="http_FixUrl">
-<area shape="rect" id="Node000001" title="Validates URL." alt="" coords="5,5,99,31"/>
-<area shape="rect" id="Node000002" href="$d8/dd2/uri_8cpp.html#a8f32e8ba916b944b37e9f23e1fc60ec9" title="Compares buffer in the token object with the buffer in in2 case insensitive." alt="" coords="147,5,313,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,15,133,15,133,21,99,21"/>
+<area shape="rect" id="Node000001" title="Validates URL." alt="" coords="5,5,92,31"/>
+<area shape="rect" id="Node000002" href="$d8/dd2/uri_8cpp.html#a8f32e8ba916b944b37e9f23e1fc60ec9" title="Compares buffer in the token object with the buffer in in2 case insensitive." alt="" coords="140,5,293,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,15,126,15,126,21,92,21"/>
 </map>

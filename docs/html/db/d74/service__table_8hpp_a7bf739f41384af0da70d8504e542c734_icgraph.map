@@ -1,24 +1,24 @@
 <map id="FindServiceEventURLPath" name="FindServiceEventURLPath">
-<area shape="rect" id="Node000001" title="Traverses the service table and finds the node whose event URL Path matches a known value." alt="" coords="1040,109,1228,134"/>
-<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a67f191fc3d9877d0efef0af385d07ac9" title="Retrieves the device handle and information of the first device of the address family specified,..." alt="" coords="783,109,992,134"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1026,124,992,124,992,119,1026,119"/>
-<area shape="rect" id="Node000003" href="$dd/de6/gena__device_8cpp.html#a6fd1575d4217390506014c896b22251e" title="Handles a subscription renewal request from a ctrl point. The connection is not destroyed on return." alt="" coords="537,5,735,45"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="844,105,734,60,700,48,702,43,736,55,846,101"/>
-<area shape="rect" id="Node000007" href="$dd/de6/gena__device_8cpp.html#a25ad1852d4d32c6f34a87b92225202fd" title="Handles a subscription request from a ctrl point. The socket is not closed on return." alt="" coords="537,69,735,109"/>
-<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="774,110,735,105,735,99,774,104"/>
-<area shape="rect" id="Node000008" href="$dd/de6/gena__device_8cpp.html#a4b03afbfa4cbf8c318857a43bbf92d8e" title="Handles a subscription cancellation request from a ctrl point. The connection is not destroyed on ret..." alt="" coords="538,133,734,173"/>
-<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="774,138,735,144,734,138,774,133"/>
-<area shape="rect" id="Node000009" href="$d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#a0b921cd63c6bb6bffb975e00b1073df8" title="Retrieve SOAP device/service information associated with request&#45;URI." alt="" coords="546,198,726,253"/>
-<area shape="poly" id="edge10_Node000002_Node000009" title=" " alt="" coords="844,142,736,188,705,200,703,195,734,183,842,137"/>
-<area shape="rect" id="Node000004" href="$dc/d02/gena__callback2_8cpp.html#a6f658b4eab5786398a00a53b87e7c622" title="This is the callback function called by the miniserver to handle incoming GENA requests." alt="" coords="352,109,463,134"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="558,52,538,60,433,111,431,106,536,55,556,47"/>
-<area shape="rect" id="Node000005" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="139,145,277,170"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="339,136,278,147,277,142,338,131"/>
-<area shape="rect" id="Node000006" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="5,145,91,170"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="125,160,91,160,91,155,125,155"/>
-<area shape="poly" id="edge7_Node000007_Node000004" title=" " alt="" coords="524,108,463,116,463,111,523,102"/>
-<area shape="poly" id="edge9_Node000008_Node000004" title=" " alt="" coords="524,140,462,132,463,126,525,135"/>
-<area shape="rect" id="Node000010" href="$d6/d92/soap__device_8cpp.html#a4b5104845d73b836d6365a306fba1679" title="This is a callback called by minisever." alt="" coords="325,169,489,194"/>
-<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="532,208,474,197,475,191,533,203"/>
-<area shape="poly" id="edge12_Node000010_Node000005" title=" " alt="" coords="311,172,277,168,278,163,312,167"/>
+<area shape="rect" id="Node000001" title="Traverses the service table and finds the node whose event URL Path matches a known value." alt="" coords="975,109,1153,134"/>
+<area shape="rect" id="Node000002" href="$d4/d99/upnpapi_8cpp.html#a67f191fc3d9877d0efef0af385d07ac9" title="Retrieves the device handle and information of the first device of the address family specified,..." alt="" coords="733,109,927,134"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="961,124,927,124,927,119,961,119"/>
+<area shape="rect" id="Node000003" href="$dd/de6/gena__device_8cpp.html#a6fd1575d4217390506014c896b22251e" title="Handles a subscription renewal request from a ctrl point. The connection is not destroyed on return." alt="" coords="505,5,685,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="788,105,684,60,653,48,655,43,686,55,790,100"/>
+<area shape="rect" id="Node000007" href="$dd/de6/gena__device_8cpp.html#a25ad1852d4d32c6f34a87b92225202fd" title="Handles a subscription request from a ctrl point. The socket is not closed on return." alt="" coords="505,69,685,109"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="723,109,685,104,686,99,723,104"/>
+<area shape="rect" id="Node000008" href="$dd/de6/gena__device_8cpp.html#a4b03afbfa4cbf8c318857a43bbf92d8e" title="Handles a subscription cancellation request from a ctrl point. The connection is not destroyed on ret..." alt="" coords="505,133,685,173"/>
+<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="723,139,686,144,685,138,723,133"/>
+<area shape="rect" id="Node000009" href="$d5/d0d/namespaceanonymous__namespace_02soap__device_8cpp_03.html#a0b921cd63c6bb6bffb975e00b1073df8" title="Retrieve SOAP device/service information associated with request&#45;URI." alt="" coords="514,198,677,253"/>
+<area shape="poly" id="edge10_Node000002_Node000009" title=" " alt="" coords="789,142,659,200,657,195,787,137"/>
+<area shape="rect" id="Node000004" href="$dc/d02/gena__callback2_8cpp.html#a6f658b4eab5786398a00a53b87e7c622" title="This is the callback function called by the miniserver to handle incoming GENA requests." alt="" coords="331,109,433,134"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="523,53,506,60,407,111,404,106,504,55,521,48"/>
+<area shape="rect" id="Node000005" href="$d4/d99/upnpapi_8cpp.html#a4c19962b251af8c60bf7f40309e79ba0" title="Performs the initial steps in initializing the UPnP SDK." alt="" coords="132,145,259,170"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="318,136,259,148,258,143,317,131"/>
+<area shape="rect" id="Node000006" href="$d9/d54/group__compaAPI.html#gae97edbe124fd36c523d890c664409df1" title="Initializes the Linux SDK for UPnP Devices (IPv4 or IPv6)." alt="" coords="5,145,84,170"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="118,160,84,160,84,155,118,155"/>
+<area shape="poly" id="edge7_Node000007_Node000004" title=" " alt="" coords="492,107,433,116,433,111,491,102"/>
+<area shape="poly" id="edge9_Node000008_Node000004" title=" " alt="" coords="491,140,433,132,433,126,492,135"/>
+<area shape="rect" id="Node000010" href="$d6/d92/soap__device_8cpp.html#a4b5104845d73b836d6365a306fba1679" title="This is a callback called by minisever." alt="" coords="307,169,457,194"/>
+<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="500,208,444,197,445,191,501,203"/>
+<area shape="poly" id="edge12_Node000010_Node000005" title=" " alt="" coords="293,173,259,168,259,163,293,167"/>
 </map>

@@ -1,17 +1,14 @@
 #ifndef PUPNP_UPNPSTRING_HPP
 #define PUPNP_UPNPSTRING_HPP
 // Copyright (C) 2021+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-// Redistribution only with this Copyright remark. Last modified: 2023-04-26
+// Redistribution only with this Copyright remark. Last modified: 2024-08-13
 // Also Copyright by other contributor as noted below.
 // Last compare with pupnp original source file on 2023-04-26, ver 1.14.15
 
 /*!
  * \defgroup UpnpString The UpnpString Class
- *
  * \brief Implements string operations in the UPnP library.
- *
- * \author Marcelo Roberto Jimenez
- *
+ * \authors Marcelo Roberto Jimenez, Ingo Höft
  * \version 1.0
  *
  * @{
@@ -24,6 +21,10 @@
 #include "UpnpGlobal.hpp" /* for EXPORT_SPEC */
 
 #include <stdlib.h> /* for size_t */
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
 /*!
  * \brief Type of the string objects inside libupnp.
@@ -140,5 +141,9 @@ EXPORT_SPEC int UpnpString_casecmp(
     UpnpString* q);
 
 /* @} UpnpString The UpnpString API */
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* PUPNP_UPNPSTRING_HPP */

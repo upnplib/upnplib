@@ -1,5 +1,5 @@
 # Copyright (C) 2022+ GPL 3 and higher by Ingo Höft, <Ingo@Hoeft-online.de>
-# Redistribution only with this Copyright remark. Last modified: 2024-06-19
+# Redistribution only with this Copyright remark. Last modified: 2024-08-06
 
 cmake_minimum_required(VERSION 3.18)
 include(../../cmake/project-header.cmake)
@@ -54,7 +54,7 @@ add_executable(test_sockaddr-ust
     test_sockaddr.cpp
 )
 target_include_directories(test_sockaddr-ust
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
 )
 target_link_libraries(test_sockaddr-ust
     PRIVATE upnplib_static
@@ -71,7 +71,7 @@ add_executable(test_addrinfo-ust
     test_addrinfo.cpp
 )
 target_include_directories(test_addrinfo-ust
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
 )
 target_link_libraries(test_addrinfo-ust
     PRIVATE upnplib_static
@@ -102,7 +102,7 @@ add_executable(test_webserver-ush
     test_webserver.cpp
 )
 target_include_directories(test_webserver-ush
-    PRIVATE ${UPNPLIB_PROJECT_SOURCE_DIR}
+    PRIVATE ${CMAKE_SOURCE_DIR}
 )
 target_link_libraries(test_webserver-ush
     PRIVATE upnplib_shared
